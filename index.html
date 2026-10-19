@@ -1,58 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>EtherLog</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>EtherLog</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root { --primary: #00897b; --bg: #f8fafc; --text: #0f172a; --border: #cbd5e1; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 90px; }
-    header { background: var(--primary); color: white; padding: 14px 18px; position: sticky; top: 0; z-index: 50; }
-    header h1 { font-size: 1.18rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .container { max-width: 800px; margin: 0 auto; padding: 12px; }
-    .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--border); }
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-size: 0.76rem; font-weight: 700; color: #64748b; margin-bottom: 5px; text-transform: uppercase; }
-    .hint-text { font-size: 0.7rem; color: #94a3b8; font-weight: 400; text-transform: none; margin-top: 2px; }
-    input[type="text"], input[type="number"], input[type="date"], input[type="url"], select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; }
-    .row { display: flex; gap: 10px; }
-    .col { flex: 1; }
-    
-    /* Native Pill Architecture */
-    .pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .pill-label { display: inline-block; cursor: pointer; }
-    .pill-label input { display: none; }
-    .pill-span { display: inline-flex; align-items: center; justify-content: center; padding: 7px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; background: #e2e8f0; color: #334155; border: 1.5px solid var(--border); }
-    
-    /* Active State Colors */
-    .pill-label input[type="radio"]:checked + .pill-span { background: #00897b !important; color: white !important; border-color: #004d40 !important; }
-    .pill-label.comorbid input[type="checkbox"]:checked + .pill-span { background: #0284c7 !important; color: white !important; border-color: #0369a1 !important; }
-    .pill-label.analgesia input[type="checkbox"]:checked + .pill-span { background: #059669 !important; color: white !important; border-color: #047857 !important; }
-    
-    /* Complication specific colors */
-    .pill-label.comp input[type="checkbox"]:checked + .pill-span { background: #ef4444 !important; color: white !important; border-color: #b91c1c !important; }
-    .pill-label.comp input[value="Nil"]:checked + .pill-span { background: #10b981 !important; color: white !important; border-color: #047857 !important; }
-
-    .conditional-box { background: #f0fdfa; border: 1.5px solid #99f6e4; border-radius: 10px; padding: 12px; margin-top: 6px; }
-    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: white; border-top: 2px solid var(--border); display: flex; z-index: 9999; }
-    .nav-btn { background: none; border: none; color: #64748b; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; gap: 4px; cursor: pointer; flex: 1; height: 100%; justify-content: center; }
-    .nav-btn.active { color: var(--primary) !important; font-weight: 700; }
-    .btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: #e2e8f0; color: var(--text); margin-top: 8px; }
-    .case-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-    .details-box { background: #f8fafc; border-radius: 6px; padding: 8px 10px; margin: 8px 0; font-size: 0.83rem; line-height: 1.4; border-left: 3px solid var(--primary); }
-    .action-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; margin: 6px 6px 0 0; }
+    :root{--primary:#00897b;--bg:#f8fafc;--text:#0f172a;--border:#cbd5e1;}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,sans-serif;}
+    body{background:var(--bg);color:var(--text);padding-bottom:90px;}
+    header{background:var(--primary);color:white;padding:14px 18px;position:sticky;top:0;z-index:50;}
+    header h1{font-size:1.18rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+    .container{max-width:800px;margin:0 auto;padding:12px;}
+    .card{background:white;border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid var(--border);}
+    .form-group{margin-bottom:14px;}
+    label{display:block;font-size:0.76rem;font-weight:700;color:#64748b;margin-bottom:5px;text-transform:uppercase;}
+    .hint-text{font-size:0.7rem;color:#94a3b8;font-weight:400;text-transform:none;margin-top:2px;}
+    input[type="text"],input[type="number"],input[type="date"],input[type="url"],select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;background:#fff;}
+    .row{display:flex;gap:10px;}.col{flex:1;}
+    .pill-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+    .pill-label{display:inline-block;cursor:pointer;}.pill-label input{display:none;}
+    .pill-span{display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;border-radius:20px;font-size:0.82rem;font-weight:600;background:#e2e8f0;color:#334155;border:1.5px solid var(--border);}
+    .pill-label input[type="radio"]:checked+.pill-span{background:#00897b!important;color:white!important;border-color:#004d40!important;}
+    .pill-label.comorbid input[type="checkbox"]:checked+.pill-span{background:#0284c7!important;color:white!important;border-color:#0369a1!important;}
+    .pill-label.analgesia input[type="checkbox"]:checked+.pill-span{background:#059669!important;color:white!important;border-color:#047857!important;}
+    .pill-label.comp input[type="checkbox"]:checked+.pill-span{background:#ef4444!important;color:white!important;border-color:#b91c1c!important;}
+    .pill-label.comp input[value="Nil"]:checked+.pill-span{background:#10b981!important;color:white!important;border-color:#047857!important;}
+    .conditional-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:12px;margin-top:6px;}
+    nav.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:65px;background:white;border-top:2px solid var(--border);display:flex;z-index:9999;}
+    .nav-btn{background:none;border:none;color:#64748b;display:flex;flex-direction:column;align-items:center;font-size:0.75rem;gap:4px;cursor:pointer;flex:1;height:100%;justify-content:center;}
+    .nav-btn.active{color:var(--primary)!important;font-weight:700;}
+    .btn{width:100%;padding:12px;border-radius:8px;font-size:1rem;font-weight:600;border:none;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px;}
+    .btn-primary{background:var(--primary);color:white;}
+    .btn-secondary{background:#e2e8f0;color:var(--text);margin-top:8px;}
+    .case-item{background:white;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+    .details-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:8px 0;font-size:0.83rem;line-height:1.4;border-left:3px solid var(--primary);}
+    .action-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.8rem;padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:6px 6px 0 0;}
   </style>
 </head>
 <body>
-
-  <header>
-    <h1><i class="fa-solid fa-syringe"></i> EtherLog</h1>
-  </header>
-
+  <header><h1><i class="fa-solid fa-syringe"></i> EtherLog</h1></header>
   <div class="container">
     
     <!-- TAB 1: LOGGER -->
@@ -61,91 +46,35 @@
         <h2 id="formTitle" style="font-size:1.15rem; margin-bottom:14px;">Log Anesthetic Case</h2>
         <input type="hidden" id="editCaseId" value="">
 
-        <!-- Date & Priority -->
         <div class="row">
-          <div class="form-group col">
-            <label>Date</label>
-            <input type="date" id="caseDate">
-          </div>
-          <div class="form-group col">
-            <label>Priority</label>
-            <select id="casePriority">
-              <option value="Elective">Elective</option>
-              <option value="Emergency">Emergency</option>
-            </select>
-          </div>
+          <div class="form-group col"><label>Date</label><input type="date" id="caseDate"></div>
+          <div class="form-group col"><label>Priority</label><select id="casePriority"><option value="Elective">Elective</option><option value="Emergency">Emergency</option></select></div>
         </div>
 
-        <!-- Age & Sex -->
         <div class="row">
-          <div class="form-group col">
-            <label>Patient Age</label>
-            <input type="number" id="patientAge" placeholder="e.g. 45">
-          </div>
-          <div class="form-group col">
-            <label>Sex</label>
-            <select id="patientSex">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
+          <div class="form-group col"><label>Patient Age</label><input type="number" id="patientAge" placeholder="e.g. 45"></div>
+          <div class="form-group col"><label>Sex</label><select id="patientSex"><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
         </div>
 
-        <!-- Surgical Procedure -->
         <div class="form-group">
-          <label>
-            Surgical Procedure 
-            <div class="hint-text">(Pick from list or just type a custom procedure directly to save it)</div>
-          </label>
+          <label>Surgical Procedure <div class="hint-text">(Pick from list or just type custom procedure to save it)</div></label>
           <input type="text" id="procedureName" list="procedureList" placeholder="Start typing procedure...">
           <datalist id="procedureList">
-            <option value="Laparoscopic Appendicectomy">
-            <option value="Open Appendicectomy">
-            <option value="Laparoscopic Cholecystectomy">
-            <option value="Open Cholecystectomy">
-            <option value="Exploratory Laparotomy">
-            <option value="Inguinal Hernia Repair (Mesh)">
-            <option value="Total Knee Arthroplasty (TKA)">
-            <option value="Total Hip Arthroplasty (THA)">
-            <option value="PFN / DHS Fixation Femur">
-            <option value="Elective Caesarean Section (LSCS)">
-            <option value="Emergency Caesarean Section (LSCS)">
-            <option value="Total Abdominal Hysterectomy (TAH)">
-            <option value="Tonsillectomy / Adenoidectomy">
-            <option value="TURP / TURBT">
-            <option value="Debridement / Skin Grafting">
+            <option value="Laparoscopic Appendicectomy"><option value="Open Appendicectomy"><option value="Laparoscopic Cholecystectomy"><option value="Open Cholecystectomy"><option value="Exploratory Laparotomy"><option value="Inguinal Hernia Repair (Mesh)"><option value="Total Knee Arthroplasty (TKA)"><option value="Total Hip Arthroplasty (THA)"><option value="PFN / DHS Fixation Femur"><option value="Elective Caesarean Section (LSCS)"><option value="Emergency Caesarean Section (LSCS)"><option value="Total Abdominal Hysterectomy (TAH)"><option value="Tonsillectomy / Adenoidectomy"><option value="TURP / TURBT"><option value="Debridement / Skin Grafting">
           </datalist>
         </div>
 
-        <!-- Specialty & Supervision -->
         <div class="row">
           <div class="form-group col">
             <label>Specialty</label>
-            <select id="surgicalSpecialty">
-              <option value="General Surgery">General Surgery</option>
-              <option value="Orthopaedics">Orthopaedics</option>
-              <option value="Obstetrics & Gynaec">Obstetrics & Gynaec</option>
-              <option value="ENT">ENT</option>
-              <option value="Urology">Urology</option>
-              <option value="Paediatrics">Paediatrics</option>
-              <option value="Neuro/Spine">Neuro/Spine</option>
-              <option value="Plastic Surgery">Plastic Surgery</option>
-              <option value="Ophthalmology">Ophthalmology</option>
-              <option value="Emergency/Trauma">Emergency/Trauma</option>
-            </select>
+            <select id="surgicalSpecialty"><option value="General Surgery">General Surgery</option><option value="Orthopaedics">Orthopaedics</option><option value="Obstetrics & Gynaec">Obstetrics & Gynaec</option><option value="ENT">ENT</option><option value="Urology">Urology</option><option value="Paediatrics">Paediatrics</option><option value="Neuro/Spine">Neuro/Spine</option><option value="Plastic Surgery">Plastic Surgery</option><option value="Ophthalmology">Ophthalmology</option><option value="Emergency/Trauma">Emergency/Trauma</option></select>
           </div>
           <div class="form-group col">
             <label>Supervision</label>
-            <select id="supervision">
-              <option value="Independent (Sole)">Independent (Sole)</option>
-              <option value="Direct Supervision">Direct Supervision</option>
-              <option value="Indirect Supervision">Indirect Supervision</option>
-            </select>
+            <select id="supervision"><option value="Independent (Sole)">Independent (Sole)</option><option value="Direct Supervision">Direct Supervision</option><option value="Indirect Supervision">Indirect Supervision</option></select>
           </div>
         </div>
 
-        <!-- ASA Radio -->
         <div class="form-group">
           <label>ASA Physical Status</label>
           <div class="pill-group">
@@ -160,7 +89,6 @@
           </div>
         </div>
 
-        <!-- Comorbidities -->
         <div class="form-group">
           <label>Comorbidities</label>
           <div class="pill-group">
@@ -180,77 +108,26 @@
           <input type="text" id="comorbidOther" placeholder="Other comorbidity..." style="margin-top:8px;">
         </div>
 
-        <!-- Anaesthesia Technique -->
         <div class="form-group">
-          <label>
-            Anaesthesia Technique 
-            <div class="hint-text">(Pick from list or just type a custom technique directly to save it)</div>
-          </label>
+          <label>Anaesthesia Technique <div class="hint-text">(Pick from list or just type custom technique to save it)</div></label>
           <input type="text" id="technique" list="techniqueList" placeholder="Start typing technique..." oninput="checkAirwayRequirement()">
           <datalist id="techniqueList">
-            <option value="General Anaesthesia (GA) - ETT">
-            <option value="General Anaesthesia (GA) - RSI ETT">
-            <option value="General Anaesthesia (GA) - LMA / SGA">
-            <option value="General Anaesthesia (GA) - TIVA">
-            <option value="Subarachnoid Block (Spinal Anaesthesia)">
-            <option value="Epidural Anaesthesia (Lumbar)">
-            <option value="Combined Spinal-Epidural (CSE)">
-            <option value="USG guided Right Supraclavicular Block">
-            <option value="USG guided Left Supraclavicular Block">
-            <option value="Landmark guided Right Supraclavicular Block">
-            <option value="USG guided Right Interscalene Block">
-            <option value="USG guided Bilateral TAP Block">
-            <option value="USG guided Right Adductor Canal Block (ACB)">
-            <option value="USG guided Right Femoral Nerve Block">
-            <option value="Monitored Anesthesia Care (MAC) / Sedation">
-            <option value="Local Infiltration / Field Block">
+            <option value="General Anaesthesia (GA) - ETT"><option value="General Anaesthesia (GA) - RSI ETT"><option value="General Anaesthesia (GA) - LMA / SGA"><option value="General Anaesthesia (GA) - TIVA"><option value="Subarachnoid Block (Spinal Anaesthesia)"><option value="Epidural Anaesthesia (Lumbar)"><option value="Combined Spinal-Epidural (CSE)"><option value="USG guided Right Supraclavicular Block"><option value="USG guided Left Supraclavicular Block"><option value="Landmark guided Right Supraclavicular Block"><option value="USG guided Right Interscalene Block"><option value="USG guided Bilateral TAP Block"><option value="USG guided Right Adductor Canal Block (ACB)"><option value="USG guided Right Femoral Nerve Block"><option value="Monitored Anesthesia Care (MAC) / Sedation"><option value="Local Infiltration / Field Block">
           </datalist>
         </div>
 
         <!-- Conditional Airway Box -->
         <div id="airwayConditionalSection" class="conditional-box" style="display:none; margin-bottom:14px;">
-          <h3 style="font-size:0.85rem; font-weight:700; color:var(--primary); margin-bottom:8px;">
-            <i class="fa-solid fa-wind"></i> Airway Assessment (GA / ETT / LMA Selected)
-          </h3>
+          <h3 style="font-size:0.85rem; font-weight:700; color:var(--primary); margin-bottom:8px;"><i class="fa-solid fa-wind"></i> Airway Assessment (GA/ETT/LMA)</h3>
           <div class="row">
-            <div class="form-group col">
-              <label>Pre-op MMS</label>
-              <select id="airwayMMS">
-                <option value="Class 1">Class 1</option>
-                <option value="Class 2">Class 2</option>
-                <option value="Class 3">Class 3</option>
-                <option value="Class 4">Class 4</option>
-                <option value="Class 0">Class 0</option>
-                <option value="Not Assessed">Not Assessed</option>
-              </select>
-            </div>
-            <div class="form-group col">
-              <label>Cormack-Lehane</label>
-              <select id="airwayCL">
-                <option value="Grade 1">Grade 1</option>
-                <option value="Grade 2">Grade 2</option>
-                <option value="Grade 2a">Grade 2a</option>
-                <option value="Grade 2b">Grade 2b</option>
-                <option value="Grade 3">Grade 3</option>
-                <option value="Grade 3a">Grade 3a</option>
-                <option value="Grade 3b">Grade 3b</option>
-                <option value="Grade 4">Grade 4</option>
-              </select>
-            </div>
+            <div class="form-group col"><label>Pre-op MMS</label><select id="airwayMMS"><option value="Class 1">Class 1</option><option value="Class 2">Class 2</option><option value="Class 3">Class 3</option><option value="Class 4">Class 4</option><option value="Class 0">Class 0</option><option value="Not Assessed">Not Assessed</option></select></div>
+            <div class="form-group col"><label>Cormack-Lehane</label><select id="airwayCL"><option value="Grade 1">Grade 1</option><option value="Grade 2">Grade 2</option><option value="Grade 2a">Grade 2a</option><option value="Grade 2b">Grade 2b</option><option value="Grade 3">Grade 3</option><option value="Grade 3a">Grade 3a</option><option value="Grade 3b">Grade 3b</option><option value="Grade 4">Grade 4</option></select></div>
           </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Tube / Blade Notes</label>
-            <input type="text" id="airwayDetails" placeholder="e.g. 7.5 cuffed ETT, Mac 3 blade">
-          </div>
+          <div class="form-group" style="margin-bottom:0;"><label>Tube / Blade Notes</label><input type="text" id="airwayDetails" placeholder="e.g. 7.5 cuffed ETT, Mac 3 blade"></div>
         </div>
 
-        <!-- Difficult Airway Notes -->
-        <div class="form-group">
-          <label>Difficult Airway / Special Procedures</label>
-          <input type="text" id="difficultAirwayNotes" placeholder="e.g. C-MAC D-blade, Bougie, Arterial line (leave blank if Nil)">
-        </div>
+        <div class="form-group"><label>Difficult Airway / Special Procedures</label><input type="text" id="difficultAirwayNotes" placeholder="e.g. C-MAC D-blade, Bougie, Arterial line (leave blank if Nil)"></div>
 
-        <!-- Analgesia -->
         <div class="form-group">
           <label>Analgesia Administered</label>
           <div class="pill-group">
@@ -265,7 +142,7 @@
           <input type="text" id="analgesiaOther" placeholder="Other analgesic / dose..." style="margin-top:8px;">
         </div>
 
-        <!-- GLOWING Complications Pills -->
+        <!-- Glowing Complications -->
         <div class="form-group">
           <label>Complications & Critical Events</label>
           <div class="pill-group">
@@ -280,18 +157,13 @@
           <input type="text" id="complicationsOther" placeholder="Other complication / action taken..." style="margin-top:8px;">
         </div>
 
-        <!-- Attachment -->
         <div class="form-group">
           <label>Attach OT Sheet (Photo / PDF)</label>
           <input type="file" id="fileUpload" accept="image/*,application/pdf" style="padding:6px 0;">
-          <div id="existingLinkContainer" style="display:none; margin-top:6px;">
-            <a id="existingLink" href="#" target="_blank" class="action-btn" style="background:#0284c7; color:white;">View Attached File</a>
-          </div>
+          <div id="existingLinkContainer" style="display:none; margin-top:6px;"><a id="existingLink" href="#" target="_blank" class="action-btn" style="background:#0284c7; color:white;">View Attached File</a></div>
         </div>
 
-        <button type="button" class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()">
-          <i class="fa-solid fa-floppy-disk"></i> <span id="saveBtnText">Save & Log Case</span>
-        </button>
+        <button type="button" class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> <span id="saveBtnText">Save & Log Case</span></button>
         <button type="button" class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">Cancel Edit</button>
       </div>
     </div>
@@ -300,9 +172,7 @@
     <div id="tabLedger" style="display:none;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <h2 style="font-size:1.15rem;">My Logbook Records</h2>
-        <button type="button" onclick="exportCSV()" class="action-btn" style="background:#f1f5f9; border:1px solid var(--border);">
-          <i class="fa-solid fa-file-csv"></i> Export CSV
-        </button>
+        <button type="button" onclick="exportCSV()" class="action-btn" style="background:#f1f5f9; border:1px solid var(--border);"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
       </div>
       <div id="caseListContainer"></div>
     </div>
@@ -311,8 +181,43 @@
     <div id="tabSettings" style="display:none;">
       <div class="card">
         <h2 style="font-size:1.15rem; margin-bottom:12px;">Google Drive Settings</h2>
-        <div class="form-group">
-          <label>Google Apps Script Web App URL</label>
-          <input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec">
-        </div>
-        <button type="button" c
+        <div class="form-group"><label>Google Apps Script Web App URL</label><input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec"></div>
+        <button type="button" class="btn btn-primary" onclick="saveSettings()">Save URL</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button type="button" class="nav-btn active" id="btnNavLog" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Log Case</span></button>
+    <button type="button" class="nav-btn" id="btnNavLedger" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
+    <button type="button" class="nav-btn" id="btnNavSettings" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
+  </nav>
+
+  <script>
+    function showTab(tabId) {
+      document.getElementById('tabLogger').style.display = (tabId === 'tabLogger') ? 'block' : 'none';
+      document.getElementById('tabLedger').style.display = (tabId === 'tabLedger') ? 'block' : 'none';
+      document.getElementById('tabSettings').style.display = (tabId === 'tabSettings') ? 'block' : 'none';
+      document.getElementById('btnNavLog').classList.toggle('active', tabId === 'tabLogger');
+      document.getElementById('btnNavLedger').classList.toggle('active', tabId === 'tabLedger');
+      document.getElementById('btnNavSettings').classList.toggle('active', tabId === 'tabSettings');
+      if (tabId === 'tabLedger') renderLedger();
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById('caseDate').value = new Date().toISOString().split('T')[0];
+    const SCRIPT_URL_KEY = "etherlog_script_url";
+    document.getElementById('scriptUrlSetting').value = localStorage.getItem(SCRIPT_URL_KEY) || "";
+    let existingAttachmentUrl = "";
+
+    function loadCustomSuggestions() {
+      JSON.parse(localStorage.getItem('etherlog_custom_procs') || '[]').forEach(p => { const opt = document.createElement('option'); opt.value = p; document.getElementById('procedureList').appendChild(opt); });
+      JSON.parse(localStorage.getItem('etherlog_custom_techs') || '[]').forEach(t => { const opt = document.createElement('option'); opt.value = t; document.getElementById('techniqueList').appendChild(opt); });
+    }
+    loadCustomSuggestions();
+
+    function checkAirwayRequirement() {
+      const val = document.getElementById('technique').value.toUpperCase();
+      const needsAirway = val.includes('ETT') || val.includes('LMA') || val.includes('GA') || val.includes('GENERAL') || val.includes('SGA');
