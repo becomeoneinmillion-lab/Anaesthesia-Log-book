@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="description" content="Standardized Clinical Anesthesia Logbook">
+  <title>EtherLog - Anesthesia Logbook</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0d9488;
+      --primary-dark: #0f766e;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 70px; }
+    
+    /* Header */
+    header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    header h1 { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    
+    /* Containers */
+    .container { max-width: 800px; margin: 0 auto; padding: 14px; }
+    .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    
+    /* Navigation Bar (Mobile bottom, desktop friendly) */
+    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 50; }
+    .nav-btn { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; gap: 4px; cursor: pointer; }
+    .nav-btn.active { color: var(--primary); font-weight: 600; }
+    .nav-btn i { font-size: 1.2rem; }
+
+    /* Forms */
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; }
+    .row { display: flex; gap: 10px; }
+    .col { flex: 1; }
+    
+    /* Quick Selection Pills */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .pill { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; background: #f1f5f9; border: 1px solid var(--border); cursor: pointer; user-select: none; }
+    .pill.selected { background: var(--primary); color: white; border-color: var(--primary-dark); }
+    
+    /* File Upload Box */
+    .upload-zone { border: 2px dashed var(--primary); border-radius: 10px; padding: 16px; text-align: center; background: #f0fdfa; cursor: pointer; position: relative; margin-top: 6px; }
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .upload-preview { display: flex; align-items: center; gap: 10px; margin-top: 8px; background: white; padding: 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.85rem; }
+
+    /* Action Buttons */
+    .btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:active { background: var(--primary-dark); }
+    
+    /* Ledger List */
+    .case-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; position: relative; }
+    .case-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .case-title { font-weight: 700; font-size: 1rem; color: var(--text); }
+    .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+    .badge-asa { background: #e0f2fe; color: #0369a1; }
+    .case-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 8px; }
+    .attachment-link { display: inline-flex; align-items: center; gap: 4px; background: #f1f5f9; color: var(--primary); font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header>
+    <h1><i class="fa-solid fa-syringe"></i> EtherLog</h1>
+    <span id="syncStatus" style="font-size:0.75rem;"><i class="fa-solid fa-cloud-check"></i> Ready</span>
+  </header>
+
+  <div class="container">
+    
+    <!-- Tab 1: New Case Logger -->
+    <div id="tabLogger">
+      <div class="card">
+        <h2 style="font-size:1.1rem; margin-bottom: 12px;">Log Anesthetic Case</h2>
+        
+        <div class="row">
+          <div class="form-group col">
+            <label>Date</label>
+            <input type="date" id="caseDate">
+          </div>
+          <div class="form-group col">
+            <label>Patient Age / Sex</label>
+            <input type="text" id="patientInfo" placeholder="e.g. 45 M">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Surgical Procedure</label>
+          <input type="text" id="procedureName" placeholder="e.g. Laparoscopic Cholecystectomy">
+        </div>
+
+        <div class="row">
+          <div class="form-group col">
+            <label>Specialty</label>
+            <select id="surgicalSpecialty">
+              <option value="General Surgery">General Surgery</option>
+              <option value="Orthopaedics">Orthopaedics</option>
+              <option value="Obstetrics & Gynaec">Obstetrics & Gynaec</option>
+              <option value="ENT">ENT</option>
+              <option value="Urology">Urology</option>
+              <option value="Paediatrics">Paediatrics</option>
+              <option value="Neuro/Spine">Neuro/Spine</option>
+              <option value="Emergency/Trauma">Emergency/Trauma</option>
+            </select>
+          </div>
+          <div class="form-group col">
+            <label>Supervision</label>
+            <select id="supervision">
+              <option value="Direct">Direct Supervision</option>
+              <option value="Indirect">Indirect Supervision</option>
+              <option value="Independent">Independent (Sole)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>ASA Physical Status</label>
+          <div class="pill-group" id="asaPills">
+            <div class="pill selected" data-val="I">I</div>
+            <div class="pill" data-val="II">II</div>
+            <div class="pill" data-val="III">III</div>
+            <div class="pill" data-val="IV">IV</div>
+            <div class="pill" data-val="IE">I E</div>
+            <div class="pill" data-val="IIE">II E</div>
+            <div class="pill" data-val="IIIE">III E</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Primary Anaesthetic Technique</label>
+          <select id="technique">
+            <option value="GA - ETT">General Anaesthesia (ETT)</option>
+            <option value="GA - LMA/SGA">General Anaesthesia (LMA/SGA)</option>
+            <option value="Subarachnoid Block (Spinal)">Subarachnoid Block (Spinal)</option>
+            <option value="Epidural / CSE">Epidural / CSE</option>
+            <option value="USG Peripheral Nerve Block">USG Peripheral Nerve Block</option>
+            <option value="Monitored Anesthesia Care (MAC)">MAC / Sedation</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Complications / Airway / Critical Notes</label>
+          <input type="text" id="caseNotes" placeholder="e.g. Mallampati III, C-MAC D-blade, smooth PACU recovery">
+        </div>
+
+        <!-- Google Drive Photo/PDF Attachment Box -->
+        <div class="form-group">
+          <label>Attach OT Sheet / PAC Note (Auto-uploads to Drive)</label>
+          <div class="upload-zone">
+            <i class="fa-solid fa-camera fa-2x" style="color:var(--primary); margin-bottom: 6px;"></i>
+            <p style="font-size:0.85rem; font-weight:600;">Tap to snap camera or pick from gallery / PDF</p>
+            <input type="file" id="fileUpload" accept="image/*,application/pdf">
+          </div>
+          <div id="filePreview" style="display:none;" class="upload-preview">
+            <i class="fa-solid fa-file-lines"></i>
+            <span id="fileName" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
+            <span id="uploadStatusText" style="color:var(--primary); font-weight:600;">Ready</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()">
+          <i class="fa-solid fa-floppy-disk"></i> Save & Log Case
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab 2: Case Ledger -->
+    <div id="tabLedger" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h2 style="font-size:1.1rem;">My Logbook Records</h2>
+        <button onclick="exportCSV()" class="attachment-link" style="border:none; cursor:pointer;">
+          <i class="fa-solid fa-file-csv"></i> Export CSV
+        </button>
+      </div>
+      <div id="caseListContainer"></div>
+    </div>
+
+    <!-- Tab 3: Settings & Drive URL -->
+    <div id="tabSettings" style="display:none;">
+      <div class="card">
+        <h2 style="font-size:1.1rem; margin-bottom: 12px;">Settings & Cloud Storage</h2>
+        <div class="form-group">
+          <label>Google Apps Script Web App URL</label>
+          <input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec">
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Paste the deployed Web App URL from Step 1 here.</p>
+        </div>
+        <button class="btn btn-primary" onclick="saveSettings()">Save URL</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('tabLogger', this)">
+      <i class="fa-solid fa-notes-medical"></i>
+      <span>Log Case</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('tabLedger', this)">
+      <i class="fa-solid fa-book-medical"></i>
+      <span>Ledger</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('tabSettings', this)">
+      <i class="fa-solid fa-gear"></i>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <script>
+    // Initial Setup
+    document.getElementById('caseDate').value = new Date().toISOString().split('T')[0];
+    let selectedASA = "I";
+    let pendingFile = null;
+
+    // Load Settings
+    const SCRIPT_URL_KEY = "etherlog_script_url";
+    document.getElementById('scriptUrlSetting').value = localStorage.getItem(SCRIPT_URL_KEY) || "";
+
+    // ASA Pill Selector Logic
+    document.querySelectorAll('#asaPills .pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('#asaPills .pill').forEach(p => p.classList.remove('selected'));
+        pill.classList.add('selected');
+        selectedASA = pill.getAttribute('data-val');
+      });
+    });
+
+    // File Selection & Local Display
+    document.getElementById('fileUpload').addEventListener('change', function(e) {
+      if (e.target.files.length > 0) {
+        pendingFile = e.target.files[0];
+        document.getElementById('filePreview').style.display = 'flex';
+        document.getElementById('fileName').textContent = pendingFile.name;
+        document.getElementById('uploadStatusText').textContent = "Ready to upload";
+      }
+    });
+
+    // Client-side Image Compression (Reduces 12MB photos to ~500KB)
+    async function processFile(file) {
+      if (file.type === "application/pdf") {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve({ base64: reader.result.split(',')[1], type: file.type });
+          reader.readAsDataURL(file);
+        });
+      }
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxWidth = 1600;
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+            resolve({ base64: dataUrl.split(',')[1], type: 'image/jpeg' });
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Save Case Entry
+    async function saveCase() {
+      const proc = document.getElementById('procedureName').value.trim();
+      if (!proc) {
+        alert("Please enter the surgical procedure.");
+        return;
+      }
+
+      const saveBtn = document.getElementById('saveCaseBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      let driveLink = "";
+      const scriptUrl = localStorage.getItem(SCRIPT_URL_KEY);
+
+      // Upload to Drive if file is attached and Script URL is configured
+      if (pendingFile && scriptUrl) {
+        document.getElementById('uploadStatusText').textContent = "Uploading to Drive...";
+        try {
+          const processed = await processFile(pendingFile);
+          const payload = {
+            fileName: `Case_${Date.now()}_${pendingFile.name.replace(/\s+/g, '_')}`,
+            mimeType: processed.type,
+            base64Data: processed.base64
+          };
+          const res = await fetch(scriptUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          const json = await res.json();
+          if (json.status === "success") {
+            driveLink = json.viewUrl;
+          }
+        } catch (err) {
+          console.error("Drive upload failed:", err);
+          alert("File upload failed, but the case details will still be saved locally.");
+        }
+      }
+
+      // Build Case Object
+      const newCase = {
+        id: "CASE-" + Date.now(),
+        date: document.getElementById('caseDate').value,
+        patient: document.getElementById('patientInfo').value || "N/A",
+        procedure: proc,
+        specialty: document.getElementById('surgicalSpecialty').value,
+        supervision: document.getElementById('supervision').value,
+        asa: selectedASA,
+        technique: document.getElementById('technique').value,
+        notes: document.getElementById('caseNotes').value,
+        attachmentUrl: driveLink
+      };
+
+      // Persist to localStorage
+      const cases = JSON.parse(localStorage.getItem('etherlog_cases') || '[]');
+      cases.unshift(newCase);
+      localStorage.setItem('etherlog_cases', JSON.stringify(cases));
+
+      // Reset Form
+      document.getElementById('procedureName').value = "";
+      document.getElementById('patientInfo').value = "";
+      document.getElementById('caseNotes').value = "";
+      document.getElementById('fileUpload').value = "";
+      document.getElementById('filePreview').style.display = "none";
+      pendingFile = null;
+
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save & Log Case';
+      alert("Case recorded successfully!");
+      renderLedger();
+    }
+
+    // Render Ledger View
+    function renderLedger() {
+      const container = document.getElementById('caseListContainer');
+      const cases = JSON.parse(localStorage.getItem('etherlog_cases') || '[]');
+      if (cases.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:30px;">No cases recorded yet.</p>';
+        return;
+      }
+      container.innerHTML = cases.map(c => `
+        <div class="case-item">
+          <div class="case-header">
+            <span class="case-title">${c.procedure}</span>
+            <span class="badge badge-asa">ASA ${c.asa}</span>
+          </div>
+          <div class="case-meta">
+            <span><i class="fa-regular fa-calendar"></i> ${c.date}</span>
+            <span><i class="fa-regular fa-user"></i> ${c.patient}</span>
+            <span><i class="fa-solid fa-stethoscope"></i> ${c.specialty}</span>
+          </div>
+          <p style="font-size:0.85rem; margin-bottom:8px;"><strong>Technique:</strong> ${c.technique} (${c.supervision})</p>
+          ${c.notes ? `<p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px;"><em>"${c.notes}"</em></p>` : ''}
+          ${c.attachmentUrl ? `<a href="${c.attachmentUrl}" target="_blank" class="attachment-link"><i class="fa-solid fa-paperclip"></i> View OT Record</a>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Save Settings
+    function saveSettings() {
+      const url = document.getElementById('scriptUrlSetting').value.trim();
+      localStorage.setItem(SCRIPT_URL_KEY, url);
+      alert("Settings saved!");
+    }
+
+    // Switch Tabs
+    function switchTab(tabId, el) {
+      document.getElementById('tabLogger').style.display = tabId === 'tabLogger' ? 'block' : 'none';
+      document.getElementById('tabLedger').style.display = tabId === 'tabLedger' ? 'block' : 'none';
+      document.getElementById('tabSettings').style.display = tabId === 'tabSettings' ? 'block' : 'none';
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+      if (tabId === 'tabLedger') renderLedger();
+    }
+
+    // Export CSV
+    function exportCSV() {
+      const cases = JSON.parse(localStorage.getItem('etherlog_cases') || '[]');
+      if (cases.length === 0) return alert("No cases to export!");
+      let csv = "Date,Patient,Procedure,Specialty,ASA,Technique,Supervision,Notes,DriveAttachment\n";
+      cases.forEach(c => {
+        csv += `"${c.date}","${c.patient}","${c.procedure}","${c.specialty}","${c.asa}","${c.technique}","${c.supervision}","${c.notes || ''}","${c.attachmentUrl || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Anesthesia_Logbook_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    }
+
+    // Initial render
+    renderLedger();
+  </script>
+</body>
+</html>
