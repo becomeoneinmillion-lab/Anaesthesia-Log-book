@@ -3,54 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#009688">
-  <meta name="description" content="Clinical Anesthesia Logbook">
+  <meta name="theme-color" content="#00897b">
   <title>EtherLog - Anesthesia Logbook</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #009688;
-      --primary-dark: #00796b;
+      --primary: #00897b;
+      --primary-dark: #00695c;
       --bg: #f8fafc;
       --card: #ffffff;
       --text: #0f172a;
       --text-muted: #64748b;
-      --border: #e2e8f0;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --success: #10b981;
+      --border: #cbd5e1;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 75px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 80px; }
     
-    /* Header */
+    /* Top Header */
     header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     header h1 { font-size: 1.18rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     
-    /* Containers */
+    /* Layout Containers */
     .container { max-width: 800px; margin: 0 auto; padding: 12px; }
     .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     
-    /* Navigation Bar */
-    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 62px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 50; }
+    /* Bottom Navigation Bar */
+    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 62px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 999; }
     .nav-btn { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; gap: 4px; cursor: pointer; flex: 1; height: 100%; justify-content: center; }
-    .nav-btn.active { color: var(--primary); font-weight: 700; }
+    .nav-btn.active { color: var(--primary) !important; font-weight: 700; }
+    .nav-btn.active i { color: var(--primary) !important; }
     .nav-btn i { font-size: 1.25rem; }
 
     /* Form Fields */
-    .form-group { margin-bottom: 12px; }
-    label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 0.76rem; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
     input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; color: var(--text); outline: none; }
-    input:focus, select:focus, textarea:focus { border-color: var(--primary); ring: 2px var(--primary); }
     .row { display: flex; gap: 10px; }
     .col { flex: 1; }
     
-    /* Pills */
-    .pill-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-    .pill { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; background: #f1f5f9; border: 1px solid var(--border); cursor: pointer; user-select: none; transition: 0.15s ease; }
-    .pill.selected { background: var(--primary); color: white; border-color: var(--primary-dark); font-weight: 600; }
-    .comorbid-pill.selected { background: #0284c7; color: white; border-color: #0369a1; }
+    /* Pill Selectors */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .pill { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; background: #e2e8f0; color: #334155; border: 1.5px solid #cbd5e1; cursor: pointer; touch-action: manipulation; transition: all 0.15s ease; }
+    
+    /* ASA Active State (Teal) */
+    .pill.selected { background: #00897b !important; color: #ffffff !important; border-color: #004d40 !important; box-shadow: 0 2px 5px rgba(0,137,123,0.35); }
+    
+    /* Comorbidities Active State (Deep Royal Blue) */
+    .comorbid-pill.selected { background: #0284c7 !important; color: #ffffff !important; border-color: #0369a1 !important; box-shadow: 0 2px 5px rgba(2,132,199,0.35); }
 
     /* Upload Zone */
     .upload-zone { border: 2px dashed var(--primary); border-radius: 10px; padding: 14px; text-align: center; background: #f0fdfa; cursor: pointer; position: relative; margin-top: 4px; }
@@ -74,7 +74,7 @@
     .case-meta { font-size: 0.82rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0; }
     .details-box { background: #f8fafc; border-radius: 6px; padding: 8px 10px; margin: 8px 0; font-size: 0.83rem; line-height: 1.4; border-left: 3px solid var(--primary); }
     .action-links { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
-    .action-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; }
+    .action-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; }
     .btn-view-doc { background: #0284c7; color: white; }
     .btn-edit { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
     .btn-delete { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
@@ -82,7 +82,7 @@
 </head>
 <body>
 
-  <!-- Top App Bar without 'Ready' text -->
+  <!-- Top App Bar -->
   <header>
     <h1><i class="fa-solid fa-syringe"></i> EtherLog</h1>
   </header>
@@ -110,7 +110,7 @@
           </div>
         </div>
 
-        <!-- Age & Sex Separated -->
+        <!-- Age & Sex -->
         <div class="row">
           <div class="form-group col">
             <label>Patient Age</label>
@@ -164,37 +164,37 @@
         <div class="form-group">
           <label>ASA Physical Status</label>
           <div class="pill-group" id="asaPills">
-            <div class="pill selected" data-val="I">I</div>
-            <div class="pill" data-val="II">II</div>
-            <div class="pill" data-val="III">III</div>
-            <div class="pill" data-val="IV">IV</div>
-            <div class="pill" data-val="V">V</div>
-            <div class="pill" data-val="IE">I E</div>
-            <div class="pill" data-val="IIE">II E</div>
-            <div class="pill" data-val="IIIE">III E</div>
-            <div class="pill" data-val="IVE">IV E</div>
+            <button type="button" class="pill selected" data-val="I">I</button>
+            <button type="button" class="pill" data-val="II">II</button>
+            <button type="button" class="pill" data-val="III">III</button>
+            <button type="button" class="pill" data-val="IV">IV</button>
+            <button type="button" class="pill" data-val="V">V</button>
+            <button type="button" class="pill" data-val="IE">I E</button>
+            <button type="button" class="pill" data-val="IIE">II E</button>
+            <button type="button" class="pill" data-val="IIIE">III E</button>
+            <button type="button" class="pill" data-val="IVE">IV E</button>
           </div>
         </div>
 
         <!-- Comorbidities Multi-Selection -->
         <div class="form-group">
-          <label>Comorbidities (Tap to select multiple)</label>
+          <label>Comorbidities (Tap to select)</label>
           <div class="pill-group" id="comorbidPills">
-            <div class="pill comorbid-pill" data-val="None">Nil Known</div>
-            <div class="pill comorbid-pill" data-val="T2DM">T2DM</div>
-            <div class="pill comorbid-pill" data-val="SHTN">SHTN</div>
-            <div class="pill comorbid-pill" data-val="Asthma">Asthma</div>
-            <div class="pill comorbid-pill" data-val="Anaemia">Anaemia</div>
-            <div class="pill comorbid-pill" data-val="Hypothyroidism">Hypothyroidism</div>
-            <div class="pill comorbid-pill" data-val="Hyperthyroidism">Hyperthyroidism</div>
-            <div class="pill comorbid-pill" data-val="Seizure Disorder">Seizure Disorder</div>
-            <div class="pill comorbid-pill" data-val="CAD">CAD</div>
-            <div class="pill comorbid-pill" data-val="COPD">COPD</div>
-            <div class="pill comorbid-pill" data-val="CKD">CKD</div>
-            <div class="pill comorbid-pill" data-val="AKI">AKI</div>
-            <div class="pill comorbid-pill" data-val="CLD">CLD</div>
-            <div class="pill comorbid-pill" data-val="Obesity/OSA">Obesity / OSA</div>
-            <div class="pill comorbid-pill" data-val="GERD">GERD</div>
+            <button type="button" class="pill comorbid-pill" data-val="None">Nil Known</button>
+            <button type="button" class="pill comorbid-pill" data-val="T2DM">T2DM</button>
+            <button type="button" class="pill comorbid-pill" data-val="SHTN">SHTN</button>
+            <button type="button" class="pill comorbid-pill" data-val="Asthma">Asthma</button>
+            <button type="button" class="pill comorbid-pill" data-val="Anaemia">Anaemia</button>
+            <button type="button" class="pill comorbid-pill" data-val="Hypothyroidism">Hypothyroidism</button>
+            <button type="button" class="pill comorbid-pill" data-val="Hyperthyroidism">Hyperthyroidism</button>
+            <button type="button" class="pill comorbid-pill" data-val="Seizure Disorder">Seizure Disorder</button>
+            <button type="button" class="pill comorbid-pill" data-val="CAD">CAD</button>
+            <button type="button" class="pill comorbid-pill" data-val="COPD">COPD</button>
+            <button type="button" class="pill comorbid-pill" data-val="CKD">CKD</button>
+            <button type="button" class="pill comorbid-pill" data-val="AKI">AKI</button>
+            <button type="button" class="pill comorbid-pill" data-val="CLD">CLD</button>
+            <button type="button" class="pill comorbid-pill" data-val="Obesity/OSA">Obesity / OSA</button>
+            <button type="button" class="pill comorbid-pill" data-val="GERD">GERD</button>
           </div>
           <input type="text" id="comorbidOther" placeholder="Other comorbidities (if any)..." style="margin-top: 8px;">
         </div>
@@ -221,12 +221,12 @@
 
         <div class="form-group">
           <label>Difficult Airway / Special Procedures</label>
-          <input type="text" id="difficultAirwayNotes" placeholder="e.g. Videolaryngoscope C-MAC used, Bougie required, awake FOI, Arterial line">
+          <input type="text" id="difficultAirwayNotes" placeholder="e.g. C-MAC D-blade, Bougie, awake FOI, Arterial line, CVC">
         </div>
 
         <div class="form-group">
           <label>Complications & Critical Events</label>
-          <input type="text" id="complicationsNotes" placeholder="e.g. Nil, transient hypotension corrected with Mephentermine, bronchospasm, etc.">
+          <input type="text" id="complicationsNotes" placeholder="e.g. Nil, transient hypotension, desaturation, bronchospasm">
         </div>
 
         <!-- OT Record Sheet / Photo Attachment -->
@@ -244,14 +244,14 @@
           </div>
           <div id="existingLinkContainer" style="display:none; margin-top:8px;">
             <span style="font-size:0.8rem; color:var(--text-muted);">Current attached record: </span>
-            <a id="existingLink" href="#" target="_blank" class="action-btn btn-view-doc" style="display:inline-flex;">View Current File</a>
+            <a id="existingLink" href="#" target="_blank" class="action-btn btn-view-doc" style="display:inline-flex;">View Attached File</a>
           </div>
         </div>
 
-        <button class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()">
+        <button type="button" class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()">
           <i class="fa-solid fa-floppy-disk"></i> <span id="saveBtnText">Save & Log Case</span>
         </button>
-        <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">
+        <button type="button" class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">
           Cancel Edit
         </button>
       </div>
@@ -261,7 +261,7 @@
     <div id="tabLedger" style="display:none;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <h2 style="font-size:1.15rem;">My Logbook Records</h2>
-        <button onclick="exportCSV()" class="action-btn btn-edit">
+        <button type="button" onclick="exportCSV()" class="action-btn btn-edit">
           <i class="fa-solid fa-file-csv"></i> Export CSV
         </button>
       </div>
@@ -275,9 +275,9 @@
         <div class="form-group">
           <label>Google Apps Script Web App URL</label>
           <input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec">
-          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Files will automatically upload to your Google Drive folder via this script URL.</p>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Files automatically upload to your personal Google Drive folder via this URL.</p>
         </div>
-        <button class="btn btn-primary" onclick="saveSettings()">Save URL</button>
+        <button type="button" class="btn btn-primary" onclick="saveSettings()">Save URL</button>
       </div>
     </div>
 
@@ -285,15 +285,15 @@
 
   <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" id="navBtnLog" onclick="switchTab('tabLogger', this)">
+    <button type="button" class="nav-btn active" id="btnNavLog" onclick="switchTab('tabLogger')">
       <i class="fa-solid fa-notes-medical"></i>
       <span>Log Case</span>
     </button>
-    <button class="nav-btn" id="navBtnLedger" onclick="switchTab('tabLedger', this)">
+    <button type="button" class="nav-btn" id="btnNavLedger" onclick="switchTab('tabLedger')">
       <i class="fa-solid fa-book-medical"></i>
       <span>Ledger</span>
     </button>
-    <button class="nav-btn" id="navBtnSettings" onclick="switchTab('tabSettings', this)">
+    <button type="button" class="nav-btn" id="btnNavSettings" onclick="switchTab('tabSettings')">
       <i class="fa-solid fa-gear"></i>
       <span>Settings</span>
     </button>
@@ -305,32 +305,58 @@
     let selectedASA = "I";
     let pendingFile = null;
     let existingAttachmentUrl = "";
-
     const SCRIPT_URL_KEY = "etherlog_script_url";
-    document.getElementById('scriptUrlSetting').value = localStorage.getItem(SCRIPT_URL_KEY) || "";
 
-    // ASA Selection
-    document.querySelectorAll('#asaPills .pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.querySelectorAll('#asaPills .pill').forEach(p => p.classList.remove('selected'));
-        pill.classList.add('selected');
-        selectedASA = pill.getAttribute('data-val');
-      });
+    // Load Settings
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('scriptUrlSetting').value = localStorage.getItem(SCRIPT_URL_KEY) || "";
+      setupPillListeners();
     });
 
-    // Comorbidities Multi-Selection
-    document.querySelectorAll('#comorbidPills .comorbid-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        const val = pill.getAttribute('data-val');
-        if (val === "None") {
-          document.querySelectorAll('#comorbidPills .comorbid-pill').forEach(p => p.classList.remove('selected'));
-          pill.classList.add('selected');
-        } else {
-          document.querySelector('#comorbidPills [data-val="None"]').classList.remove('selected');
-          pill.classList.toggle('selected');
-        }
+    // Pill Selector Click Setup
+    function setupPillListeners() {
+      // ASA Pills
+      document.querySelectorAll('#asaPills .pill').forEach(btn => {
+        btn.onclick = function(e) {
+          e.preventDefault();
+          document.querySelectorAll('#asaPills .pill').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          selectedASA = this.getAttribute('data-val');
+        };
       });
-    });
+
+      // Comorbidities Pills
+      document.querySelectorAll('#comorbidPills .comorbid-pill').forEach(btn => {
+        btn.onclick = function(e) {
+          e.preventDefault();
+          const val = this.getAttribute('data-val');
+          if (val === "None") {
+            document.querySelectorAll('#comorbidPills .comorbid-pill').forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+          } else {
+            const noneBtn = document.querySelector('#comorbidPills [data-val="None"]');
+            if (noneBtn) noneBtn.classList.remove('selected');
+            this.classList.toggle('selected');
+          }
+        };
+      });
+    }
+
+    // Direct, Robust Tab Switching
+    function switchTab(tabId) {
+      document.getElementById('tabLogger').style.display = (tabId === 'tabLogger') ? 'block' : 'none';
+      document.getElementById('tabLedger').style.display = (tabId === 'tabLedger') ? 'block' : 'none';
+      document.getElementById('tabSettings').style.display = (tabId === 'tabSettings') ? 'block' : 'none';
+
+      document.getElementById('btnNavLog').classList.toggle('active', tabId === 'tabLogger');
+      document.getElementById('btnNavLedger').classList.toggle('active', tabId === 'tabLedger');
+      document.getElementById('btnNavSettings').classList.toggle('active', tabId === 'tabSettings');
+
+      if (tabId === 'tabLedger') {
+        renderLedger();
+      }
+      window.scrollTo(0, 0);
+    }
 
     // File Selection Trigger
     document.getElementById('fileUpload').addEventListener('change', function(e) {
@@ -358,52 +384,4 @@
           img.onload = () => {
             const canvas = document.createElement('canvas');
             const maxWidth = 1600;
-            let width = img.width;
-            let height = img.height;
-            if (width > maxWidth) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            }
-            canvas.width = width;
-            canvas.height = height;
-            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
-            resolve({ base64: dataUrl.split(',')[1], type: 'image/jpeg' });
-          };
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // Save or Overwrite / Edit Case
-    async function saveCase() {
-      const proc = document.getElementById('procedureName').value.trim();
-      if (!proc) {
-        alert("Please enter the surgical procedure name.");
-        return;
-      }
-
-      const saveBtn = document.getElementById('saveCaseBtn');
-      const saveBtnText = document.getElementById('saveBtnText');
-      saveBtn.disabled = true;
-      saveBtnText.textContent = 'Uploading / Saving...';
-
-      let driveLink = existingAttachmentUrl;
-      const scriptUrl = localStorage.getItem(SCRIPT_URL_KEY);
-
-      // Upload if a new file is chosen
-      if (pendingFile && scriptUrl) {
-        document.getElementById('uploadStatusText').textContent = "Uploading to Drive...";
-        try {
-          const processed = await processFile(pendingFile);
-          const payload = {
-            fileName: `Case_${Date.now()}_${pendingFile.name.replace(/\s+/g, '_')}`,
-            mimeType: processed.type,
-            base64Data: processed.base64
-          };
-          const res = await fetch(scriptUrl, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-          });
-          const json = awa
+            
