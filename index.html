@@ -15,16 +15,26 @@
     .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--border); }
     .form-group { margin-bottom: 14px; }
     label { display: block; font-size: 0.76rem; font-weight: 700; color: #64748b; margin-bottom: 5px; text-transform: uppercase; }
+    .hint-text { font-size: 0.7rem; color: #94a3b8; font-weight: 400; text-transform: none; margin-top: 2px; }
     input[type="text"], input[type="number"], input[type="date"], input[type="url"], select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; }
     .row { display: flex; gap: 10px; }
     .col { flex: 1; }
+    
+    /* Native Pill Architecture */
     .pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
     .pill-label { display: inline-block; cursor: pointer; }
     .pill-label input { display: none; }
     .pill-span { display: inline-flex; align-items: center; justify-content: center; padding: 7px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; background: #e2e8f0; color: #334155; border: 1.5px solid var(--border); }
-    .pill-label input[type="radio"]:checked + .pill-span { background: #00897b !important; color: white !important; }
-    .pill-label.comorbid input[type="checkbox"]:checked + .pill-span { background: #0284c7 !important; color: white !important; }
-    .pill-label.analgesia input[type="checkbox"]:checked + .pill-span { background: #059669 !important; color: white !important; }
+    
+    /* Active State Colors */
+    .pill-label input[type="radio"]:checked + .pill-span { background: #00897b !important; color: white !important; border-color: #004d40 !important; }
+    .pill-label.comorbid input[type="checkbox"]:checked + .pill-span { background: #0284c7 !important; color: white !important; border-color: #0369a1 !important; }
+    .pill-label.analgesia input[type="checkbox"]:checked + .pill-span { background: #059669 !important; color: white !important; border-color: #047857 !important; }
+    
+    /* Complication specific colors */
+    .pill-label.comp input[type="checkbox"]:checked + .pill-span { background: #ef4444 !important; color: white !important; border-color: #b91c1c !important; }
+    .pill-label.comp input[value="Nil"]:checked + .pill-span { background: #10b981 !important; color: white !important; border-color: #047857 !important; }
+
     .conditional-box { background: #f0fdfa; border: 1.5px solid #99f6e4; border-radius: 10px; padding: 12px; margin-top: 6px; }
     nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: white; border-top: 2px solid var(--border); display: flex; z-index: 9999; }
     .nav-btn { background: none; border: none; color: #64748b; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; gap: 4px; cursor: pointer; flex: 1; height: 100%; justify-content: center; }
@@ -32,8 +42,6 @@
     .btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #e2e8f0; color: var(--text); margin-top: 8px; }
-    .tag-btn { display: inline-block; padding: 4px 10px; background: #e2e8f0; border: 1px solid var(--border); border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; margin: 4px 4px 0 0; }
-    .tag-btn-nil { background: #dcfce7; color: #15803d; border-color: #86efac; }
     .case-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
     .details-box { background: #f8fafc; border-radius: 6px; padding: 8px 10px; margin: 8px 0; font-size: 0.83rem; line-height: 1.4; border-left: 3px solid var(--primary); }
     .action-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; margin: 6px 6px 0 0; }
@@ -86,8 +94,11 @@
 
         <!-- Surgical Procedure -->
         <div class="form-group">
-          <label>Surgical Procedure (Select or type custom)</label>
-          <input type="text" id="procedureName" list="procedureList" placeholder="Type or pick procedure...">
+          <label>
+            Surgical Procedure 
+            <div class="hint-text">(Pick from list or just type a custom procedure directly to save it)</div>
+          </label>
+          <input type="text" id="procedureName" list="procedureList" placeholder="Start typing procedure...">
           <datalist id="procedureList">
             <option value="Laparoscopic Appendicectomy">
             <option value="Open Appendicectomy">
@@ -97,17 +108,12 @@
             <option value="Inguinal Hernia Repair (Mesh)">
             <option value="Total Knee Arthroplasty (TKA)">
             <option value="Total Hip Arthroplasty (THA)">
-            <option value="Hemiarthroplasty Hip">
             <option value="PFN / DHS Fixation Femur">
-            <option value="ORIF Ankle / Tibia Fracture">
             <option value="Elective Caesarean Section (LSCS)">
             <option value="Emergency Caesarean Section (LSCS)">
             <option value="Total Abdominal Hysterectomy (TAH)">
-            <option value="Total Laparoscopic Hysterectomy (TLH)">
             <option value="Tonsillectomy / Adenoidectomy">
             <option value="TURP / TURBT">
-            <option value="URSL / PCNL">
-            <option value="Craniotomy for SDH/EDH">
             <option value="Debridement / Skin Grafting">
           </datalist>
         </div>
@@ -176,8 +182,11 @@
 
         <!-- Anaesthesia Technique -->
         <div class="form-group">
-          <label>Anaesthesia Technique (Select or type custom)</label>
-          <input type="text" id="technique" list="techniqueList" placeholder="Type or pick technique..." oninput="checkAirwayRequirement()">
+          <label>
+            Anaesthesia Technique 
+            <div class="hint-text">(Pick from list or just type a custom technique directly to save it)</div>
+          </label>
+          <input type="text" id="technique" list="techniqueList" placeholder="Start typing technique..." oninput="checkAirwayRequirement()">
           <datalist id="techniqueList">
             <option value="General Anaesthesia (GA) - ETT">
             <option value="General Anaesthesia (GA) - RSI ETT">
@@ -186,24 +195,13 @@
             <option value="Subarachnoid Block (Spinal Anaesthesia)">
             <option value="Epidural Anaesthesia (Lumbar)">
             <option value="Combined Spinal-Epidural (CSE)">
-            <option value="Caudal Epidural Block">
             <option value="USG guided Right Supraclavicular Block">
             <option value="USG guided Left Supraclavicular Block">
             <option value="Landmark guided Right Supraclavicular Block">
-            <option value="Landmark guided Left Supraclavicular Block">
             <option value="USG guided Right Interscalene Block">
-            <option value="USG guided Left Interscalene Block">
-            <option value="USG guided Right Axillary Block">
-            <option value="USG guided Left Axillary Block">
             <option value="USG guided Bilateral TAP Block">
-            <option value="USG guided Bilateral Rectus Sheath Block">
-            <option value="USG guided Bilateral ESP Block">
             <option value="USG guided Right Adductor Canal Block (ACB)">
-            <option value="USG guided Left Adductor Canal Block (ACB)">
             <option value="USG guided Right Femoral Nerve Block">
-            <option value="USG guided Left Femoral Nerve Block">
-            <option value="USG guided Right Popliteal Sciatic Block">
-            <option value="USG guided Left Popliteal Sciatic Block">
             <option value="Monitored Anesthesia Care (MAC) / Sedation">
             <option value="Local Infiltration / Field Block">
           </datalist>
@@ -212,7 +210,7 @@
         <!-- Conditional Airway Box -->
         <div id="airwayConditionalSection" class="conditional-box" style="display:none; margin-bottom:14px;">
           <h3 style="font-size:0.85rem; font-weight:700; color:var(--primary); margin-bottom:8px;">
-            <i class="fa-solid fa-wind"></i> Airway Assessment (ETT)
+            <i class="fa-solid fa-wind"></i> Airway Assessment (GA / ETT / LMA Selected)
           </h3>
           <div class="row">
             <div class="form-group col">
@@ -249,14 +247,14 @@
         <!-- Difficult Airway Notes -->
         <div class="form-group">
           <label>Difficult Airway / Special Procedures</label>
-          <input type="text" id="difficultAirwayNotes" placeholder="e.g. C-MAC D-blade, Bougie, Arterial line (or leave blank if Nil)">
+          <input type="text" id="difficultAirwayNotes" placeholder="e.g. C-MAC D-blade, Bougie, Arterial line (leave blank if Nil)">
         </div>
 
         <!-- Analgesia -->
         <div class="form-group">
           <label>Analgesia Administered</label>
           <div class="pill-group">
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Nil" id="analgesiaNil" onchange="toggleAnalgesiaNil(this)"><span class="pill-span">Nil</span></label>
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Nil" id="analgesiaNil" onchange="toggleExclusive(this, 'analgesiaBox')"><span class="pill-span">Nil</span></label>
             <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV Paracetamol"><span class="pill-span">IV Paracetamol</span></label>
             <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV NSAID"><span class="pill-span">IV NSAID</span></label>
             <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV Opioid"><span class="pill-span">IV Opioid</span></label>
@@ -267,20 +265,19 @@
           <input type="text" id="analgesiaOther" placeholder="Other analgesic / dose..." style="margin-top:8px;">
         </div>
 
-        <!-- Complications -->
+        <!-- GLOWING Complications Pills -->
         <div class="form-group">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <label style="margin-bottom:0;">Complications</label>
-            <button type="button" class="tag-btn tag-btn-nil" onclick="setComplication('Nil')"><i class="fa-solid fa-check"></i> Set Nil</button>
+          <label>Complications & Critical Events</label>
+          <div class="pill-group">
+            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Nil" id="compNil" checked onchange="toggleExclusive(this, 'compBox')"><span class="pill-span">Nil / Uneventful</span></label>
+            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Hypotension"><span class="pill-span">Hypotension</span></label>
+            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Bradycardia"><span class="pill-span">Bradycardia</span></label>
+            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Desaturation"><span class="pill-span">Desaturation</span></label>
+            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Bronchospasm"><span class="pill-span">Bronchospasm</span></label>
+            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Difficult Intubation"><span class="pill-span">Difficult Intubation</span></label>
+            <label class="pill-label comp"><input type="checkbox" name="compBox" value="PONV"><span class="pill-span">PONV</span></label>
           </div>
-          <input type="text" id="complicationsNotes" placeholder="e.g. Nil, hypotension, desaturation">
-          <div style="margin-top:6px;">
-            <span class="tag-btn" onclick="setComplication('Nil')">Nil</span>
-            <span class="tag-btn" onclick="addComplication('Hypotension (treated)')">Hypotension</span>
-            <span class="tag-btn" onclick="addComplication('Bradycardia')">Bradycardia</span>
-            <span class="tag-btn" onclick="addComplication('Desaturation')">Desaturation</span>
-            <span class="tag-btn" onclick="addComplication('Difficult Intubation')">Difficult Intubation</span>
-          </div>
+          <input type="text" id="complicationsOther" placeholder="Other complication / action taken..." style="margin-top:8px;">
         </div>
 
         <!-- Attachment -->
@@ -318,4 +315,4 @@
           <label>Google Apps Script Web App URL</label>
           <input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec">
         </div>
-        <button type="button" class="btn btn-primary" onclick="sa
+        <button type="button" c
