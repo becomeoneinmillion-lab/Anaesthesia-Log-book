@@ -6,239 +6,245 @@
   <title>EtherLog</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root{--primary:#00897b;--bg:#f8fafc;--text:#0f172a;--border:#cbd5e1;}
-    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,sans-serif; -webkit-tap-highlight-color: transparent;}
-    body{background:var(--bg);color:var(--text);padding-bottom:90px;}
-    header{background:var(--primary);color:white;padding:14px 18px;position:sticky;top:0;z-index:50;}
+    :root{--pri:#00897b;--bg:#f8fafc;--txt:#0f172a;--bdr:#cbd5e1;}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,sans-serif;-webkit-tap-highlight-color:transparent;}
+    body{background:var(--bg);color:var(--txt);padding-bottom:90px;}
+    header{background:var(--pri);color:#fff;padding:14px 18px;position:sticky;top:0;z-index:50;}
     header h1{font-size:1.18rem;font-weight:700;display:flex;align-items:center;gap:8px;}
     .container{max-width:800px;margin:0 auto;padding:12px;}
-    .card{background:white;border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid var(--border);}
-    .form-group{margin-bottom:14px;}
-    label{display:block;font-size:0.76rem;font-weight:700;color:#64748b;margin-bottom:5px;text-transform:uppercase;}
-    .hint-text{font-size:0.7rem;color:#94a3b8;font-weight:400;text-transform:none;margin-top:2px;}
-    input[type="text"],input[type="number"],input[type="date"],input[type="url"],select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:0.95rem;background:#fff;}
+    .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid var(--bdr);}
+    .fg{margin-bottom:14px;}
+    .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+    label{display:block;font-size:0.75rem;font-weight:700;color:#64748b;margin-bottom:5px;text-transform:uppercase;}
+    input[type="text"],input[type="number"],input[type="date"],input[type="url"],select{width:100%;padding:10px;border:1px solid var(--bdr);border-radius:8px;font-size:0.95rem;background:#fff;}
     .row{display:flex;gap:10px;}.col{flex:1;}
-    .pill-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
-    .pill-label{display:inline-block;cursor:pointer;}.pill-label input{display:none;}
-    .pill-span{display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;border-radius:20px;font-size:0.82rem;font-weight:600;background:#e2e8f0;color:#334155;border:1.5px solid var(--border); transition:0.1s;}
-    
-    .pill-label input[type="radio"]:checked+.pill-span{background:#00897b!important;color:white!important;border-color:#004d40!important;}
-    .pill-label.comorbid input[type="checkbox"]:checked+.pill-span{background:#0284c7!important;color:white!important;border-color:#0369a1!important;}
-    .pill-label.analgesia input[type="checkbox"]:checked+.pill-span{background:#059669!important;color:white!important;border-color:#047857!important;}
-    .pill-label.comp input[type="checkbox"]:checked+.pill-span{background:#ef4444!important;color:white!important;border-color:#b91c1c!important;}
-    .pill-label.comp input[value="Nil"]:checked+.pill-span{background:#10b981!important;color:white!important;border-color:#047857!important;}
-    
-    .conditional-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:12px;margin-top:6px;}
-    
-    nav.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:65px;background:white;border-top:2px solid var(--border);display:flex;z-index:9999;}
-    .nav-btn{background:none;border:none;color:#64748b;display:flex;flex-direction:column;align-items:center;font-size:0.75rem;gap:4px;cursor:pointer;flex:1;height:100%;justify-content:center;}
-    .nav-btn.active{color:var(--primary)!important;font-weight:700;}
-    .nav-btn * { pointer-events: none; } /* Prevents touch conflicts */
-
-    .btn{width:100%;padding:12px;border-radius:8px;font-size:1rem;font-weight:600;border:none;cursor:pointer;display:flex;justify-content:center;align-items:center;gap:8px;}
-    .btn-primary{background:var(--primary);color:white;}
-    .btn-secondary{background:#e2e8f0;color:var(--text);margin-top:8px;}
-    .case-item{background:white;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
-    .details-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:8px 0;font-size:0.83rem;line-height:1.4;border-left:3px solid var(--primary);}
-    .action-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.8rem;padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:6px 6px 0 0;}
+    .pill-group{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;}
+    .pill-lbl{display:inline-block;cursor:pointer;}.pill-lbl input{display:none;}
+    .pill-sp{display:inline-flex;padding:7px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;background:#e2e8f0;color:#334155;border:1.5px solid var(--bdr);}
+    .pill-lbl input[type="radio"]:checked+.pill-sp{background:#00897b!important;color:#fff!important;border-color:#004d40!important;}
+    .pill-lbl.comorbid input:checked+.pill-sp{background:#0284c7!important;color:#fff!important;border-color:#0369a1!important;}
+    .pill-lbl.analgesia input:checked+.pill-sp{background:#059669!important;color:#fff!important;border-color:#047857!important;}
+    .pill-lbl.comp input:checked+.pill-sp{background:#ef4444!important;color:#fff!important;border-color:#b91c1c!important;}
+    .pill-lbl.comp input[value="Nil"]:checked+.pill-sp,.pill-lbl.comorbid input[value="Nil"]:checked+.pill-sp{background:#10b981!important;color:#fff!important;border-color:#047857!important;}
+    .cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:12px;margin-bottom:14px;display:none;}
+    nav.b-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:2px solid var(--bdr);display:flex;z-index:9999;}
+    .nav-btn{background:none;border:none;color:#64748b;display:flex;flex-direction:column;align-items:center;font-size:0.75rem;gap:4px;cursor:pointer;flex:1;justify-content:center;}
+    .nav-btn.active{color:var(--pri)!important;font-weight:700;}
+    .btn{width:100%;padding:12px;border-radius:8px;font-size:1rem;font-weight:600;border:none;cursor:pointer;background:var(--pri);color:#fff;}
+    .btn-sec{background:#e2e8f0;color:var(--txt);margin-top:8px;}
+    .mini-btn{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:700;cursor:pointer;}
+    .case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:12px;}
+    .d-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:8px 0;font-size:0.83rem;line-height:1.4;border-left:3px solid var(--pri);}
+    .act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.8rem;padding:6px 11px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:6px 6px 0 0;}
   </style>
 </head>
 <body>
   <header><h1><i class="fa-solid fa-syringe"></i> EtherLog</h1></header>
   <div class="container">
-    
-    <!-- TAB 1: LOGGER -->
     <div id="tabLogger">
       <div class="card">
-        <h2 id="formTitle" style="font-size:1.15rem; margin-bottom:14px;">Log Anesthetic Case</h2>
-        <input type="hidden" id="editCaseId" value="">
-
+        <h2 id="formTitle" style="font-size:1.12rem;margin-bottom:12px;">Log Anesthetic Case</h2>
+        <input type="hidden" id="editId" value="">
         <div class="row">
-          <div class="form-group col"><label>Date</label><input type="date" id="caseDate"></div>
-          <div class="form-group col"><label>Priority</label><select id="casePriority"><option value="Elective">Elective</option><option value="Emergency">Emergency</option></select></div>
+          <div class="fg col"><label>Date</label><input type="date" id="cDate"></div>
+          <div class="fg col"><label>Elective / Emergency</label><select id="cPrio"><option>Elective</option><option>Emergency</option></select></div>
         </div>
-
         <div class="row">
-          <div class="form-group col"><label>Patient Age</label><input type="number" id="patientAge" placeholder="e.g. 45"></div>
-          <div class="form-group col"><label>Sex</label><select id="patientSex"><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
+          <div class="fg col"><label>Patient Age</label><input type="number" id="cAge" placeholder="e.g. 45"></div>
+          <div class="fg col"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
         </div>
-
-        <div class="form-group">
-          <label>Surgical Procedure <div class="hint-text">(Pick from list or just type custom procedure to save it)</div></label>
-          <input type="text" id="procedureName" list="procedureList" placeholder="Start typing procedure...">
-          <datalist id="procedureList"></datalist>
+        <div class="fg">
+          <div class="lbl-row"><label style="margin:0">Surgical Procedure</label><button type="button" class="mini-btn" onclick="addCustom('proc')">+ Add Custom</button></div>
+          <input type="text" id="cProc" list="procList" placeholder="Start typing or select procedure...">
+          <datalist id="procList"></datalist>
         </div>
-
         <div class="row">
-          <div class="form-group col">
-            <label>Specialty</label>
-            <select id="surgicalSpecialty">
-              <option value="General Surgery">General Surgery</option><option value="Orthopaedics">Orthopaedics</option><option value="Obstetrics & Gynaec">Obstetrics & Gynaec</option>
-              <option value="ENT">ENT</option><option value="Urology">Urology</option><option value="Paediatrics">Paediatrics</option><option value="Neuro/Spine">Neuro/Spine</option>
-              <option value="Plastic Surgery">Plastic Surgery</option><option value="Ophthalmology">Ophthalmology</option><option value="Emergency/Trauma">Emergency/Trauma</option>
-            </select>
+          <div class="fg col"><label>Specialty</label><select id="cSpec"></select></div>
+          <div class="fg col"><label>Supervision</label><select id="cSup"><option>Independent (Sole)</option><option>Direct Supervision</option><option>Indirect Supervision</option></select></div>
+        </div>
+        <div class="fg"><label>ASA Physical Status</label><div class="pill-group" id="asaPills"></div></div>
+        <div class="fg"><label>Comorbidities</label><div class="pill-group" id="comorbidPills"></div><input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:8px"></div>
+        <div class="fg">
+          <div class="lbl-row"><label style="margin:0">Anaesthesia Technique</label><button type="button" class="mini-btn" onclick="addCustom('tech')">+ Add Custom</button></div>
+          <input type="text" id="cTech" list="techList" placeholder="Start typing technique (e.g. ETT, USG right...)" oninput="checkAirway()">
+          <datalist id="techList"></datalist>
+        </div>
+        <div id="airwayBox" class="cond-box">
+          <label style="color:var(--pri)">Airway Management (GA / ETT / LMA)</label>
+          <div class="row" style="margin-top:6px">
+            <div class="fg col"><label>Pre-op MMS</label><select id="cMMS"><option>1</option><option>2</option><option>3</option><option>4</option><option>0</option><option>Not Assessed</option></select></div>
+            <div class="fg col"><label>Cormack-Lehane</label><select id="cCL"><option>1</option><option>2</option><option>2a</option><option>2b</option><option>3a</option><option>3b</option><option>4</option></select></div>
           </div>
-          <div class="form-group col">
-            <label>Supervision</label>
-            <select id="supervision"><option value="Independent (Sole)">Independent (Sole)</option><option value="Direct Supervision">Direct Supervision</option><option value="Indirect Supervision">Indirect Supervision</option></select>
-          </div>
+          <input type="text" id="cAirNotes" placeholder="Tube size, blade, intubation notes...">
         </div>
-
-        <div class="form-group">
-          <label>ASA Physical Status</label>
-          <div class="pill-group">
-            <label class="pill-label"><input type="radio" name="asaRadio" value="I" checked><span class="pill-span">I</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="II"><span class="pill-span">II</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="III"><span class="pill-span">III</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="IV"><span class="pill-span">IV</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="V"><span class="pill-span">V</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="I E"><span class="pill-span">I E</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="II E"><span class="pill-span">II E</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="III E"><span class="pill-span">III E</span></label>
-          </div>
+        <div class="fg"><label>Difficult Airway / Special Notes</label><input type="text" id="cDiff" placeholder="e.g. C-MAC, Bougie, Arterial line (or Nil)"></div>
+        <div class="fg"><label>Analgesia</label><div class="pill-group" id="analgPills"></div><input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:8px"></div>
+        <div class="fg"><label>Complications</label><div class="pill-group" id="compPills"></div><input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:8px"></div>
+        <div class="fg">
+          <label>Attach OT Record Sheet (Photo / PDF - Multiple Allowed)</label>
+          <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:6px 0">
+          <div id="currFiles" style="margin-top:4px"></div>
         </div>
-
-        <div class="form-group">
-          <label>Comorbidities</label>
-          <div class="pill-group">
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="T2DM"><span class="pill-span">T2DM</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="SHTN"><span class="pill-span">SHTN</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Asthma"><span class="pill-span">Asthma</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Anaemia"><span class="pill-span">Anaemia</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Hypothyroidism"><span class="pill-span">Hypothyroidism</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Hyperthyroidism"><span class="pill-span">Hyperthyroidism</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Seizure"><span class="pill-span">Seizure</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="CAD"><span class="pill-span">CAD</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="COPD"><span class="pill-span">COPD</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="CKD"><span class="pill-span">CKD</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Obesity/OSA"><span class="pill-span">Obesity/OSA</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="GERD"><span class="pill-span">GERD</span></label>
-          </div>
-          <input type="text" id="comorbidOther" placeholder="Other comorbidity..." style="margin-top:8px;">
-        </div>
-
-        <div class="form-group">
-          <label>Anaesthesia Technique <div class="hint-text">(Pick from list or type custom technique to save it)</div></label>
-          <input type="text" id="technique" list="techniqueList" placeholder="Start typing technique..." oninput="checkAirwayRequirement()">
-          <datalist id="techniqueList"></datalist>
-        </div>
-
-        <div id="airwayConditionalSection" class="conditional-box" style="display:none; margin-bottom:14px;">
-          <h3 style="font-size:0.85rem; font-weight:700; color:var(--primary); margin-bottom:8px;"><i class="fa-solid fa-wind"></i> Airway Assessment (GA/ETT/LMA)</h3>
-          <div class="row">
-            <div class="form-group col"><label>Pre-op MMS</label><select id="airwayMMS"><option value="Class 1">Class 1</option><option value="Class 2">Class 2</option><option value="Class 3">Class 3</option><option value="Class 4">Class 4</option><option value="Class 0">Class 0</option><option value="Not Assessed">Not Assessed</option></select></div>
-            <div class="form-group col"><label>Cormack-Lehane</label><select id="airwayCL"><option value="Grade 1">Grade 1</option><option value="Grade 2">Grade 2</option><option value="Grade 2a">Grade 2a</option><option value="Grade 2b">Grade 2b</option><option value="Grade 3">Grade 3</option><option value="Grade 3a">Grade 3a</option><option value="Grade 3b">Grade 3b</option><option value="Grade 4">Grade 4</option></select></div>
-          </div>
-          <div class="form-group" style="margin-bottom:0;"><label>Tube / Blade Notes</label><input type="text" id="airwayDetails" placeholder="e.g. 7.5 cuffed ETT, Mac 3 blade"></div>
-        </div>
-
-        <div class="form-group"><label>Difficult Airway / Special Procedures</label><input type="text" id="difficultAirwayNotes" placeholder="e.g. C-MAC D-blade, Bougie, Arterial line (leave blank if Nil)"></div>
-
-        <div class="form-group">
-          <label>Analgesia Administered</label>
-          <div class="pill-group">
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Nil" id="analgesiaNil" onchange="toggleExclusive(this, 'analgesiaBox')"><span class="pill-span">Nil</span></label>
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV Paracetamol"><span class="pill-span">IV Paracetamol</span></label>
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV NSAID"><span class="pill-span">IV NSAID</span></label>
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV Opioid"><span class="pill-span">IV Opioid</span></label>
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Regional Block"><span class="pill-span">Regional Block</span></label>
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Local Infiltration"><span class="pill-span">Local Infiltration</span></label>
-            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Epidural Infusion"><span class="pill-span">Epidural Infusion</span></label>
-          </div>
-          <input type="text" id="analgesiaOther" placeholder="Other analgesic / dose..." style="margin-top:8px;">
-        </div>
-
-        <div class="form-group">
-          <label>Complications & Critical Events</label>
-          <div class="pill-group">
-            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Nil" id="compNil" checked onchange="toggleExclusive(this, 'compBox')"><span class="pill-span">Nil / Uneventful</span></label>
-            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Hypotension"><span class="pill-span">Hypotension</span></label>
-            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Bradycardia"><span class="pill-span">Bradycardia</span></label>
-            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Desaturation"><span class="pill-span">Desaturation</span></label>
-            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Bronchospasm"><span class="pill-span">Bronchospasm</span></label>
-            <label class="pill-label comp"><input type="checkbox" name="compBox" value="Difficult Intubation"><span class="pill-span">Difficult Intubation</span></label>
-            <label class="pill-label comp"><input type="checkbox" name="compBox" value="PONV"><span class="pill-span">PONV</span></label>
-          </div>
-          <input type="text" id="complicationsOther" placeholder="Other complication / action taken..." style="margin-top:8px;">
-        </div>
-
-        <div class="form-group">
-          <label>Attach OT Sheet (Photo / PDF)</label>
-          <input type="file" id="fileUpload" accept="image/*,application/pdf" style="padding:6px 0;">
-          <div id="existingLinkContainer" style="display:none; margin-top:6px;"><a id="existingLink" href="#" target="_blank" class="action-btn" style="background:#0284c7; color:white;">View Attached File</a></div>
-        </div>
-
-        <button type="button" class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> <span id="saveBtnText">Save & Log Case</span></button>
-        <button type="button" class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">Cancel Edit</button>
+        <button type="button" class="btn" id="saveBtn" onclick="saveCase()">Save & Log Case</button>
+        <button type="button" class="btn btn-sec" id="cancelBtn" onclick="resetForm();showTab('tabLedger')" style="display:none">Cancel Edit</button>
       </div>
     </div>
-
-    <!-- TAB 2: LEDGER -->
-    <div id="tabLedger" style="display:none;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h2 style="font-size:1.15rem;">My Logbook Records</h2>
-        <button type="button" onclick="exportCSV()" class="action-btn" style="background:#f1f5f9; border:1px solid var(--border);"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-      </div>
-      <div id="caseListContainer"></div>
+    <div id="tabLedger" style="display:none">
+      <div class="lbl-row" style="margin-bottom:12px"><h2>My Logbook Records</h2><button type="button" class="mini-btn" style="padding:6px 12px;font-size:0.8rem" onclick="exportCSV()">Export CSV</button></div>
+      <div id="ledgerList"></div>
     </div>
-
-    <!-- TAB 3: SETTINGS -->
-    <div id="tabSettings" style="display:none;">
+    <div id="tabSettings" style="display:none">
       <div class="card">
-        <h2 style="font-size:1.15rem; margin-bottom:12px;">Google Drive Settings</h2>
-        <div class="form-group"><label>Google Apps Script Web App URL</label><input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec"></div>
-        <button type="button" class="btn btn-primary" onclick="saveSettings()">Save URL</button>
+        <h2 style="font-size:1.1rem;margin-bottom:12px">Google Drive Settings</h2>
+        <div class="fg"><label>Google Apps Script Web App URL</label><input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
+        <button type="button" class="btn" onclick="localStorage.setItem('el_url',document.getElementById('sUrl').value.trim());alert('Saved!')">Save URL</button>
       </div>
     </div>
-
   </div>
-
-  <nav class="bottom-nav">
-    <button type="button" class="nav-btn active" id="btnNavLog" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Log Case</span></button>
-    <button type="button" class="nav-btn" id="btnNavLedger" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
-    <button type="button" class="nav-btn" id="btnNavSettings" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
+  <nav class="b-nav">
+    <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Log Case</span></button>
+    <button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
+    <button type="button" class="nav-btn" id="nav2" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
   </nav>
-
   <script>
-    // Bulletproof Tab Switcher
-    window.showTab = function(tabId) {
-      try {
-        document.getElementById('tabLogger').style.display = 'none';
-        document.getElementById('tabLedger').style.display = 'none';
-        document.getElementById('tabSettings').style.display = 'none';
-        
-        document.getElementById('btnNavLog').classList.remove('active');
-        document.getElementById('btnNavLedger').classList.remove('active');
-        document.getElementById('btnNavSettings').classList.remove('active');
-
-        document.getElementById(tabId).style.display = 'block';
-        if (tabId === 'tabLogger') document.getElementById('btnNavLog').classList.add('active');
-        if (tabId === 'tabLedger') document.getElementById('btnNavLedger').classList.add('active');
-        if (tabId === 'tabSettings') document.getElementById('btnNavSettings').classList.add('active');
-
-        if (tabId === 'tabLedger') renderLedger();
-        window.scrollTo(0, 0);
-      } catch (err) {
-        alert("Tab Switch Error: Please clear your browser data. " + err.message);
-      }
-    };
-
-    // Safe Local Storage Parser (Prevents corrupted JSON crashes)
-    function safeParse(key, defaultVal) {
-      try { return JSON.parse(localStorage.getItem(key)) || defaultVal; } 
-      catch(e) { localStorage.setItem(key, JSON.stringify(defaultVal)); return defaultVal; }
+    const getLS = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d} };
+    const setLS = (k,v) => localStorage.setItem(k,JSON.stringify(v));
+    let curLinks = [];
+    const PROCS = ["Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy","Inguinal Hernia Repair","Total Thyroidectomy","Modified Radical Mastectomy (MRM)","Total Knee Arthroplasty (TKA)","Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm / Tibia","Elective LSCS","Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Tonsillectomy","FESS","Tympanoplasty / Mastoidectomy","TURP","URSL / PCNL","Craniotomy","Lumbar Discectomy / Laminectomy","Split Skin Grafting (SSG)"];
+    const TECHS = ["General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT","General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA","Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)","Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block","USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block","Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block","USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block","USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block","USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block","USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block","USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)","USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)","USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation","Local Infiltration / Field Block"];
+    function init() {
+      document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('sUrl').value = localStorage.getItem('el_url') || '';
+      document.getElementById('cSpec').innerHTML = ["General Surgery","Orthopaedics","Obstetrics & Gynaec","ENT","Urology","Paediatrics","Neuro/Spine","Plastic Surgery","Ophthalmology","Cardiothoracic","Emergency/Trauma"].map(s=>`<option>${s}</option>`).join('');
+      makePills('asaPills','asa',['I','II','III','IV','V','I E','II E','III E','IV E'],'radio','I');
+      makePills('comorbidPills','comorbid',['Nil','T2DM','SHTN','Asthma','Anaemia','Seizure Disorder','Hypothyroidism','Hyperthyroidism','CKD','CAD','CLD','COPD','AKI','Obesity/OSA','GERD'],'checkbox','Nil');
+      makePills('analgPills','analgesia',['Nil','IV Paracetamol','IV NSAID','IV Opioid','IV Multimodal','Regional Block','Local Infiltration','Epidural Infusion','IV PCA'],'checkbox','Nil');
+      makePills('compPills','comp',['Nil','Hypotension','Bradycardia','Desaturation','Bronchospasm','Laryngospasm','Difficult Intubation','High Spinal','PDPH','PONV'],'checkbox','Nil');
+      renderLists();
     }
-
-    document.getElementById('caseDate').value = new Date().toISOString().split('T')[0];
-    const SCRIPT_URL_KEY = "etherlog_script_url";
-    document.getElementById('scriptUrlSetting').value = localStorage.getItem(SCRIPT_URL_KEY) || "";
-    let existingAttachmentUrl = "";
-
-    // Load Default & Custom Suggestions Programmatically (Cleaner HTML)
-    function loadSuggestions() {
-      const defaultProcs = ["Laparoscopic Appendicectomy", "Open Appendicectomy", "Laparoscopic Cholecystectomy", "Open Cholecystectomy", "Exploratory Laparotomy", "Inguinal Hernia Repair (Mesh)", "Total Knee Arthroplasty (TKA)", "Total Hip Arthroplasty (THA)", "PFN / DHS Fixation Femur", "Elective Caesarean Section (LSCS)", "Emergency Caesarean Section (LSCS)", "Total Abdominal Hysterectomy (TAH)", "Tonsillectomy / Adenoidectomy", "TURP / TURBT", "Debridement / Skin Grafting"];
-      const customProcs = safeParse('etherlog_custom_procs', []);
-      const procList = document.getElementById('procedureList');
-      [...new Set([...defaultProcs, ...customProcs])].forEach(p => { const opt = document.createElement('option'); opt.value = p; procList.appendChild(opt); });
-
-      const defaultTechs = ["General Anaesthesia (GA) - ETT", "General Anaesthesia (GA) - RSI ETT", "General Anaesthesia (GA) - LMA / SGA", "General Anaesthesia (GA) - TIVA", "Subarachnoid Block (Spinal Anaesthesia)", "Epidural Anaesthesia (Lumbar)", "Combined Spinal-Epidural (CSE)", "USG guided Right Supraclavicular Block", "USG guided Left Supraclavicular Block", "Landmark guided Right Supraclavicular Block", "USG guided Right Interscalene Block", "USG guided Bilateral TAP Block", "USG guided Right Adductor Canal Block (ACB)", "USG guided Right Femoral Nerve Block", "Monitored Anesthesia Care (MAC) / Sedation", "Local Infiltration / Field Block"]
+    function renderLists() {
+      document.getElementById('procList').innerHTML = [...new Set([...PROCS,...getLS('el_procs')])].map(x=>`<option value="${x}">`).join('');
+      document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>`<option value="${x}">`).join('');
+    }
+    function makePills(id,name,arr,type,def) {
+      document.getElementById(id).innerHTML = arr.map(v=>`<label class="pill-lbl ${name}"><input type="${type}" name="${name}" value="${v}" ${v===def?'checked':''} onchange="pillClick(this,'${name}')"><span class="pill-sp">${v}</span></label>`).join('');
+    }
+    function pillClick(el,name) {
+      if(el.type==='radio') return;
+      if(el.value==='Nil' && el.checked) document.querySelectorAll(`input[name="${name}"]`).forEach(c=>{if(c!==el)c.checked=false});
+      else if(el.value!=='Nil' && el.checked) { const n=document.querySelector(`input[name="${name}"][value="Nil"]`); if(n) n.checked=false; }
+    }
+    function addCustom(type) {
+      const val = prompt(type==='proc' ? "Enter new Surgical Procedure:" : "Enter new Anaesthesia Technique:");
+      if(!val || !val.trim()) return;
+      const key = type==='proc' ? 'el_procs' : 'el_techs';
+      setLS(key, [...new Set([...getLS(key), val.trim()])]);
+      renderLists();
+      document.getElementById(type==='proc' ? 'cProc' : 'cTech').value = val.trim();
+      checkAirway();
+    }
+    function checkAirway() {
+      const v = document.getElementById('cTech').value.toUpperCase();
+      document.getElementById('airwayBox').style.display = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(v) ? 'block' : 'none';
+    }
+    function showTab(id) {
+      ['tabLogger','tabLedger','tabSettings'].forEach((t,i) => {
+        document.getElementById(t).style.display = (t===id) ? 'block' : 'none';
+        document.getElementById('nav'+i).classList.toggle('active', t===id);
+      });
+      if(id==='tabLedger') renderLedger();
+      window.scrollTo(0,0);
+    }
+    const toB64 = f => new Promise((r,j)=>{const rd=new FileReader();rd.readAsDataURL(f);rd.onload=()=>r(rd.result);rd.onerror=e=>j(e)});
+    async function saveCase() {
+      const proc = document.getElementById('cProc').value.trim();
+      if(!proc) return alert("Enter Surgical Procedure");
+      const tech = document.getElementById('cTech').value.trim() || "General Anaesthesia (GA) - ETT";
+      setLS('el_procs',[...new Set([...getLS('el_procs'),proc])]);
+      setLS('el_techs',[...new Set([...getLS('el_techs'),tech])]);
+      renderLists();
+      const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = "Saving / Uploading...";
+      const files = document.getElementById('cFiles').files;
+      const url = localStorage.getItem('el_url');
+      let links = [...curLinks];
+      if(files.length > 0 && url) {
+        for(let f of files) {
+          try {
+            const b64 = await toB64(f);
+            const res = await fetch(url,{method:'POST',body:JSON.stringify({fileName:`Case_${Date.now()}_${f.name}`,mimeType:f.type,base64Data:b64.split(',')[1]})});
+            const j = await res.json(); if(j.status==='success') links.push(j.viewUrl);
+          } catch(e){ console.error(e); }
+        }
+      }
+      const getChecked = (n,oth) => {
+        let a = Array.from(document.querySelectorAll(`input[name="${n}"]:checked`)).map(c=>c.value);
+        let o = document.getElementById(oth).value.trim(); if(o) a.push(o);
+        return a.join(', ') || 'Nil';
+      };
+      const isAir = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(tech.toUpperCase());
+      const eid = document.getElementById('editId').value;
+      const rec = {
+        id: eid || ('C'+Date.now()), date: document.getElementById('cDate').value, prio: document.getElementById('cPrio').value,
+        age: document.getElementById('cAge').value||'N/A', sex: document.getElementById('cSex').value, proc, spec: document.getElementById('cSpec').value,
+        sup: document.getElementById('cSup').value, asa: document.querySelector('input[name="asa"]:checked')?.value||'I',
+        comorbid: getChecked('comorbid','cComOther'), tech,
+        airway: isAir ? `MMS: ${document.getElementById('cMMS').value} | CL: ${document.getElementById('cCL').value} ${document.getElementById('cAirNotes').value}` : 'N/A',
+        diff: document.getElementById('cDiff').value.trim()||'Nil', analg: getChecked('analgesia','cAnalgOther'), comp: getChecked('comp','cCompOther'), links
+      };
+      let cases = getLS('el_cases');
+      if(eid) { const i = cases.findIndex(x=>x.id===eid); if(i>-1) cases[i]=rec; } else cases.unshift(rec);
+      setLS('el_cases',cases); btn.disabled=false; btn.textContent="Save & Log Case"; resetForm(); showTab('tabLedger');
+    }
+    function resetForm() {
+      document.getElementById('editId').value=''; document.getElementById('formTitle').textContent='Log Anesthetic Case';
+      document.getElementById('cancelBtn').style.display='none'; document.getElementById('currFiles').innerHTML=''; curLinks=[];
+      ['cProc','cAge','cTech','cComOther','cAnalgOther','cCompOther','cAirNotes','cDiff','cFiles'].forEach(id=>document.getElementById(id).value='');
+      init(); checkAirway();
+    }
+    function renderLedger() {
+      const cases = getLS('el_cases'); const box = document.getElementById('ledgerList');
+      if(!cases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
+      box.innerHTML = cases.map(c => {
+        const lks = (c.links|| (c.attachmentUrl?[c.attachmentUrl]:[])).map((u,i)=>`<a href="${u}" target="_blank" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-medical"></i> View OT Sheet ${i+1}</a>`).join('');
+        return `<div class="case-item">
+          <div class="lbl-row"><strong>${c.proc||c.procedure}</strong><span><span class="mini-btn">${c.prio||c.priority||'Elective'}</span> <span class="mini-btn">ASA ${c.asa}</span></span></div>
+          <div style="font-size:0.8rem;color:#64748b;margin:4px 0">${c.date} | ${c.age}Y / ${c.sex} | ${c.spec||c.specialty} (${c.sup||c.supervision})</div>
+          <div style="font-size:0.85rem"><strong>Technique:</strong> ${c.tech||c.technique}</div>
+          <div class="d-box">
+            <div><strong>Comorbidities:</strong> ${c.comorbid||c.comorbidities||'Nil'}</div>
+            ${c.airway&&c.airway!=='N/A'?`<div><strong>Airway:</strong> ${c.airway}</div>`:''}
+            <div><strong>Difficult Airway/Notes:</strong> ${c.diff||c.difficultAirway||'Nil'}</div>
+            <div><strong>Analgesia:</strong> ${c.analg||c.analgesia||'Nil'}</div>
+            <div><strong>Complications:</strong> ${c.comp||c.complications||'Nil'}</div>
+          </div>
+          <div>${lks}<button type="button" class="act-btn" style="background:#e2e8f0" onclick="editCase('${c.id}')"><i class="fa-solid fa-pen"></i> Edit / Add File</button><button type="button" class="act-btn" style="background:#fee2e2;color:#dc2626" onclick="delCase('${c.id}')"><i class="fa-solid fa-trash"></i></button></div>
+        </div>`;
+      }).join('');
+    }
+    function editCase(id) {
+      const c = getLS('el_cases').find(x=>x.id===id); if(!c) return;
+      document.getElementById('editId').value = c.id; document.getElementById('formTitle').textContent = 'Edit Case / Add Files';
+      document.getElementById('cancelBtn').style.display = 'block';
+      document.getElementById('cDate').value = c.date; document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
+      document.getElementById('cAge').value = c.age!=='N/A'?c.age:''; document.getElementById('cSex').value = c.sex||'Male';
+      document.getElementById('cProc').value = c.proc||c.procedure||''; document.getElementById('cSpec').value = c.spec||c.specialty||'General Surgery';
+      document.getElementById('cSup').value = c.sup||c.supervision||'Independent (Sole)'; document.getElementById('cTech').value = c.tech||c.technique||'';
+      document.getElementById('cDiff').value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
+      const setP = (n,str) => { const arr=(str||'').split(', '); document.querySelectorAll(`input[name="${n}"]`).forEach(el=>el.checked=arr.includes(el.value)); };
+      setP('asa',c.asa); setP('comorbid',c.comorbid||c.comorbidities); setP('analgesia',c.analg||c.analgesia); setP('comp',c.comp||c.complications);
+      curLinks = c.links || (c.attachmentUrl?[c.attachmentUrl]:[]);
+      document.getElementById('currFiles').innerHTML = curLinks.length ? `<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. Selecting new files will add to this case. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear existing</u></span>` : '';
+      checkAirway(); showTab('tabLogger');
+    }
+    function delCase(id) { if(confirm("Delete case?")) { setLS('el_cases',getLS('el_cases').filter(x=>x.id!==id)); renderLedger(); } }
+    function exportCSV() {
+      const cases = getLS('el_cases'); if(!cases.length) return alert("No cases!");
+      let csv = "Date,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheet_Links\n";
+      cases.forEach(c => { csv += `"${c.date}","${c.prio||''}","${c.age}","${c.sex}","${c.proc||c.procedure}","${c.spec||''}","${c.sup||''}","${c.asa}","${c.comorbid||''}","${c.tech||''}","${c.airway||''}","${c.diff||''}","${c.analg||''}","${c.comp||''}","${(c.links||[]).join(' | ')}"\n`; });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = 'Anesthesia_Logbook.csv'; a.click();
+    }
+    init();
+  </script>
+</body>
+</html>
+<!-- END OF FILE -->
