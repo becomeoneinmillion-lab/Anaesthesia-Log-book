@@ -48,7 +48,7 @@
   <div id="modalOverlay" onclick="this.style.display='none'">
     <img id="modalImg" src="">
     <div style="margin-top:12px;display:flex;gap:10px">
-      <a id="modalDriveBtn" href="#" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:8px 14px" onclick="event.stopPropagation()"><i class="fa-solid fa-up-right-from-square"></i> Open in Google Drive</a>
+      <a id="modalDriveBtn" href="#" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:8px 14px" onclick="event.stopPropagation()"><i class="fa-solid fa-up-right-from-square"></i> Open in Drive</a>
       <button type="button" class="act-btn" style="background:#ef4444;color:#fff;padding:8px 14px">Close Preview</button>
     </div>
   </div>
@@ -94,7 +94,7 @@
         <div class="fg"><label>Analgesia</label><div class="pill-group" id="analgPills"></div><input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:8px"></div>
         <div class="fg"><label>Complications</label><div class="pill-group" id="compPills"></div><input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:8px"></div>
         <div class="fg" style="background:#f0fdfa;padding:12px;border-radius:8px;border:1px dashed var(--pri)">
-          <label style="color:var(--pri)">Attach OT Record Sheet (Photo / PDF)</label>
+          <label style="color:var(--pri)">Attach OT Record Sheet</label>
           <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:6px 0" onchange="document.getElementById('fileStatus').textContent = this.files.length + ' file(s) selected ready to upload.'">
           <div id="fileStatus" style="font-size:0.78rem;color:#059669;font-weight:700;margin-top:4px"></div>
           <div id="currFiles" style="margin-top:4px"></div>
@@ -105,22 +105,23 @@
     </div>
 
     <div id="tabLedger" style="display:none">
-      <div class="lbl-row" style="margin-bottom:12px"><h2>My Logbook Records</h2><button type="button" class="mini-btn" style="padding:6px 12px;font-size:0.8rem" onclick="exportCSV()">Export CSV</button></div>
+      <div class="lbl-row" style="margin-bottom:12px"><h2>My Logbook Records</h2><button type="button" class="mini-btn" style="padding:6px 12px;font-size:0.8rem;background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button></div>
       <div id="ledgerList"></div>
     </div>
 
+    <!-- NEW REDESIGNED SETTINGS TAB -->
     <div id="tabSettings" style="display:none">
       <div class="card">
-        <h2 style="font-size:1.1rem;margin-bottom:12px">Google Drive Settings</h2>
+        <h2 style="font-size:1.2rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up"></i> Drive Integration</h2>
         <div class="fg">
           <label>Google Apps Script Web App URL</label>
           <input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec">
         </div>
-        <div class="row" style="margin-bottom:8px">
-          <div class="col"><button type="button" class="btn" onclick="saveSettings()">Save URL</button></div>
-          <div class="col"><button type="button" class="btn btn-sec" onclick="testDriveLink()">Test Link</button></div>
+        <div style="display:flex;gap:10px;margin-bottom:12px">
+          <button type="button" class="btn" style="flex:1;" onclick="saveSettings()">Save URL</button>
+          <button type="button" class="btn" style="flex:1;background:#0284c7;" onclick="testDriveLink()"><i class="fa-solid fa-network-wired"></i> Test Link</button>
         </div>
-        <div id="testStatus" style="font-size:0.85rem;font-weight:600;"></div>
+        <div id="testStatus" style="padding:12px; border-radius:8px; font-size:0.85rem; font-weight:600; display:none; background:#f1f5f9; border:1px solid #cbd5e1;"></div>
       </div>
     </div>
   </div>
@@ -196,7 +197,6 @@
             if(w>1100){h=Math.round(h*1100/w);w=1100;} cv.width=w; cv.height=h;
             cv.getContext('2d').drawImage(img,0,0,w,h); r({b64:cv.toDataURL('image/jpeg',0.65),mime:'image/jpeg'});
           }; 
-          // Fallback if image format (like HEIC) fails canvas drawing
           img.onerror = () => r({b64: e.target.result, mime: f.type});
           img.src=e.target.result;
         }; rd.readAsDataURL(f);
@@ -214,21 +214,46 @@
       const url = document.getElementById('sUrl').value.trim();
       localStorage.setItem('el_url', url);
       localStorage.setItem('etherlog_script_url', url);
-      document.getElementById('testStatus').innerHTML = '<span style="color:#059669">Settings Saved!</span>';
+      const stat = document.getElementById('testStatus');
+      stat.style.display = 'block';
+      stat.innerHTML = '<span style="color:#059669"><i class="fa-solid fa-check"></i> URL Saved Successfully. Click "Test Link" to verify.</span>';
     }
 
+    // NEW ROBUST TEST FUNCTION
     async function testDriveLink() {
       const url = document.getElementById('sUrl').value.trim();
-      const statusEl = document.getElementById('testStatus');
-      if(!url) return statusEl.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-exclamation"></i> Please enter a URL first.</span>';
-      if(!url.includes('script.google.com/macros/')) return statusEl.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-exclamation"></i> This doesn\'t look like a valid Google Apps Script Web App URL.</span>';
+      const stat = document.getElementById('testStatus');
+      stat.style.display = 'block';
       
-      statusEl.innerHTML = '<span style="color:#0284c7"><i class="fa-solid fa-spinner fa-spin"></i> Testing connection...</span>';
+      if(!url) return stat.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-exclamation"></i> Error: Input is empty. Paste your Google Apps Script URL.</span>';
+      if(!url.includes('script.google.com')) return stat.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-exclamation"></i> Error: This does not look like a Google Script URL.</span>';
+      
+      stat.innerHTML = '<span style="color:#0284c7"><i class="fa-solid fa-spinner fa-spin"></i> Pinging Google Drive server...</span>';
+      
       try {
-        await fetch(url, { method: 'GET', mode: 'no-cors' });
-        statusEl.innerHTML = '<span style="color:#059669"><i class="fa-solid fa-circle-check"></i> Connection successful! The script URL is reachable.</span>';
+        const res = await fetch(url, {
+          method: 'POST',
+          redirect: 'follow',
+          headers: {'Content-Type': 'text/plain;charset=utf-8'},
+          body: JSON.stringify({testConnection: true, fileName: "Test_Ping", mimeType: "text/plain", base64Data: "dGVzdA=="}) 
+        });
+        
+        const rawText = await res.text();
+        
+        try {
+          const j = JSON.parse(rawText);
+          if (j.status === 'success' || typeof j === 'object') {
+            stat.innerHTML = '<span style="color:#059669"><i class="fa-solid fa-circle-check"></i> Success! Google Apps Script is responding correctly.</span>';
+          } else {
+            stat.innerHTML = '<span style="color:#eab308"><i class="fa-solid fa-triangle-exclamation"></i> Connected, but script returned unexpected output: ' + JSON.stringify(j) + '</span>';
+          }
+        } catch(e) {
+          // If JSON parse fails, it means Google returned an HTML login page instead of the script
+          stat.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-xmark"></i> Deployment Error! The script returned a webpage instead of JSON. Ensure you deployed the script with <b>"Who has access: Anyone"</b>.</span>';
+          console.error("Script returned:", rawText);
+        }
       } catch(e) {
-        statusEl.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-xmark"></i> Connection failed. Check your internet or ensure the URL is correct.</span>';
+        stat.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-xmark"></i> Network Error! Could not reach the URL. Check your internet or CORS policy.</span>';
       }
     }
 
@@ -245,17 +270,36 @@
       
       if(files.length > 0) {
         for(let f of files) {
+          let dUrl = '';
+          let b64 = '';
+          let mime = '';
           try {
-            const {b64, mime} = await compressFile(f);
-            let dUrl = '';
-            if(url) {
+            const compressed = await compressFile(f);
+            b64 = compressed.b64;
+            mime = compressed.mime;
+          } catch(e) { console.error("Compression error", e); }
+          
+          if(url && b64) {
+            try {
+              const res = await fetch(url,{
+                method:'POST',
+                redirect:'follow',
+                headers:{'Content-Type':'text/plain;charset=utf-8'},
+                body:JSON.stringify({fileName:`Case_${Date.now()}_${f.name.replace(/\s+/g,'_')}`,mimeType:mime,base64Data:b64.split(',')[1]})
+              });
+              const rawText = await res.text();
               try {
-                const res = await fetch(url,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fileName:`Case_${Date.now()}_${f.name.replace(/\s+/g,'_')}`,mimeType:mime,base64Data:b64.split(',')[1]})});
-                const j = await res.json(); if(j.status==='success') dUrl = j.viewUrl;
-              } catch(err) { console.error(err); }
+                const j = JSON.parse(rawText); 
+                if(j.status==='success') dUrl = j.viewUrl;
+                else console.warn("Upload returned error:", j);
+              } catch(jsonErr) {
+                alert("Warning: Drive URL upload failed because your Apps Script is incorrectly deployed (Returned HTML). File was only saved locally.");
+              }
+            } catch(err) { 
+              alert("Network Error during upload. File saved locally only."); 
             }
-            links.push({url: dUrl, thumb: b64, name: f.name});
-          } catch(e){ console.error(e); }
+          }
+          links.push({url: dUrl, thumb: b64, name: f.name});
         }
       }
 
@@ -283,7 +327,7 @@
         setLS('el_cases',cases); 
         btn.disabled=false; btn.textContent="Save & Log Case"; resetForm(); showTab('tabLedger');
       } catch(e) {
-        alert("⚠️ Storage Limit Exceeded! Local storage is full because of too many local image saves. Please export your logbook to CSV and clear old cases, or ensure Google Drive integration is working to free up space.");
+        alert("⚠️ Storage Full! Your device browser limit is reached because files aren't uploading to Google Drive successfully. Check Settings to fix your URL or Export CSV to backup data.");
         btn.disabled=false; btn.textContent="Save & Log Case";
       }
     }
@@ -298,7 +342,7 @@
     function renderLedger() {
       const cases = getLS('el_cases'); const box = document.getElementById('ledgerList');
       if(!cases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
-      window._cases = cases; // Store globally for safe onClick reference
+      window._cases = cases; 
       
       box.innerHTML = cases.map((c,ci) => {
         let raw = c.links || [];
@@ -354,18 +398,38 @@
 
     function delCase(id) { if(confirm("Delete case?")) { setLS('el_cases',getLS('el_cases').filter(x=>x.id!==id)); renderLedger(); } }
     
+    // NEW BULLETPROOF CSV EXPORTER
     function exportCSV() {
-      const cases = getLS('el_cases'); if(!cases.length) return alert("No cases!");
-      let csv = "Date,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheet_Drive_Links\n";
+      const cases = getLS('el_cases'); 
+      if(!cases.length) return alert("No cases to export!");
+      
+      let csv = "Date,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,Attachments\n";
+      
       cases.forEach(c => {
         let raw = c.links || [];
         if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl}];
         
-        // Prioritize actual URLs. If no URL but there's a local thumb, note it as locally saved.
-        const lks = raw.map(x => (typeof x==='object' ? (x.url || (x.thumb ? 'Local File Saved (No Drive URL)' : '')) : x)).filter(Boolean).join(' | ');
+        let stringLinks = raw.map(x => {
+          if (typeof x === 'string') return x;
+          if (x && x.url && x.url.startsWith('http')) return x.url;
+          if (x && x.thumb) return 'Local Base64 File (Not uploaded to Drive)';
+          return '';
+        }).filter(Boolean).join(' | ');
         
-        csv += `"${c.date}","${c.prio||''}","${c.age}","${c.sex}","${c.proc||c.procedure}","${c.spec||''}","${c.sup||''}","${c.asa}","${c.comorbid||''}","${c.tech||''}","${c.airway||''}","${c.diff||''}","${c.analg||''}","${c.comp||''}","${lks}"\n`;
+        if(!stringLinks || stringLinks === '') {
+            stringLinks = 'Nil';
+        }
+        
+        const row = [
+            c.date, c.prio||c.priority||'', c.age, c.sex, c.proc||c.procedure||'',
+            c.spec||c.specialty||'', c.sup||c.supervision||'', c.asa, c.comorbid||c.comorbidities||'',
+            c.tech||c.technique||'', c.airway||'', c.diff||c.difficultAirway||'',
+            c.analg||c.analgesia||'', c.comp||c.complications||'', stringLinks
+        ].map(v => `"${(v||'').toString().replace(/"/g, '""')}"`).join(',');
+
+        csv += row + "\n";
       });
+      
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = 'Anesthesia_Logbook.csv'; a.click();
     }
     
