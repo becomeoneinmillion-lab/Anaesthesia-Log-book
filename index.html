@@ -31,7 +31,7 @@
     .nav-btn{background:none;border:none;color:#64748b;display:flex;flex-direction:column;align-items:center;font-size:0.75rem;gap:4px;cursor:pointer;flex:1;justify-content:center;}
     .nav-btn.active{color:var(--pri)!important;font-weight:700;}
     .btn{width:100%;padding:12px;border-radius:8px;font-size:1rem;font-weight:600;border:none;cursor:pointer;background:var(--pri);color:#fff;}
-    .btn-sec{background:#e2e8f0;color:var(--txt);margin-top:8px;}
+    .btn-sec{background:#e2e8f0;color:var(--txt);}
     .mini-btn{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:700;cursor:pointer;}
     .case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:12px;}
     .d-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:8px 0;font-size:0.83rem;line-height:1.4;border-left:3px solid var(--pri);}
@@ -44,6 +44,7 @@
 </head>
 <body>
   <header><h1><i class="fa-solid fa-syringe"></i> EtherLog</h1></header>
+  
   <div id="modalOverlay" onclick="this.style.display='none'">
     <img id="modalImg" src="">
     <div style="margin-top:12px;display:flex;gap:10px">
@@ -51,6 +52,7 @@
       <button type="button" class="act-btn" style="background:#ef4444;color:#fff;padding:8px 14px">Close Preview</button>
     </div>
   </div>
+
   <div class="container">
     <div id="tabLogger">
       <div class="card">
@@ -98,32 +100,44 @@
           <div id="currFiles" style="margin-top:4px"></div>
         </div>
         <button type="button" class="btn" id="saveBtn" onclick="saveCase()">Save & Log Case</button>
-        <button type="button" class="btn btn-sec" id="cancelBtn" onclick="resetForm();showTab('tabLedger')" style="display:none">Cancel Edit</button>
+        <button type="button" class="btn btn-sec" style="margin-top:8px;display:none" id="cancelBtn" onclick="resetForm();showTab('tabLedger')">Cancel Edit</button>
       </div>
     </div>
+
     <div id="tabLedger" style="display:none">
       <div class="lbl-row" style="margin-bottom:12px"><h2>My Logbook Records</h2><button type="button" class="mini-btn" style="padding:6px 12px;font-size:0.8rem" onclick="exportCSV()">Export CSV</button></div>
       <div id="ledgerList"></div>
     </div>
+
     <div id="tabSettings" style="display:none">
       <div class="card">
         <h2 style="font-size:1.1rem;margin-bottom:12px">Google Drive Settings</h2>
-        <div class="fg"><label>Google Apps Script Web App URL</label><input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
-        <button type="button" class="btn" onclick="localStorage.setItem('el_url',document.getElementById('sUrl').value.trim());localStorage.setItem('etherlog_script_url',document.getElementById('sUrl').value.trim());alert('Drive Script URL Saved!')">Save URL</button>
+        <div class="fg">
+          <label>Google Apps Script Web App URL</label>
+          <input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+        <div class="row" style="margin-bottom:8px">
+          <div class="col"><button type="button" class="btn" onclick="saveSettings()">Save URL</button></div>
+          <div class="col"><button type="button" class="btn btn-sec" onclick="testDriveLink()">Test Link</button></div>
+        </div>
+        <div id="testStatus" style="font-size:0.85rem;font-weight:600;"></div>
       </div>
     </div>
   </div>
+
   <nav class="b-nav">
     <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Log Case</span></button>
     <button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
     <button type="button" class="nav-btn" id="nav2" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
   </nav>
+
   <script>
     const getLS = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d} };
     const setLS = (k,v) => localStorage.setItem(k,JSON.stringify(v));
     let curLinks = [];
     const PROCS = ["Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy","Inguinal Hernia Repair","Total Thyroidectomy","Modified Radical Mastectomy (MRM)","Total Knee Arthroplasty (TKA)","Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm / Tibia","Elective LSCS","Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Tonsillectomy","FESS","Tympanoplasty / Mastoidectomy","TURP","URSL / PCNL","Craniotomy","Lumbar Discectomy / Laminectomy","Split Skin Grafting (SSG)"];
     const TECHS = ["General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT","General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA","Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)","Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block","USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block","Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block","USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block","USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block","USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block","USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block","USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)","USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)","USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation","Local Infiltration / Field Block"];
+    
     function init() {
       document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('sUrl').value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
@@ -134,18 +148,22 @@
       makePills('compPills','comp',['Nil','Hypotension','Bradycardia','Desaturation','Bronchospasm','Laryngospasm','Difficult Intubation','High Spinal','PDPH','PONV'],'checkbox','Nil');
       renderLists();
     }
+
     function renderLists() {
       document.getElementById('procList').innerHTML = [...new Set([...PROCS,...getLS('el_procs')])].map(x=>`<option value="${x}">`).join('');
       document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>`<option value="${x}">`).join('');
     }
+
     function makePills(id,name,arr,type,def) {
       document.getElementById(id).innerHTML = arr.map(v=>`<label class="pill-lbl ${name}"><input type="${type}" name="${name}" value="${v}" ${v===def?'checked':''} onchange="pillClick(this,'${name}')"><span class="pill-sp">${v}</span></label>`).join('');
     }
+
     function pillClick(el,name) {
       if(el.type==='radio') return;
       if(el.value==='Nil' && el.checked) document.querySelectorAll(`input[name="${name}"]`).forEach(c=>{if(c!==el)c.checked=false});
       else if(el.value!=='Nil' && el.checked) { const n=document.querySelector(`input[name="${name}"][value="Nil"]`); if(n) n.checked=false; }
     }
+
     function addCustom(type) {
       const val = prompt(type==='proc' ? "Enter new Surgical Procedure:" : "Enter new Anaesthesia Technique:");
       if(!val || !val.trim()) return;
@@ -153,10 +171,12 @@
       setLS(key, [...new Set([...getLS(key), val.trim()])]); renderLists();
       document.getElementById(type==='proc' ? 'cProc' : 'cTech').value = val.trim(); checkAirway();
     }
+
     function checkAirway() {
       const v = document.getElementById('cTech').value.toUpperCase();
       document.getElementById('airwayBox').style.display = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(v) ? 'block' : 'none';
     }
+
     function showTab(id) {
       ['tabLogger','tabLedger','tabSettings'].forEach((t,i) => {
         document.getElementById(t).style.display = (t===id) ? 'block' : 'none';
@@ -165,33 +185,64 @@
       if(id==='tabLedger') renderLedger();
       window.scrollTo(0,0);
     }
+
     function compressFile(f) {
       if(f.type==='application/pdf') return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r({b64:rd.result,mime:f.type});rd.readAsDataURL(f)});
       return new Promise(r=>{
         const rd=new FileReader(); rd.onload=e=>{
-          const img=new Image(); img.onload=()=>{
+          const img=new Image(); 
+          img.onload=()=>{
             const cv=document.createElement('canvas'); let w=img.width, h=img.height;
             if(w>1100){h=Math.round(h*1100/w);w=1100;} cv.width=w; cv.height=h;
             cv.getContext('2d').drawImage(img,0,0,w,h); r({b64:cv.toDataURL('image/jpeg',0.65),mime:'image/jpeg'});
-          }; img.src=e.target.result;
+          }; 
+          // Fallback if image format (like HEIC) fails canvas drawing
+          img.onerror = () => r({b64: e.target.result, mime: f.type});
+          img.src=e.target.result;
         }; rd.readAsDataURL(f);
       });
     }
+
     function openPreview(src, driveUrl) {
       document.getElementById('modalImg').src = src;
       const dBtn = document.getElementById('modalDriveBtn');
       if(driveUrl && driveUrl.startsWith('http')) { dBtn.href = driveUrl; dBtn.style.display = 'inline-flex'; } else dBtn.style.display = 'none';
       document.getElementById('modalOverlay').style.display = 'flex';
     }
+
+    function saveSettings() {
+      const url = document.getElementById('sUrl').value.trim();
+      localStorage.setItem('el_url', url);
+      localStorage.setItem('etherlog_script_url', url);
+      document.getElementById('testStatus').innerHTML = '<span style="color:#059669">Settings Saved!</span>';
+    }
+
+    async function testDriveLink() {
+      const url = document.getElementById('sUrl').value.trim();
+      const statusEl = document.getElementById('testStatus');
+      if(!url) return statusEl.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-exclamation"></i> Please enter a URL first.</span>';
+      if(!url.includes('script.google.com/macros/')) return statusEl.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-exclamation"></i> This doesn\'t look like a valid Google Apps Script Web App URL.</span>';
+      
+      statusEl.innerHTML = '<span style="color:#0284c7"><i class="fa-solid fa-spinner fa-spin"></i> Testing connection...</span>';
+      try {
+        await fetch(url, { method: 'GET', mode: 'no-cors' });
+        statusEl.innerHTML = '<span style="color:#059669"><i class="fa-solid fa-circle-check"></i> Connection successful! The script URL is reachable.</span>';
+      } catch(e) {
+        statusEl.innerHTML = '<span style="color:#dc2626"><i class="fa-solid fa-circle-xmark"></i> Connection failed. Check your internet or ensure the URL is correct.</span>';
+      }
+    }
+
     async function saveCase() {
       const proc = document.getElementById('cProc').value.trim();
       if(!proc) return alert("Enter Surgical Procedure");
       const tech = document.getElementById('cTech').value.trim() || "General Anaesthesia (GA) - ETT";
       setLS('el_procs',[...new Set([...getLS('el_procs'),proc])]); setLS('el_techs',[...new Set([...getLS('el_techs'),tech])]); renderLists();
+      
       const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = "Processing & Uploading...";
       const files = document.getElementById('cFiles').files;
       const url = (localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '').trim();
       let links = [...curLinks];
+      
       if(files.length > 0) {
         for(let f of files) {
           try {
@@ -207,11 +258,13 @@
           } catch(e){ console.error(e); }
         }
       }
+
       const getChecked = (n,oth) => {
         let a = Array.from(document.querySelectorAll(`input[name="${n}"]:checked`)).map(c=>c.value);
         let o = document.getElementById(oth).value.trim(); if(o) a.push(o);
         return a.join(', ') || 'Nil';
       };
+      
       const isAir = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(tech.toUpperCase());
       const eid = document.getElementById('editId').value;
       const rec = {
@@ -222,20 +275,31 @@
         airway: isAir ? `MMS: ${document.getElementById('cMMS').value} | CL: ${document.getElementById('cCL').value} ${document.getElementById('cAirNotes').value}` : 'N/A',
         diff: document.getElementById('cDiff').value.trim()||'Nil', analg: getChecked('analgesia','cAnalgOther'), comp: getChecked('comp','cCompOther'), links
       };
+      
       let cases = getLS('el_cases');
       if(eid) { const i = cases.findIndex(x=>x.id===eid); if(i>-1) cases[i]=rec; } else cases.unshift(rec);
-      setLS('el_cases',cases); btn.disabled=false; btn.textContent="Save & Log Case"; resetForm(); showTab('tabLedger');
+      
+      try {
+        setLS('el_cases',cases); 
+        btn.disabled=false; btn.textContent="Save & Log Case"; resetForm(); showTab('tabLedger');
+      } catch(e) {
+        alert("⚠️ Storage Limit Exceeded! Local storage is full because of too many local image saves. Please export your logbook to CSV and clear old cases, or ensure Google Drive integration is working to free up space.");
+        btn.disabled=false; btn.textContent="Save & Log Case";
+      }
     }
+
     function resetForm() {
       document.getElementById('editId').value=''; document.getElementById('formTitle').textContent='Log Anesthetic Case';
       document.getElementById('cancelBtn').style.display='none'; document.getElementById('currFiles').innerHTML=''; document.getElementById('fileStatus').textContent=''; curLinks=[];
       ['cProc','cAge','cTech','cComOther','cAnalgOther','cCompOther','cAirNotes','cDiff','cFiles'].forEach(id=>document.getElementById(id).value='');
       init(); checkAirway();
     }
+
     function renderLedger() {
       const cases = getLS('el_cases'); const box = document.getElementById('ledgerList');
       if(!cases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
-      window._cases = cases;
+      window._cases = cases; // Store globally for safe onClick reference
+      
       box.innerHTML = cases.map((c,ci) => {
         let raw = c.links || [];
         if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl, thumb: c.attachmentUrl.startsWith('http')?'':c.attachmentUrl, name:'OT_Record'}];
@@ -247,6 +311,8 @@
           
           if(tSrc && tSrc.startsWith('data:image')) {
             return `<img src="${tSrc}" class="thumb-img" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)" title="Tap to preview"><button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><i class="fa-solid fa-eye"></i> Preview Sheet ${fi+1}</button>${dUrl?`<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`:''}`;
+          } else if (tSrc && tSrc.startsWith('data:application/pdf')) {
+            return `<a href="${tSrc}" download="Case_PDF_${fi+1}.pdf" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-pdf"></i> Download PDF ${fi+1}</a>${dUrl?`<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`:''}`;
           } else if(dUrl) {
             return `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-arrow-down"></i> Open File ${fi+1}</a>`;
           }
@@ -269,6 +335,7 @@
         </div>`;
       }).join('');
     }
+
     function editCase(id) {
       const c = getLS('el_cases').find(x=>x.id===id); if(!c) return;
       document.getElementById('editId').value = c.id; document.getElementById('formTitle').textContent = 'Edit Case / Add Files';
@@ -284,20 +351,25 @@
       document.getElementById('currFiles').innerHTML = curLinks.length ? `<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>` : '';
       checkAirway(); showTab('tabLogger');
     }
+
     function delCase(id) { if(confirm("Delete case?")) { setLS('el_cases',getLS('el_cases').filter(x=>x.id!==id)); renderLedger(); } }
+    
     function exportCSV() {
       const cases = getLS('el_cases'); if(!cases.length) return alert("No cases!");
       let csv = "Date,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheet_Drive_Links\n";
       cases.forEach(c => {
         let raw = c.links || [];
         if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl}];
-        const lks = raw.map(x => (typeof x==='object' ? (x.url || '') : x)).filter(Boolean).join(' | ');
+        
+        // Prioritize actual URLs. If no URL but there's a local thumb, note it as locally saved.
+        const lks = raw.map(x => (typeof x==='object' ? (x.url || (x.thumb ? 'Local File Saved (No Drive URL)' : '')) : x)).filter(Boolean).join(' | ');
+        
         csv += `"${c.date}","${c.prio||''}","${c.age}","${c.sex}","${c.proc||c.procedure}","${c.spec||''}","${c.sup||''}","${c.asa}","${c.comorbid||''}","${c.tech||''}","${c.airway||''}","${c.diff||''}","${c.analg||''}","${c.comp||''}","${lks}"\n`;
       });
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = 'Anesthesia_Logbook.csv'; a.click();
     }
+    
     init();
   </script>
 </body>
 </html>
-<!-- END OF FILE -->
