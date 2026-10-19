@@ -27,7 +27,7 @@
     .pill-lbl.comp input:checked+.pill-sp{background:#ef4444!important;color:#fff!important;border-color:#b91c1c!important;}
     .pill-lbl.comp input[value="Nil"]:checked+.pill-sp,.pill-lbl.comorbid input[value="Nil"]:checked+.pill-sp{background:#10b981!important;color:#fff!important;border-color:#047857!important;}
     .cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:12px;margin-bottom:14px;display:none;}
-    nav.b-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:2px solid var(--bdr);display:flex;z-index:9999;}
+    nav.b-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:2px solid var(--bdr);display:flex;z-index:999;}
     .nav-btn{background:none;border:none;color:#64748b;display:flex;flex-direction:column;align-items:center;font-size:0.75rem;gap:4px;cursor:pointer;flex:1;justify-content:center;}
     .nav-btn.active{color:var(--pri)!important;font-weight:700;}
     .btn{width:100%;padding:12px;border-radius:8px;font-size:1rem;font-weight:600;border:none;cursor:pointer;background:var(--pri);color:#fff;}
@@ -36,10 +36,21 @@
     .case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:12px;}
     .d-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:8px 0;font-size:0.83rem;line-height:1.4;border-left:3px solid var(--pri);}
     .act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.8rem;padding:6px 11px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:6px 6px 0 0;}
+    .thumb-row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;}
+    .thumb-img{width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid var(--pri);cursor:pointer;}
+    #modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
+    #modalOverlay img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;}
   </style>
 </head>
 <body>
   <header><h1><i class="fa-solid fa-syringe"></i> EtherLog</h1></header>
+  <div id="modalOverlay" onclick="this.style.display='none'">
+    <img id="modalImg" src="">
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <a id="modalDriveBtn" href="#" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:8px 14px" onclick="event.stopPropagation()"><i class="fa-solid fa-up-right-from-square"></i> Open in Google Drive</a>
+      <button type="button" class="act-btn" style="background:#ef4444;color:#fff;padding:8px 14px">Close Preview</button>
+    </div>
+  </div>
   <div class="container">
     <div id="tabLogger">
       <div class="card">
@@ -81,7 +92,7 @@
         <div class="fg"><label>Analgesia</label><div class="pill-group" id="analgPills"></div><input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:8px"></div>
         <div class="fg"><label>Complications</label><div class="pill-group" id="compPills"></div><input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:8px"></div>
         <div class="fg">
-          <label>Attach OT Record Sheet (Photo / PDF - Multiple Allowed)</label>
+          <label>Attach OT Record Sheet (Photo / PDF)</label>
           <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:6px 0">
           <div id="currFiles" style="margin-top:4px"></div>
         </div>
@@ -97,7 +108,7 @@
       <div class="card">
         <h2 style="font-size:1.1rem;margin-bottom:12px">Google Drive Settings</h2>
         <div class="fg"><label>Google Apps Script Web App URL</label><input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
-        <button type="button" class="btn" onclick="localStorage.setItem('el_url',document.getElementById('sUrl').value.trim());alert('Saved!')">Save URL</button>
+        <button type="button" class="btn" onclick="localStorage.setItem('el_url',document.getElementById('sUrl').value.trim());localStorage.setItem('etherlog_script_url',document.getElementById('sUrl').value.trim());alert('Drive Script URL Saved!')">Save URL</button>
       </div>
     </div>
   </div>
@@ -114,7 +125,7 @@
     const TECHS = ["General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT","General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA","Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)","Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block","USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block","Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block","USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block","USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block","USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block","USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block","USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)","USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)","USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation","Local Infiltration / Field Block"];
     function init() {
       document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
-      document.getElementById('sUrl').value = localStorage.getItem('el_url') || '';
+      document.getElementById('sUrl').value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
       document.getElementById('cSpec').innerHTML = ["General Surgery","Orthopaedics","Obstetrics & Gynaec","ENT","Urology","Paediatrics","Neuro/Spine","Plastic Surgery","Ophthalmology","Cardiothoracic","Emergency/Trauma"].map(s=>`<option>${s}</option>`).join('');
       makePills('asaPills','asa',['I','II','III','IV','V','I E','II E','III E','IV E'],'radio','I');
       makePills('comorbidPills','comorbid',['Nil','T2DM','SHTN','Asthma','Anaemia','Seizure Disorder','Hypothyroidism','Hyperthyroidism','CKD','CAD','CLD','COPD','AKI','Obesity/OSA','GERD'],'checkbox','Nil');
@@ -138,10 +149,8 @@
       const val = prompt(type==='proc' ? "Enter new Surgical Procedure:" : "Enter new Anaesthesia Technique:");
       if(!val || !val.trim()) return;
       const key = type==='proc' ? 'el_procs' : 'el_techs';
-      setLS(key, [...new Set([...getLS(key), val.trim()])]);
-      renderLists();
-      document.getElementById(type==='proc' ? 'cProc' : 'cTech').value = val.trim();
-      checkAirway();
+      setLS(key, [...new Set([...getLS(key), val.trim()])]); renderLists();
+      document.getElementById(type==='proc' ? 'cProc' : 'cTech').value = val.trim(); checkAirway();
     }
     function checkAirway() {
       const v = document.getElementById('cTech').value.toUpperCase();
@@ -155,24 +164,46 @@
       if(id==='tabLedger') renderLedger();
       window.scrollTo(0,0);
     }
-    const toB64 = f => new Promise((r,j)=>{const rd=new FileReader();rd.readAsDataURL(f);rd.onload=()=>r(rd.result);rd.onerror=e=>j(e)});
+    function compressFile(f) {
+      if(f.type==='application/pdf') return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r({b64:rd.result,mime:f.type});rd.readAsDataURL(f)});
+      return new Promise(r=>{
+        const rd=new FileReader(); rd.onload=e=>{
+          const img=new Image(); img.onload=()=>{
+            const cv=document.createElement('canvas'); let w=img.width, h=img.height;
+            if(w>1100){h=Math.round(h*1100/w);w=1100;} cv.width=w; cv.height=h;
+            cv.getContext('2d').drawImage(img,0,0,w,h); r({b64:cv.toDataURL('image/jpeg',0.65),mime:'image/jpeg'});
+          }; img.src=e.target.result;
+        }; rd.readAsDataURL(f);
+      });
+    }
+    function openPreview(src, driveUrl) {
+      document.getElementById('modalImg').src = src;
+      const dBtn = document.getElementById('modalDriveBtn');
+      if(driveUrl && driveUrl.startsWith('http')) { dBtn.href = driveUrl; dBtn.style.display = 'inline-flex'; } else dBtn.style.display = 'none';
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
     async function saveCase() {
       const proc = document.getElementById('cProc').value.trim();
       if(!proc) return alert("Enter Surgical Procedure");
       const tech = document.getElementById('cTech').value.trim() || "General Anaesthesia (GA) - ETT";
-      setLS('el_procs',[...new Set([...getLS('el_procs'),proc])]);
-      setLS('el_techs',[...new Set([...getLS('el_techs'),tech])]);
-      renderLists();
-      const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = "Saving / Uploading...";
+      setLS('el_procs',[...new Set([...getLS('el_procs'),proc])]); setLS('el_techs',[...new Set([...getLS('el_techs'),tech])]); renderLists();
+      const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = "Processing & Uploading...";
       const files = document.getElementById('cFiles').files;
-      const url = localStorage.getItem('el_url');
+      const url = (localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '').trim();
       let links = [...curLinks];
-      if(files.length > 0 && url) {
+      if(files.length > 0) {
+        if(!url) alert("Note: Google Drive URL is not set in Settings! Photo will be saved locally for preview, but add your Script URL in Settings for Cloud CSV links.");
         for(let f of files) {
           try {
-            const b64 = await toB64(f);
-            const res = await fetch(url,{method:'POST',body:JSON.stringify({fileName:`Case_${Date.now()}_${f.name}`,mimeType:f.type,base64Data:b64.split(',')[1]})});
-            const j = await res.json(); if(j.status==='success') links.push(j.viewUrl);
+            const {b64, mime} = await compressFile(f);
+            let dUrl = '';
+            if(url) {
+              try {
+                const res = await fetch(url,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fileName:`Case_${Date.now()}_${f.name.replace(/\s+/g,'_')}`,mimeType:mime,base64Data:b64.split(',')[1]})});
+                const j = await res.json(); if(j.status==='success') dUrl = j.viewUrl;
+              } catch(err) { console.error(err); }
+            }
+            links.push({url: dUrl, thumb: b64, name: f.name});
           } catch(e){ console.error(e); }
         }
       }
@@ -204,8 +235,18 @@
     function renderLedger() {
       const cases = getLS('el_cases'); const box = document.getElementById('ledgerList');
       if(!cases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
-      box.innerHTML = cases.map(c => {
-        const lks = (c.links|| (c.attachmentUrl?[c.attachmentUrl]:[])).map((u,i)=>`<a href="${u}" target="_blank" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-medical"></i> View OT Sheet ${i+1}</a>`).join('');
+      window._cases = cases;
+      box.innerHTML = cases.map((c,ci) => {
+        const raw = c.links || (c.attachmentUrl ? [c.attachmentUrl] : []);
+        const thumbs = raw.map((item,fi) => {
+          const isObj = typeof item === 'object' && item !== null;
+          const tSrc = isObj ? item.thumb : item;
+          const dUrl = isObj ? item.url : item;
+          if(tSrc && tSrc.startsWith('data:image')) {
+            return `<img src="${tSrc}" class="thumb-img" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)" title="Tap to preview"><button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><i class="fa-solid fa-eye"></i> Preview Sheet ${fi+1}</button>${dUrl?`<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`:''}`;
+          }
+          return dUrl ? `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-pdf"></i> Open Sheet ${fi+1}</a>` : '';
+        }).join('');
         return `<div class="case-item">
           <div class="lbl-row"><strong>${c.proc||c.procedure}</strong><span><span class="mini-btn">${c.prio||c.priority||'Elective'}</span> <span class="mini-btn">ASA ${c.asa}</span></span></div>
           <div style="font-size:0.8rem;color:#64748b;margin:4px 0">${c.date} | ${c.age}Y / ${c.sex} | ${c.spec||c.specialty} (${c.sup||c.supervision})</div>
@@ -217,7 +258,8 @@
             <div><strong>Analgesia:</strong> ${c.analg||c.analgesia||'Nil'}</div>
             <div><strong>Complications:</strong> ${c.comp||c.complications||'Nil'}</div>
           </div>
-          <div>${lks}<button type="button" class="act-btn" style="background:#e2e8f0" onclick="editCase('${c.id}')"><i class="fa-solid fa-pen"></i> Edit / Add File</button><button type="button" class="act-btn" style="background:#fee2e2;color:#dc2626" onclick="delCase('${c.id}')"><i class="fa-solid fa-trash"></i></button></div>
+          ${thumbs ? `<div class="thumb-row">${thumbs}</div>` : ''}
+          <div><button type="button" class="act-btn" style="background:#e2e8f0" onclick="editCase('${c.id}')"><i class="fa-solid fa-pen"></i> Edit / Add File</button><button type="button" class="act-btn" style="background:#fee2e2;color:#dc2626" onclick="delCase('${c.id}')"><i class="fa-solid fa-trash"></i></button></div>
         </div>`;
       }).join('');
     }
@@ -233,14 +275,17 @@
       const setP = (n,str) => { const arr=(str||'').split(', '); document.querySelectorAll(`input[name="${n}"]`).forEach(el=>el.checked=arr.includes(el.value)); };
       setP('asa',c.asa); setP('comorbid',c.comorbid||c.comorbidities); setP('analgesia',c.analg||c.analgesia); setP('comp',c.comp||c.complications);
       curLinks = c.links || (c.attachmentUrl?[c.attachmentUrl]:[]);
-      document.getElementById('currFiles').innerHTML = curLinks.length ? `<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. Selecting new files will add to this case. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear existing</u></span>` : '';
+      document.getElementById('currFiles').innerHTML = curLinks.length ? `<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>` : '';
       checkAirway(); showTab('tabLogger');
     }
     function delCase(id) { if(confirm("Delete case?")) { setLS('el_cases',getLS('el_cases').filter(x=>x.id!==id)); renderLedger(); } }
     function exportCSV() {
       const cases = getLS('el_cases'); if(!cases.length) return alert("No cases!");
-      let csv = "Date,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheet_Links\n";
-      cases.forEach(c => { csv += `"${c.date}","${c.prio||''}","${c.age}","${c.sex}","${c.proc||c.procedure}","${c.spec||''}","${c.sup||''}","${c.asa}","${c.comorbid||''}","${c.tech||''}","${c.airway||''}","${c.diff||''}","${c.analg||''}","${c.comp||''}","${(c.links||[]).join(' | ')}"\n`; });
+      let csv = "Date,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheet_Drive_Links\n";
+      cases.forEach(c => {
+        const lks = (c.links||[]).map(x => (typeof x==='object' ? (x.url || 'Saved Locally on Device') : x)).join(' | ');
+        csv += `"${c.date}","${c.prio||''}","${c.age}","${c.sex}","${c.proc||c.procedure}","${c.spec||''}","${c.sup||''}","${c.asa}","${c.comorbid||''}","${c.tech||''}","${c.airway||''}","${c.diff||''}","${c.analg||''}","${c.comp||''}","${lks}"\n`;
+      });
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = 'Anesthesia_Logbook.csv'; a.click();
     }
     init();
