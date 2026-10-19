@@ -91,9 +91,10 @@
         <div class="fg"><label>Difficult Airway / Special Notes</label><input type="text" id="cDiff" placeholder="e.g. C-MAC, Bougie, Arterial line (or Nil)"></div>
         <div class="fg"><label>Analgesia</label><div class="pill-group" id="analgPills"></div><input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:8px"></div>
         <div class="fg"><label>Complications</label><div class="pill-group" id="compPills"></div><input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:8px"></div>
-        <div class="fg">
-          <label>Attach OT Record Sheet (Photo / PDF)</label>
-          <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:6px 0">
+        <div class="fg" style="background:#f0fdfa;padding:12px;border-radius:8px;border:1px dashed var(--pri)">
+          <label style="color:var(--pri)">Attach OT Record Sheet (Photo / PDF)</label>
+          <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:6px 0" onchange="document.getElementById('fileStatus').textContent = this.files.length + ' file(s) selected ready to upload.'">
+          <div id="fileStatus" style="font-size:0.78rem;color:#059669;font-weight:700;margin-top:4px"></div>
           <div id="currFiles" style="margin-top:4px"></div>
         </div>
         <button type="button" class="btn" id="saveBtn" onclick="saveCase()">Save & Log Case</button>
@@ -227,7 +228,7 @@
     }
     function resetForm() {
       document.getElementById('editId').value=''; document.getElementById('formTitle').textContent='Log Anesthetic Case';
-      document.getElementById('cancelBtn').style.display='none'; document.getElementById('currFiles').innerHTML=''; curLinks=[];
+      document.getElementById('cancelBtn').style.display='none'; document.getElementById('currFiles').innerHTML=''; document.getElementById('fileStatus').textContent=''; curLinks=[];
       ['cProc','cAge','cTech','cComOther','cAnalgOther','cCompOther','cAirNotes','cDiff','cFiles'].forEach(id=>document.getElementById(id).value='');
       init(); checkAirway();
     }
@@ -236,7 +237,6 @@
       if(!cases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
       window._cases = cases;
       box.innerHTML = cases.map((c,ci) => {
-        // Universal fallback for old or new link structures
         let raw = c.links || [];
         if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl, thumb: c.attachmentUrl.startsWith('http')?'':c.attachmentUrl, name:'OT_Record'}];
         
@@ -246,7 +246,7 @@
           const dUrl = isObj ? item.url : (item.startsWith('http') ? item : '');
           
           if(tSrc && tSrc.startsWith('data:image')) {
-            return `<img src="${tSrc}" class="thumb-img" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><i class="fa-solid fa-eye"></i> Preview Sheet ${fi+1}</button>${dUrl?`<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`:''}`;
+            return `<img src="${tSrc}" class="thumb-img" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)" title="Tap to preview"><button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><i class="fa-solid fa-eye"></i> Preview Sheet ${fi+1}</button>${dUrl?`<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`:''}`;
           } else if(dUrl) {
             return `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-arrow-down"></i> Open File ${fi+1}</a>`;
           }
@@ -291,7 +291,7 @@
       cases.forEach(c => {
         let raw = c.links || [];
         if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl}];
-        const lks = raw.map(x => (typeof x==='object' ? (x.url || 'Local Preview Saved') : x)).filter(Boolean).join(' | ');
+        const lks = raw.map(x => (typeof x==='object' ? (x.url || '') : x)).filter(Boolean).join(' | ');
         csv += `"${c.date}","${c.prio||''}","${c.age}","${c.sex}","${c.proc||c.procedure}","${c.spec||''}","${c.sup||''}","${c.asa}","${c.comorbid||''}","${c.tech||''}","${c.airway||''}","${c.diff||''}","${c.analg||''}","${c.comp||''}","${lks}"\n`;
       });
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = 'Anesthesia_Logbook.csv'; a.click();
