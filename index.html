@@ -3,72 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <title>EtherLog - Anesthesia Logbook</title>
+  <title>EtherLog</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root {
-      --primary: #00897b;
-      --primary-dark: #00695c;
-      --bg: #f8fafc;
-      --text: #0f172a;
-      --border: #cbd5e1;
-    }
+    :root { --primary: #00897b; --bg: #f8fafc; --text: #0f172a; --border: #cbd5e1; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 85px; }
-    
-    header { background: var(--primary); color: white; padding: 14px 18px; display: flex; align-items: center; position: sticky; top: 0; z-index: 50; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 90px; }
+    header { background: var(--primary); color: white; padding: 14px 18px; position: sticky; top: 0; z-index: 50; }
     header h1 { font-size: 1.18rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    
     .container { max-width: 800px; margin: 0 auto; padding: 12px; }
     .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--border); }
-    
     .form-group { margin-bottom: 14px; }
     label { display: block; font-size: 0.76rem; font-weight: 700; color: #64748b; margin-bottom: 5px; text-transform: uppercase; }
-    input[type="text"], input[type="number"], input[type="date"], input[type="url"], select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; color: var(--text); outline: none; }
+    input[type="text"], input[type="number"], input[type="date"], input[type="url"], select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; }
     .row { display: flex; gap: 10px; }
     .col { flex: 1; }
-    
-    /* Native CSS Pills */
     .pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
     .pill-label { display: inline-block; cursor: pointer; }
-    .pill-label input[type="radio"], .pill-label input[type="checkbox"] { display: none; }
-    .pill-span { display: inline-flex; align-items: center; justify-content: center; padding: 7px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; background: #e2e8f0; color: #334155; border: 1.5px solid #cbd5e1; }
-    
-    .pill-label input[type="radio"]:checked + .pill-span { background: #00897b !important; color: #ffffff !important; border-color: #004d40 !important; font-weight: 700; }
-    .pill-label.comorbid input[type="checkbox"]:checked + .pill-span { background: #0284c7 !important; color: #ffffff !important; border-color: #0369a1 !important; font-weight: 700; }
-    .pill-label.analgesia input[type="checkbox"]:checked + .pill-span { background: #059669 !important; color: #ffffff !important; border-color: #047857 !important; font-weight: 700; }
-    
-    /* Conditional Airway Box */
+    .pill-label input { display: none; }
+    .pill-span { display: inline-flex; align-items: center; justify-content: center; padding: 7px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; background: #e2e8f0; color: #334155; border: 1.5px solid var(--border); }
+    .pill-label input[type="radio"]:checked + .pill-span { background: #00897b !important; color: white !important; }
+    .pill-label.comorbid input[type="checkbox"]:checked + .pill-span { background: #0284c7 !important; color: white !important; }
+    .pill-label.analgesia input[type="checkbox"]:checked + .pill-span { background: #059669 !important; color: white !important; }
     .conditional-box { background: #f0fdfa; border: 1.5px solid #99f6e4; border-radius: 10px; padding: 12px; margin-top: 6px; }
-
-    /* Bottom Navigation */
-    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 62px; background: white; border-top: 1px solid var(--border); display: flex; z-index: 9999; }
-    .nav-btn { background: none; border: none; color: #64748b; display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; gap: 4px; cursor: pointer; flex: 1; height: 100%; justify-content: center; }
+    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: white; border-top: 2px solid var(--border); display: flex; z-index: 9999; }
+    .nav-btn { background: none; border: none; color: #64748b; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; gap: 4px; cursor: pointer; flex: 1; height: 100%; justify-content: center; }
     .nav-btn.active { color: var(--primary) !important; font-weight: 700; }
-    .nav-btn i { font-size: 1.25rem; }
-
     .btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #e2e8f0; color: var(--text); margin-top: 8px; }
-
-    /* Fast Action Nil Pill */
-    .tag-btn { display: inline-block; padding: 4px 10px; background: #e2e8f0; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; margin-right: 4px; margin-top: 4px; }
+    .tag-btn { display: inline-block; padding: 4px 10px; background: #e2e8f0; border: 1px solid var(--border); border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; margin: 4px 4px 0 0; }
     .tag-btn-nil { background: #dcfce7; color: #15803d; border-color: #86efac; }
-
-    /* Ledger Cards */
     .case-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-    .case-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-    .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
-    .badge-emergency { background: #fee2e2; color: #b91c1c; }
-    .badge-elective { background: #dcfce7; color: #15803d; }
     .details-box { background: #f8fafc; border-radius: 6px; padding: 8px 10px; margin: 8px 0; font-size: 0.83rem; line-height: 1.4; border-left: 3px solid var(--primary); }
-    .action-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; margin-right: 6px; margin-top: 6px; }
-    .btn-view-doc { background: #0284c7; color: white; }
-    .btn-edit { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
-    .btn-delete { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+    .action-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; margin: 6px 6px 0 0; }
   </style>
 </head>
 <body>
@@ -79,10 +47,10 @@
 
   <div class="container">
     
-    <!-- Tab 1: Logger -->
+    <!-- TAB 1: LOGGER -->
     <div id="tabLogger">
       <div class="card">
-        <h2 id="formTitle" style="font-size:1.15rem; margin-bottom: 14px;">Log Anesthetic Case</h2>
+        <h2 id="formTitle" style="font-size:1.15rem; margin-bottom:14px;">Log Anesthetic Case</h2>
         <input type="hidden" id="editCaseId" value="">
 
         <!-- Date & Priority -->
@@ -92,7 +60,7 @@
             <input type="date" id="caseDate">
           </div>
           <div class="form-group col">
-            <label>Case Priority</label>
+            <label>Priority</label>
             <select id="casePriority">
               <option value="Elective">Elective</option>
               <option value="Emergency">Emergency</option>
@@ -104,7 +72,7 @@
         <div class="row">
           <div class="form-group col">
             <label>Patient Age</label>
-            <input type="number" id="patientAge" placeholder="e.g. 45" min="0" max="120">
+            <input type="number" id="patientAge" placeholder="e.g. 45">
           </div>
           <div class="form-group col">
             <label>Sex</label>
@@ -116,83 +84,31 @@
           </div>
         </div>
 
-        <!-- Surgical Procedure (Searchable Datalist) -->
+        <!-- Surgical Procedure -->
         <div class="form-group">
-          <label>Surgical Procedure (Type to search / select)</label>
-          <input type="text" id="procedureName" list="procedureList" placeholder="Start typing procedure name...">
+          <label>Surgical Procedure (Select or type custom)</label>
+          <input type="text" id="procedureName" list="procedureList" placeholder="Type or pick procedure...">
           <datalist id="procedureList">
-            <!-- General Surgery -->
             <option value="Laparoscopic Appendicectomy">
             <option value="Open Appendicectomy">
             <option value="Laparoscopic Cholecystectomy">
             <option value="Open Cholecystectomy">
             <option value="Exploratory Laparotomy">
-            <option value="Emergency Laparotomy for Perforation / Obstruction">
-            <option value="Inguinal Hernia Repair (Open / Mesh)">
-            <option value="Laparoscopic TEP / TAPP Inguinal Hernia">
-            <option value="Umbilical / Ventral Hernia Repair">
-            <option value="Incisional Hernia Repair">
-            <option value="Right Hemicolectomy">
-            <option value="Left Hemicolectomy / Anterior Resection">
-            <option value="Whipple's Pancreaticoduodenectomy">
-            <option value="Breast Conservative Surgery / MRM">
-            <option value="Total Thyroidectomy / Hemithyroidectomy">
-            <option value="Haemorrhoidectomy / Fissurectomy / Fistulotomy">
-            <option value="Debridement / Wound Excision">
-            <!-- Orthopaedics -->
+            <option value="Inguinal Hernia Repair (Mesh)">
             <option value="Total Knee Arthroplasty (TKA)">
             <option value="Total Hip Arthroplasty (THA)">
             <option value="Hemiarthroplasty Hip">
-            <option value="DHS / PFN Fixation Femur Fractures">
-            <option value="IM Nailing Femur / Tibia">
-            <option value="ORIF Tibia / Fibula / Ankle Fracture">
-            <option value="ORIF Radius / Ulna / Humerus">
-            <option value="Shoulder Hemi / Reverse Shoulder Replacement">
-            <option value="Diagnostic Knee / Shoulder Arthroscopy">
-            <option value="Arthroscopic ACL / Meniscal Reconstruction">
-            <option value="Tendon Repair Hand / Foot">
-            <option value="External Fixator Application">
-            <option value="Amputation (Above / Below Knee, Finger/Toe)">
-            <!-- OBG -->
+            <option value="PFN / DHS Fixation Femur">
+            <option value="ORIF Ankle / Tibia Fracture">
             <option value="Elective Caesarean Section (LSCS)">
             <option value="Emergency Caesarean Section (LSCS)">
             <option value="Total Abdominal Hysterectomy (TAH)">
             <option value="Total Laparoscopic Hysterectomy (TLH)">
-            <option value="Vaginal Hysterectomy / Pelvic Floor Repair">
-            <option value="Laparoscopy Ovarian Cystectomy / Ectopic Pregnancy">
-            <option value="D&C / MVA / Suction Evacuation">
-            <!-- ENT & Head & Neck -->
             <option value="Tonsillectomy / Adenoidectomy">
-            <option value="Microlaryngeal Surgery (MLS)">
-            <option value="Tympanoplasty / Mastoidectomy">
-            <option value="Functional Endoscopic Sinus Surgery (FESS)">
-            <option value="Septoplasty / Rhinoplasty">
-            <option value="Tracheostomy (Elective / Emergency)">
-            <option value="Parotidectomy / Submandibular Gland Excision">
-            <!-- Urology -->
-            <option value="Transurethral Resection of Prostate (TURP)">
-            <option value="TURBT (Bladder Tumor)">
-            <option value="URSL (Ureteroscopic Lithotripsy)">
-            <option value="PCNL (Percutaneous Nephrolithotomy)">
-            <option value="Radical / Simple Nephrectomy">
-            <option value="DJ Stenting / Removal">
-            <option value="Orchidopexy / Orchidectomy">
-            <!-- Paediatric -->
-            <option value="Paediatric Herniotomy">
-            <option value="Paediatric Orchidopexy">
-            <option value="Pyloromyotomy">
-            <option value="Congenital Diaphragmatic Hernia Repair">
-            <!-- Neuro / Spine -->
-            <option value="Craniotomy for SDH / EDH Evacuation">
-            <option value="Craniotomy for SOL / Tumor Excision">
-            <option value="Lumbar Discectomy / Laminectomy">
-            <option value="Spine Decompression and Instrumentation">
-            <option value="Ventriculoperitoneal (VP) Shunt">
-            <!-- Plastic & Ophthalmology -->
-            <option value="Split Thickness Skin Grafting (STSG)">
-            <option value="Flap Reconstruction / Microvascular Free Flap">
-            <option value="Phacoemulsification Cataract Surgery">
-            <option value="Trabeculectomy / Vitrectomy">
+            <option value="TURP / TURBT">
+            <option value="URSL / PCNL">
+            <option value="Craniotomy for SDH/EDH">
+            <option value="Debridement / Skin Grafting">
           </datalist>
         </div>
 
@@ -210,7 +126,6 @@
               <option value="Neuro/Spine">Neuro/Spine</option>
               <option value="Plastic Surgery">Plastic Surgery</option>
               <option value="Ophthalmology">Ophthalmology</option>
-              <option value="Cardiothoracic">Cardiothoracic</option>
               <option value="Emergency/Trauma">Emergency/Trauma</option>
             </select>
           </div>
@@ -224,7 +139,7 @@
           </div>
         </div>
 
-        <!-- ASA Radio Group -->
+        <!-- ASA Radio -->
         <div class="form-group">
           <label>ASA Physical Status</label>
           <div class="pill-group">
@@ -236,13 +151,12 @@
             <label class="pill-label"><input type="radio" name="asaRadio" value="I E"><span class="pill-span">I E</span></label>
             <label class="pill-label"><input type="radio" name="asaRadio" value="II E"><span class="pill-span">II E</span></label>
             <label class="pill-label"><input type="radio" name="asaRadio" value="III E"><span class="pill-span">III E</span></label>
-            <label class="pill-label"><input type="radio" name="asaRadio" value="IV E"><span class="pill-span">IV E</span></label>
           </div>
         </div>
 
-        <!-- Comorbidities Checkbox Group -->
+        <!-- Comorbidities -->
         <div class="form-group">
-          <label>Comorbidities (Tap to select)</label>
+          <label>Comorbidities</label>
           <div class="pill-group">
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="T2DM"><span class="pill-span">T2DM</span></label>
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="SHTN"><span class="pill-span">SHTN</span></label>
@@ -250,64 +164,158 @@
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Anaemia"><span class="pill-span">Anaemia</span></label>
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Hypothyroidism"><span class="pill-span">Hypothyroidism</span></label>
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Hyperthyroidism"><span class="pill-span">Hyperthyroidism</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Seizure Disorder"><span class="pill-span">Seizure Disorder</span></label>
+            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Seizure Disorder"><span class="pill-span">Seizure</span></label>
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="CAD"><span class="pill-span">CAD</span></label>
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="COPD"><span class="pill-span">COPD</span></label>
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="CKD"><span class="pill-span">CKD</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="AKI"><span class="pill-span">AKI</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="CLD"><span class="pill-span">CLD</span></label>
-            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Obesity/OSA"><span class="pill-span">Obesity / OSA</span></label>
+            <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="Obesity/OSA"><span class="pill-span">Obesity/OSA</span></label>
             <label class="pill-label comorbid"><input type="checkbox" name="comorbidBox" value="GERD"><span class="pill-span">GERD</span></label>
           </div>
-          <input type="text" id="comorbidOther" placeholder="Other comorbidities (if any)..." style="margin-top: 8px;">
+          <input type="text" id="comorbidOther" placeholder="Other comorbidity..." style="margin-top:8px;">
         </div>
 
-        <!-- Anaesthesia Technique (Searchable Datalist) -->
+        <!-- Anaesthesia Technique -->
         <div class="form-group">
-          <label>Anaesthesia Technique (Type to search / select)</label>
-          <input type="text" id="technique" list="techniqueList" placeholder="Start typing technique (e.g. ETT, supraclavicular, spinal)..." oninput="checkAirwayRequirement()">
+          <label>Anaesthesia Technique (Select or type custom)</label>
+          <input type="text" id="technique" list="techniqueList" placeholder="Type or pick technique..." oninput="checkAirwayRequirement()">
           <datalist id="techniqueList">
-            <!-- General Anaesthesia -->
             <option value="General Anaesthesia (GA) - ETT">
-            <option value="General Anaesthesia (GA) - Rapid Sequence Induction (RSI) ETT">
-            <option value="General Anaesthesia (GA) - Nasotracheal Intubation ETT">
-            <option value="General Anaesthesia (GA) - Double Lumen Tube (DLT)">
+            <option value="General Anaesthesia (GA) - RSI ETT">
             <option value="General Anaesthesia (GA) - LMA / SGA">
-            <option value="General Anaesthesia (GA) - ProSeal / Supreme / i-gel">
-            <option value="General Anaesthesia (GA) - TIVA (Propofol / Remifentanil)">
-            <option value="General Anaesthesia (GA) - Inhalational Induction">
-            <!-- Neuraxial -->
+            <option value="General Anaesthesia (GA) - TIVA">
             <option value="Subarachnoid Block (Spinal Anaesthesia)">
             <option value="Epidural Anaesthesia (Lumbar)">
-            <option value="Epidural Anaesthesia (Thoracic)">
             <option value="Combined Spinal-Epidural (CSE)">
             <option value="Caudal Epidural Block">
-            <!-- Upper Limb Regional - Right -->
-            <option value="USG guided Right Supraclavicular Brachial Plexus Block">
-            <option value="Landmark guided Right Supraclavicular Brachial Plexus Block">
-            <option value="USG guided Right Interscalene Brachial Plexus Block">
-            <option value="USG guided Right Infraclavicular Brachial Plexus Block">
-            <option value="USG guided Right Axillary Brachial Plexus Block">
-            <!-- Upper Limb Regional - Left -->
-            <option value="USG guided Left Supraclavicular Brachial Plexus Block">
-            <option value="Landmark guided Left Supraclavicular Brachial Plexus Block">
-            <option value="USG guided Left Interscalene Brachial Plexus Block">
-            <option value="USG guided Left Infraclavicular Brachial Plexus Block">
-            <option value="USG guided Left Axillary Brachial Plexus Block">
-            <!-- Truncal & Abdominal Blocks -->
+            <option value="USG guided Right Supraclavicular Block">
+            <option value="USG guided Left Supraclavicular Block">
+            <option value="Landmark guided Right Supraclavicular Block">
+            <option value="Landmark guided Left Supraclavicular Block">
+            <option value="USG guided Right Interscalene Block">
+            <option value="USG guided Left Interscalene Block">
+            <option value="USG guided Right Axillary Block">
+            <option value="USG guided Left Axillary Block">
             <option value="USG guided Bilateral TAP Block">
-            <option value="USG guided Right TAP Block">
-            <option value="USG guided Left TAP Block">
             <option value="USG guided Bilateral Rectus Sheath Block">
-            <option value="USG guided Bilateral Erector Spinae Plane (ESP) Block">
-            <option value="USG guided Right Erector Spinae Plane (ESP) Block">
-            <option value="USG guided Left Erector Spinae Plane (ESP) Block">
-            <option value="USG guided Bilateral Quadratus Lumborum (QL) Block">
-            <option value="USG guided Right Quadratus Lumborum (QL) Block">
-            <option value="USG guided Left Quadratus Lumborum (QL) Block">
-            <option value="USG guided PECS I & II Block">
-            <option value="USG guided Serratus Anterior Plane Block">
-            <!-- Lower Limb Regional - Right -->
-            <option value="USG guided Right Femoral Nerve Block">
+            <option value="USG guided Bilateral ESP Block">
             <option value="USG guided Right Adductor Canal Block (ACB)">
-            <option value="USG guided Right Fascia Iliaca Compartme
+            <option value="USG guided Left Adductor Canal Block (ACB)">
+            <option value="USG guided Right Femoral Nerve Block">
+            <option value="USG guided Left Femoral Nerve Block">
+            <option value="USG guided Right Popliteal Sciatic Block">
+            <option value="USG guided Left Popliteal Sciatic Block">
+            <option value="Monitored Anesthesia Care (MAC) / Sedation">
+            <option value="Local Infiltration / Field Block">
+          </datalist>
+        </div>
+
+        <!-- Conditional Airway Box -->
+        <div id="airwayConditionalSection" class="conditional-box" style="display:none; margin-bottom:14px;">
+          <h3 style="font-size:0.85rem; font-weight:700; color:var(--primary); margin-bottom:8px;">
+            <i class="fa-solid fa-wind"></i> Airway Assessment (ETT)
+          </h3>
+          <div class="row">
+            <div class="form-group col">
+              <label>Pre-op MMS</label>
+              <select id="airwayMMS">
+                <option value="Class 1">Class 1</option>
+                <option value="Class 2">Class 2</option>
+                <option value="Class 3">Class 3</option>
+                <option value="Class 4">Class 4</option>
+                <option value="Class 0">Class 0</option>
+                <option value="Not Assessed">Not Assessed</option>
+              </select>
+            </div>
+            <div class="form-group col">
+              <label>Cormack-Lehane</label>
+              <select id="airwayCL">
+                <option value="Grade 1">Grade 1</option>
+                <option value="Grade 2">Grade 2</option>
+                <option value="Grade 2a">Grade 2a</option>
+                <option value="Grade 2b">Grade 2b</option>
+                <option value="Grade 3">Grade 3</option>
+                <option value="Grade 3a">Grade 3a</option>
+                <option value="Grade 3b">Grade 3b</option>
+                <option value="Grade 4">Grade 4</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Tube / Blade Notes</label>
+            <input type="text" id="airwayDetails" placeholder="e.g. 7.5 cuffed ETT, Mac 3 blade">
+          </div>
+        </div>
+
+        <!-- Difficult Airway Notes -->
+        <div class="form-group">
+          <label>Difficult Airway / Special Procedures</label>
+          <input type="text" id="difficultAirwayNotes" placeholder="e.g. C-MAC D-blade, Bougie, Arterial line (or leave blank if Nil)">
+        </div>
+
+        <!-- Analgesia -->
+        <div class="form-group">
+          <label>Analgesia Administered</label>
+          <div class="pill-group">
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Nil" id="analgesiaNil" onchange="toggleAnalgesiaNil(this)"><span class="pill-span">Nil</span></label>
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV Paracetamol"><span class="pill-span">IV Paracetamol</span></label>
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV NSAID"><span class="pill-span">IV NSAID</span></label>
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="IV Opioid"><span class="pill-span">IV Opioid</span></label>
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Regional Block"><span class="pill-span">Regional Block</span></label>
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Local Infiltration"><span class="pill-span">Local Infiltration</span></label>
+            <label class="pill-label analgesia"><input type="checkbox" name="analgesiaBox" value="Epidural Infusion"><span class="pill-span">Epidural Infusion</span></label>
+          </div>
+          <input type="text" id="analgesiaOther" placeholder="Other analgesic / dose..." style="margin-top:8px;">
+        </div>
+
+        <!-- Complications -->
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label style="margin-bottom:0;">Complications</label>
+            <button type="button" class="tag-btn tag-btn-nil" onclick="setComplication('Nil')"><i class="fa-solid fa-check"></i> Set Nil</button>
+          </div>
+          <input type="text" id="complicationsNotes" placeholder="e.g. Nil, hypotension, desaturation">
+          <div style="margin-top:6px;">
+            <span class="tag-btn" onclick="setComplication('Nil')">Nil</span>
+            <span class="tag-btn" onclick="addComplication('Hypotension (treated)')">Hypotension</span>
+            <span class="tag-btn" onclick="addComplication('Bradycardia')">Bradycardia</span>
+            <span class="tag-btn" onclick="addComplication('Desaturation')">Desaturation</span>
+            <span class="tag-btn" onclick="addComplication('Difficult Intubation')">Difficult Intubation</span>
+          </div>
+        </div>
+
+        <!-- Attachment -->
+        <div class="form-group">
+          <label>Attach OT Sheet (Photo / PDF)</label>
+          <input type="file" id="fileUpload" accept="image/*,application/pdf" style="padding:6px 0;">
+          <div id="existingLinkContainer" style="display:none; margin-top:6px;">
+            <a id="existingLink" href="#" target="_blank" class="action-btn" style="background:#0284c7; color:white;">View Attached File</a>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()">
+          <i class="fa-solid fa-floppy-disk"></i> <span id="saveBtnText">Save & Log Case</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">Cancel Edit</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: LEDGER -->
+    <div id="tabLedger" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h2 style="font-size:1.15rem;">My Logbook Records</h2>
+        <button type="button" onclick="exportCSV()" class="action-btn" style="background:#f1f5f9; border:1px solid var(--border);">
+          <i class="fa-solid fa-file-csv"></i> Export CSV
+        </button>
+      </div>
+      <div id="caseListContainer"></div>
+    </div>
+
+    <!-- TAB 3: SETTINGS -->
+    <div id="tabSettings" style="display:none;">
+      <div class="card">
+        <h2 style="font-size:1.15rem; margin-bottom:12px;">Google Drive Settings</h2>
+        <div class="form-group">
+          <label>Google Apps Script Web App URL</label>
+          <input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="sa
