@@ -77,7 +77,7 @@
         <div class="fg"><label>Comorbidities</label><div class="pill-group" id="comorbidPills"></div><input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:8px"></div>
         <div class="fg">
           <div class="lbl-row"><label style="margin:0">Anaesthesia Technique</label><button type="button" class="mini-btn" onclick="addCustom('tech')">+ Add Custom</button></div>
-          <input type="text" id="cTech" list="techList" placeholder="Start typing technique (e.g. ETT, USG right...)" oninput="checkAirway()">
+          <input type="text" id="cTech" list="techList" placeholder="Start typing technique..." oninput="checkAirway()">
           <datalist id="techList"></datalist>
         </div>
         <div id="airwayBox" class="cond-box">
@@ -192,7 +192,6 @@
       const url = (localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '').trim();
       let links = [...curLinks];
       if(files.length > 0) {
-        if(!url) alert("Note: Google Drive URL is not set in Settings! Photo will be saved locally for preview, but add your Script URL in Settings for Cloud CSV links.");
         for(let f of files) {
           try {
             const {b64, mime} = await compressFile(f);
@@ -237,16 +236,23 @@
       if(!cases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
       window._cases = cases;
       box.innerHTML = cases.map((c,ci) => {
-        const raw = c.links || (c.attachmentUrl ? [c.attachmentUrl] : []);
+        // Universal fallback for old or new link structures
+        let raw = c.links || [];
+        if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl, thumb: c.attachmentUrl.startsWith('http')?'':c.attachmentUrl, name:'OT_Record'}];
+        
         const thumbs = raw.map((item,fi) => {
           const isObj = typeof item === 'object' && item !== null;
-          const tSrc = isObj ? item.thumb : item;
-          const dUrl = isObj ? item.url : item;
+          const tSrc = isObj ? item.thumb : (item.startsWith('http') ? '' : item);
+          const dUrl = isObj ? item.url : (item.startsWith('http') ? item : '');
+          
           if(tSrc && tSrc.startsWith('data:image')) {
-            return `<img src="${tSrc}" class="thumb-img" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)" title="Tap to preview"><button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><i class="fa-solid fa-eye"></i> Preview Sheet ${fi+1}</button>${dUrl?`<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`:''}`;
+            return `<img src="${tSrc}" class="thumb-img" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="openPreview(window._cases[${ci}].links[${fi}].thumb, window._cases[${ci}].links[${fi}].url)"><i class="fa-solid fa-eye"></i> Preview Sheet ${fi+1}</button>${dUrl?`<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`:''}`;
+          } else if(dUrl) {
+            return `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-arrow-down"></i> Open File ${fi+1}</a>`;
           }
-          return dUrl ? `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-pdf"></i> Open Sheet ${fi+1}</a>` : '';
+          return '';
         }).join('');
+
         return `<div class="case-item">
           <div class="lbl-row"><strong>${c.proc||c.procedure}</strong><span><span class="mini-btn">${c.prio||c.priority||'Elective'}</span> <span class="mini-btn">ASA ${c.asa}</span></span></div>
           <div style="font-size:0.8rem;color:#64748b;margin:4px 0">${c.date} | ${c.age}Y / ${c.sex} | ${c.spec||c.specialty} (${c.sup||c.supervision})</div>
@@ -274,7 +280,7 @@
       document.getElementById('cDiff').value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
       const setP = (n,str) => { const arr=(str||'').split(', '); document.querySelectorAll(`input[name="${n}"]`).forEach(el=>el.checked=arr.includes(el.value)); };
       setP('asa',c.asa); setP('comorbid',c.comorbid||c.comorbidities); setP('analgesia',c.analg||c.analgesia); setP('comp',c.comp||c.complications);
-      curLinks = c.links || (c.attachmentUrl?[c.attachmentUrl]:[]);
+      curLinks = c.links || (c.attachmentUrl ? [{url:c.attachmentUrl, thumb:''}] : []);
       document.getElementById('currFiles').innerHTML = curLinks.length ? `<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>` : '';
       checkAirway(); showTab('tabLogger');
     }
@@ -283,7 +289,9 @@
       const cases = getLS('el_cases'); if(!cases.length) return alert("No cases!");
       let csv = "Date,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheet_Drive_Links\n";
       cases.forEach(c => {
-        const lks = (c.links||[]).map(x => (typeof x==='object' ? (x.url || 'Saved Locally on Device') : x)).join(' | ');
+        let raw = c.links || [];
+        if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl}];
+        const lks = raw.map(x => (typeof x==='object' ? (x.url || 'Local Preview Saved') : x)).filter(Boolean).join(' | ');
         csv += `"${c.date}","${c.prio||''}","${c.age}","${c.sex}","${c.proc||c.procedure}","${c.spec||''}","${c.sup||''}","${c.asa}","${c.comorbid||''}","${c.tech||''}","${c.airway||''}","${c.diff||''}","${c.analg||''}","${c.comp||''}","${lks}"\n`;
       });
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = 'Anesthesia_Logbook.csv'; a.click();
