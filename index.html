@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0d9488">
-  <meta name="description" content="Standardized Clinical Anesthesia Logbook">
+  <meta name="theme-color" content="#009688">
+  <meta name="description" content="Clinical Anesthesia Logbook">
   <title>EtherLog - Anesthesia Logbook</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #0d9488;
-      --primary-dark: #0f766e;
+      --primary: #009688;
+      --primary-dark: #00796b;
       --bg: #f8fafc;
       --card: #ffffff;
       --text: #0f172a;
@@ -22,85 +22,117 @@
       --success: #10b981;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 70px; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 75px; }
     
     /* Header */
     header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    header h1 { font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    header h1 { font-size: 1.18rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     
     /* Containers */
-    .container { max-width: 800px; margin: 0 auto; padding: 14px; }
+    .container { max-width: 800px; margin: 0 auto; padding: 12px; }
     .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 14px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
     
-    /* Navigation Bar (Mobile bottom, desktop friendly) */
-    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 50; }
-    .nav-btn { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; gap: 4px; cursor: pointer; }
-    .nav-btn.active { color: var(--primary); font-weight: 600; }
-    .nav-btn i { font-size: 1.2rem; }
+    /* Navigation Bar */
+    nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 62px; background: white; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 50; }
+    .nav-btn { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; gap: 4px; cursor: pointer; flex: 1; height: 100%; justify-content: center; }
+    .nav-btn.active { color: var(--primary); font-weight: 700; }
+    .nav-btn i { font-size: 1.25rem; }
 
-    /* Forms */
+    /* Form Fields */
     .form-group { margin-bottom: 12px; }
-    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; }
+    label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; background: #fff; color: var(--text); outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); ring: 2px var(--primary); }
     .row { display: flex; gap: 10px; }
     .col { flex: 1; }
     
-    /* Quick Selection Pills */
+    /* Pills */
     .pill-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-    .pill { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; background: #f1f5f9; border: 1px solid var(--border); cursor: pointer; user-select: none; }
-    .pill.selected { background: var(--primary); color: white; border-color: var(--primary-dark); }
-    
-    /* File Upload Box */
-    .upload-zone { border: 2px dashed var(--primary); border-radius: 10px; padding: 16px; text-align: center; background: #f0fdfa; cursor: pointer; position: relative; margin-top: 6px; }
-    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .upload-preview { display: flex; align-items: center; gap: 10px; margin-top: 8px; background: white; padding: 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.85rem; }
+    .pill { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; background: #f1f5f9; border: 1px solid var(--border); cursor: pointer; user-select: none; transition: 0.15s ease; }
+    .pill.selected { background: var(--primary); color: white; border-color: var(--primary-dark); font-weight: 600; }
+    .comorbid-pill.selected { background: #0284c7; color: white; border-color: #0369a1; }
 
-    /* Action Buttons */
+    /* Upload Zone */
+    .upload-zone { border: 2px dashed var(--primary); border-radius: 10px; padding: 14px; text-align: center; background: #f0fdfa; cursor: pointer; position: relative; margin-top: 4px; }
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-preview { display: flex; align-items: center; gap: 10px; margin-top: 8px; background: white; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.85rem; }
+
+    /* Buttons */
     .btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:active { background: var(--primary-dark); }
+    .btn-secondary { background: #e2e8f0; color: var(--text); margin-top: 8px; }
     
-    /* Ledger List */
-    .case-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; position: relative; }
+    /* Ledger Cards */
+    .case-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
     .case-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-    .case-title { font-weight: 700; font-size: 1rem; color: var(--text); }
-    .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+    .case-title { font-weight: 700; font-size: 1.05rem; color: var(--text); }
+    .badge { padding: 3px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
     .badge-asa { background: #e0f2fe; color: #0369a1; }
-    .case-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 8px; }
-    .attachment-link { display: inline-flex; align-items: center; gap: 4px; background: #f1f5f9; color: var(--primary); font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; text-decoration: none; font-weight: 600; }
+    .badge-emergency { background: #fee2e2; color: #b91c1c; }
+    .badge-elective { background: #dcfce7; color: #15803d; }
+    .case-meta { font-size: 0.82rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0; }
+    .details-box { background: #f8fafc; border-radius: 6px; padding: 8px 10px; margin: 8px 0; font-size: 0.83rem; line-height: 1.4; border-left: 3px solid var(--primary); }
+    .action-links { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+    .action-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: 600; border: none; cursor: pointer; }
+    .btn-view-doc { background: #0284c7; color: white; }
+    .btn-edit { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+    .btn-delete { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
   </style>
 </head>
 <body>
 
-  <!-- Top App Bar -->
+  <!-- Top App Bar without 'Ready' text -->
   <header>
     <h1><i class="fa-solid fa-syringe"></i> EtherLog</h1>
-    <span id="syncStatus" style="font-size:0.75rem;"><i class="fa-solid fa-cloud-check"></i> Ready</span>
   </header>
 
   <div class="container">
     
-    <!-- Tab 1: New Case Logger -->
+    <!-- Tab 1: Case Logger / Editor -->
     <div id="tabLogger">
       <div class="card">
-        <h2 style="font-size:1.1rem; margin-bottom: 12px;">Log Anesthetic Case</h2>
-        
+        <h2 id="formTitle" style="font-size:1.15rem; margin-bottom: 14px;">Log Anesthetic Case</h2>
+        <input type="hidden" id="editCaseId" value="">
+
+        <!-- Date & Priority -->
         <div class="row">
           <div class="form-group col">
             <label>Date</label>
             <input type="date" id="caseDate">
           </div>
           <div class="form-group col">
-            <label>Patient Age / Sex</label>
-            <input type="text" id="patientInfo" placeholder="e.g. 45 M">
+            <label>Case Priority</label>
+            <select id="casePriority">
+              <option value="Elective">Elective</option>
+              <option value="Emergency">Emergency</option>
+            </select>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Surgical Procedure</label>
-          <input type="text" id="procedureName" placeholder="e.g. Laparoscopic Cholecystectomy">
+        <!-- Age & Sex Separated -->
+        <div class="row">
+          <div class="form-group col">
+            <label>Patient Age</label>
+            <input type="number" id="patientAge" placeholder="e.g. 45" min="0" max="120">
+          </div>
+          <div class="form-group col">
+            <label>Sex</label>
+            <select id="patientSex">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </div>
 
+        <!-- Procedure -->
+        <div class="form-group">
+          <label>Surgical Procedure</label>
+          <input type="text" id="procedureName" placeholder="e.g. Laparoscopic Appendicectomy">
+        </div>
+
+        <!-- Specialty & Supervision -->
         <div class="row">
           <div class="form-group col">
             <label>Specialty</label>
@@ -112,19 +144,23 @@
               <option value="Urology">Urology</option>
               <option value="Paediatrics">Paediatrics</option>
               <option value="Neuro/Spine">Neuro/Spine</option>
+              <option value="Plastic Surgery">Plastic Surgery</option>
+              <option value="Ophthalmology">Ophthalmology</option>
+              <option value="Cardiothoracic">Cardiothoracic</option>
               <option value="Emergency/Trauma">Emergency/Trauma</option>
             </select>
           </div>
           <div class="form-group col">
             <label>Supervision</label>
             <select id="supervision">
-              <option value="Direct">Direct Supervision</option>
-              <option value="Indirect">Indirect Supervision</option>
-              <option value="Independent">Independent (Sole)</option>
+              <option value="Independent (Sole)">Independent (Sole)</option>
+              <option value="Direct Supervision">Direct Supervision</option>
+              <option value="Indirect Supervision">Indirect Supervision</option>
             </select>
           </div>
         </div>
 
+        <!-- ASA Physical Status -->
         <div class="form-group">
           <label>ASA Physical Status</label>
           <div class="pill-group" id="asaPills">
@@ -132,12 +168,38 @@
             <div class="pill" data-val="II">II</div>
             <div class="pill" data-val="III">III</div>
             <div class="pill" data-val="IV">IV</div>
+            <div class="pill" data-val="V">V</div>
             <div class="pill" data-val="IE">I E</div>
             <div class="pill" data-val="IIE">II E</div>
             <div class="pill" data-val="IIIE">III E</div>
+            <div class="pill" data-val="IVE">IV E</div>
           </div>
         </div>
 
+        <!-- Comorbidities Multi-Selection -->
+        <div class="form-group">
+          <label>Comorbidities (Tap to select multiple)</label>
+          <div class="pill-group" id="comorbidPills">
+            <div class="pill comorbid-pill" data-val="None">Nil Known</div>
+            <div class="pill comorbid-pill" data-val="T2DM">T2DM</div>
+            <div class="pill comorbid-pill" data-val="SHTN">SHTN</div>
+            <div class="pill comorbid-pill" data-val="Asthma">Asthma</div>
+            <div class="pill comorbid-pill" data-val="Anaemia">Anaemia</div>
+            <div class="pill comorbid-pill" data-val="Hypothyroidism">Hypothyroidism</div>
+            <div class="pill comorbid-pill" data-val="Hyperthyroidism">Hyperthyroidism</div>
+            <div class="pill comorbid-pill" data-val="Seizure Disorder">Seizure Disorder</div>
+            <div class="pill comorbid-pill" data-val="CAD">CAD</div>
+            <div class="pill comorbid-pill" data-val="COPD">COPD</div>
+            <div class="pill comorbid-pill" data-val="CKD">CKD</div>
+            <div class="pill comorbid-pill" data-val="AKI">AKI</div>
+            <div class="pill comorbid-pill" data-val="CLD">CLD</div>
+            <div class="pill comorbid-pill" data-val="Obesity/OSA">Obesity / OSA</div>
+            <div class="pill comorbid-pill" data-val="GERD">GERD</div>
+          </div>
+          <input type="text" id="comorbidOther" placeholder="Other comorbidities (if any)..." style="margin-top: 8px;">
+        </div>
+
+        <!-- Primary Technique -->
         <div class="form-group">
           <label>Primary Anaesthetic Technique</label>
           <select id="technique">
@@ -147,31 +209,50 @@
             <option value="Epidural / CSE">Epidural / CSE</option>
             <option value="USG Peripheral Nerve Block">USG Peripheral Nerve Block</option>
             <option value="Monitored Anesthesia Care (MAC)">MAC / Sedation</option>
+            <option value="Local / Field Block">Local / Field Block</option>
           </select>
         </div>
 
+        <!-- Separated Clinical Fields -->
         <div class="form-group">
-          <label>Complications / Airway / Critical Notes</label>
-          <input type="text" id="caseNotes" placeholder="e.g. Mallampati III, C-MAC D-blade, smooth PACU recovery">
+          <label>Airway Management Notes</label>
+          <input type="text" id="airwayNotes" placeholder="e.g. Mallampati II, Mac 3 blade, 7.5 ETT, Cormack-Lehane 1">
         </div>
 
-        <!-- Google Drive Photo/PDF Attachment Box -->
         <div class="form-group">
-          <label>Attach OT Sheet / PAC Note (Auto-uploads to Drive)</label>
+          <label>Difficult Airway / Special Procedures</label>
+          <input type="text" id="difficultAirwayNotes" placeholder="e.g. Videolaryngoscope C-MAC used, Bougie required, awake FOI, Arterial line">
+        </div>
+
+        <div class="form-group">
+          <label>Complications & Critical Events</label>
+          <input type="text" id="complicationsNotes" placeholder="e.g. Nil, transient hypotension corrected with Mephentermine, bronchospasm, etc.">
+        </div>
+
+        <!-- OT Record Sheet / Photo Attachment -->
+        <div class="form-group">
+          <label>Intraop Chart / OT Record Sheet (Uploads to Drive)</label>
           <div class="upload-zone">
             <i class="fa-solid fa-camera fa-2x" style="color:var(--primary); margin-bottom: 6px;"></i>
-            <p style="font-size:0.85rem; font-weight:600;">Tap to snap camera or pick from gallery / PDF</p>
+            <p style="font-size:0.85rem; font-weight:600;">Snap camera or select photo / PDF</p>
             <input type="file" id="fileUpload" accept="image/*,application/pdf">
           </div>
           <div id="filePreview" style="display:none;" class="upload-preview">
-            <i class="fa-solid fa-file-lines"></i>
+            <i class="fa-solid fa-file-image fa-lg" style="color:var(--primary);"></i>
             <span id="fileName" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
             <span id="uploadStatusText" style="color:var(--primary); font-weight:600;">Ready</span>
+          </div>
+          <div id="existingLinkContainer" style="display:none; margin-top:8px;">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Current attached record: </span>
+            <a id="existingLink" href="#" target="_blank" class="action-btn btn-view-doc" style="display:inline-flex;">View Current File</a>
           </div>
         </div>
 
         <button class="btn btn-primary" id="saveCaseBtn" onclick="saveCase()">
-          <i class="fa-solid fa-floppy-disk"></i> Save & Log Case
+          <i class="fa-solid fa-floppy-disk"></i> <span id="saveBtnText">Save & Log Case</span>
+        </button>
+        <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">
+          Cancel Edit
         </button>
       </div>
     </div>
@@ -179,22 +260,22 @@
     <!-- Tab 2: Case Ledger -->
     <div id="tabLedger" style="display:none;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h2 style="font-size:1.1rem;">My Logbook Records</h2>
-        <button onclick="exportCSV()" class="attachment-link" style="border:none; cursor:pointer;">
+        <h2 style="font-size:1.15rem;">My Logbook Records</h2>
+        <button onclick="exportCSV()" class="action-btn btn-edit">
           <i class="fa-solid fa-file-csv"></i> Export CSV
         </button>
       </div>
       <div id="caseListContainer"></div>
     </div>
 
-    <!-- Tab 3: Settings & Drive URL -->
+    <!-- Tab 3: Settings -->
     <div id="tabSettings" style="display:none;">
       <div class="card">
-        <h2 style="font-size:1.1rem; margin-bottom: 12px;">Settings & Cloud Storage</h2>
+        <h2 style="font-size:1.15rem; margin-bottom: 12px;">Settings & Cloud Storage</h2>
         <div class="form-group">
           <label>Google Apps Script Web App URL</label>
           <input type="url" id="scriptUrlSetting" placeholder="https://script.google.com/macros/s/.../exec">
-          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Paste the deployed Web App URL from Step 1 here.</p>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Files will automatically upload to your Google Drive folder via this script URL.</p>
         </div>
         <button class="btn btn-primary" onclick="saveSettings()">Save URL</button>
       </div>
@@ -202,33 +283,33 @@
 
   </div>
 
-  <!-- Bottom Navigation -->
+  <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="switchTab('tabLogger', this)">
+    <button class="nav-btn active" id="navBtnLog" onclick="switchTab('tabLogger', this)">
       <i class="fa-solid fa-notes-medical"></i>
       <span>Log Case</span>
     </button>
-    <button class="nav-btn" onclick="switchTab('tabLedger', this)">
+    <button class="nav-btn" id="navBtnLedger" onclick="switchTab('tabLedger', this)">
       <i class="fa-solid fa-book-medical"></i>
       <span>Ledger</span>
     </button>
-    <button class="nav-btn" onclick="switchTab('tabSettings', this)">
+    <button class="nav-btn" id="navBtnSettings" onclick="switchTab('tabSettings', this)">
       <i class="fa-solid fa-gear"></i>
       <span>Settings</span>
     </button>
   </nav>
 
   <script>
-    // Initial Setup
+    // State Initializations
     document.getElementById('caseDate').value = new Date().toISOString().split('T')[0];
     let selectedASA = "I";
     let pendingFile = null;
+    let existingAttachmentUrl = "";
 
-    // Load Settings
     const SCRIPT_URL_KEY = "etherlog_script_url";
     document.getElementById('scriptUrlSetting').value = localStorage.getItem(SCRIPT_URL_KEY) || "";
 
-    // ASA Pill Selector Logic
+    // ASA Selection
     document.querySelectorAll('#asaPills .pill').forEach(pill => {
       pill.addEventListener('click', () => {
         document.querySelectorAll('#asaPills .pill').forEach(p => p.classList.remove('selected'));
@@ -237,7 +318,21 @@
       });
     });
 
-    // File Selection & Local Display
+    // Comorbidities Multi-Selection
+    document.querySelectorAll('#comorbidPills .comorbid-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const val = pill.getAttribute('data-val');
+        if (val === "None") {
+          document.querySelectorAll('#comorbidPills .comorbid-pill').forEach(p => p.classList.remove('selected'));
+          pill.classList.add('selected');
+        } else {
+          document.querySelector('#comorbidPills [data-val="None"]').classList.remove('selected');
+          pill.classList.toggle('selected');
+        }
+      });
+    });
+
+    // File Selection Trigger
     document.getElementById('fileUpload').addEventListener('change', function(e) {
       if (e.target.files.length > 0) {
         pendingFile = e.target.files[0];
@@ -247,7 +342,7 @@
       }
     });
 
-    // Client-side Image Compression (Reduces 12MB photos to ~500KB)
+    // Fast In-Browser Image Compressor
     async function processFile(file) {
       if (file.type === "application/pdf") {
         return new Promise((resolve) => {
@@ -281,22 +376,23 @@
       });
     }
 
-    // Save Case Entry
+    // Save or Overwrite / Edit Case
     async function saveCase() {
       const proc = document.getElementById('procedureName').value.trim();
       if (!proc) {
-        alert("Please enter the surgical procedure.");
+        alert("Please enter the surgical procedure name.");
         return;
       }
 
       const saveBtn = document.getElementById('saveCaseBtn');
+      const saveBtnText = document.getElementById('saveBtnText');
       saveBtn.disabled = true;
-      saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+      saveBtnText.textContent = 'Uploading / Saving...';
 
-      let driveLink = "";
+      let driveLink = existingAttachmentUrl;
       const scriptUrl = localStorage.getItem(SCRIPT_URL_KEY);
 
-      // Upload to Drive if file is attached and Script URL is configured
+      // Upload if a new file is chosen
       if (pendingFile && scriptUrl) {
         document.getElementById('uploadStatusText').textContent = "Uploading to Drive...";
         try {
@@ -310,109 +406,4 @@
             method: 'POST',
             body: JSON.stringify(payload)
           });
-          const json = await res.json();
-          if (json.status === "success") {
-            driveLink = json.viewUrl;
-          }
-        } catch (err) {
-          console.error("Drive upload failed:", err);
-          alert("File upload failed, but the case details will still be saved locally.");
-        }
-      }
-
-      // Build Case Object
-      const newCase = {
-        id: "CASE-" + Date.now(),
-        date: document.getElementById('caseDate').value,
-        patient: document.getElementById('patientInfo').value || "N/A",
-        procedure: proc,
-        specialty: document.getElementById('surgicalSpecialty').value,
-        supervision: document.getElementById('supervision').value,
-        asa: selectedASA,
-        technique: document.getElementById('technique').value,
-        notes: document.getElementById('caseNotes').value,
-        attachmentUrl: driveLink
-      };
-
-      // Persist to localStorage
-      const cases = JSON.parse(localStorage.getItem('etherlog_cases') || '[]');
-      cases.unshift(newCase);
-      localStorage.setItem('etherlog_cases', JSON.stringify(cases));
-
-      // Reset Form
-      document.getElementById('procedureName').value = "";
-      document.getElementById('patientInfo').value = "";
-      document.getElementById('caseNotes').value = "";
-      document.getElementById('fileUpload').value = "";
-      document.getElementById('filePreview').style.display = "none";
-      pendingFile = null;
-
-      saveBtn.disabled = false;
-      saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save & Log Case';
-      alert("Case recorded successfully!");
-      renderLedger();
-    }
-
-    // Render Ledger View
-    function renderLedger() {
-      const container = document.getElementById('caseListContainer');
-      const cases = JSON.parse(localStorage.getItem('etherlog_cases') || '[]');
-      if (cases.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:30px;">No cases recorded yet.</p>';
-        return;
-      }
-      container.innerHTML = cases.map(c => `
-        <div class="case-item">
-          <div class="case-header">
-            <span class="case-title">${c.procedure}</span>
-            <span class="badge badge-asa">ASA ${c.asa}</span>
-          </div>
-          <div class="case-meta">
-            <span><i class="fa-regular fa-calendar"></i> ${c.date}</span>
-            <span><i class="fa-regular fa-user"></i> ${c.patient}</span>
-            <span><i class="fa-solid fa-stethoscope"></i> ${c.specialty}</span>
-          </div>
-          <p style="font-size:0.85rem; margin-bottom:8px;"><strong>Technique:</strong> ${c.technique} (${c.supervision})</p>
-          ${c.notes ? `<p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px;"><em>"${c.notes}"</em></p>` : ''}
-          ${c.attachmentUrl ? `<a href="${c.attachmentUrl}" target="_blank" class="attachment-link"><i class="fa-solid fa-paperclip"></i> View OT Record</a>` : ''}
-        </div>
-      `).join('');
-    }
-
-    // Save Settings
-    function saveSettings() {
-      const url = document.getElementById('scriptUrlSetting').value.trim();
-      localStorage.setItem(SCRIPT_URL_KEY, url);
-      alert("Settings saved!");
-    }
-
-    // Switch Tabs
-    function switchTab(tabId, el) {
-      document.getElementById('tabLogger').style.display = tabId === 'tabLogger' ? 'block' : 'none';
-      document.getElementById('tabLedger').style.display = tabId === 'tabLedger' ? 'block' : 'none';
-      document.getElementById('tabSettings').style.display = tabId === 'tabSettings' ? 'block' : 'none';
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      el.classList.add('active');
-      if (tabId === 'tabLedger') renderLedger();
-    }
-
-    // Export CSV
-    function exportCSV() {
-      const cases = JSON.parse(localStorage.getItem('etherlog_cases') || '[]');
-      if (cases.length === 0) return alert("No cases to export!");
-      let csv = "Date,Patient,Procedure,Specialty,ASA,Technique,Supervision,Notes,DriveAttachment\n";
-      cases.forEach(c => {
-        csv += `"${c.date}","${c.patient}","${c.procedure}","${c.specialty}","${c.asa}","${c.technique}","${c.supervision}","${c.notes || ''}","${c.attachmentUrl || ''}"\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `Anesthesia_Logbook_${new Date().toISOString().split('T')[0]}.csv`;
-      a.click();
-    }
-
-    // Initial render
-    renderLedger();
-  </script>
-</body>
-</html>
+          const json = awa
