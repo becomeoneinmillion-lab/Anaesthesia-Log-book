@@ -74,12 +74,13 @@
         <h2 id="formTitle" style="font-size:1.12rem;margin-bottom:12px;">Log Anesthetic Case</h2>
         <input type="hidden" id="editId" value="">
         
-        <div class="row">
-          <div class="fg col"><label>Date</label><input type="date" id="cDate"></div>
-          <div class="fg col"><label>Elective / Emergency</label><select id="cPrio"><option>Elective</option><option>Emergency</option></select></div>
+        <!-- 1. DATE -->
+        <div class="fg">
+          <label>Date</label>
+          <input type="date" id="cDate">
         </div>
 
-        <!-- NEW: HOSPITAL NAME WITH ADD CUSTOM -->
+        <!-- 2. HOSPITAL NAME (WITH + ADD CUSTOM) -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Hospital Name</label>
@@ -89,14 +90,36 @@
           <datalist id="hospList"></datalist>
         </div>
 
-        <!-- NEW: PATIENT ID + AGE + SEX -->
+        <!-- 3. PATIENT ID, 4. AGE, 5. SEX -->
         <div class="row">
           <div class="fg" style="flex:1.4"><label>Patient ID / IP No.</label><input type="text" id="cPatId" placeholder="e.g. IP / UHID"></div>
           <div class="fg" style="flex:0.8"><label>Age</label><input type="number" id="cAge" placeholder="e.g. 45"></div>
           <div class="fg" style="flex:1"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
         </div>
 
-        <!-- NEW: DIAGNOSIS WITH ADD CUSTOM -->
+        <!-- 6. ELECTIVE OR EMERGENCY & 7. SUPERVISION -->
+        <div class="row">
+          <div class="fg col">
+            <label>Elective / Emergency</label>
+            <select id="cPrio"><option>Elective</option><option>Emergency</option></select>
+          </div>
+          <div class="fg col">
+            <label>Supervision</label>
+            <select id="cSup"><option>Independent (Sole)</option><option>Direct Supervision</option><option>Indirect Supervision</option></select>
+          </div>
+        </div>
+
+        <!-- 8. SPECIALTY (WITH + ADD CUSTOM) -->
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Specialty</label>
+            <button type="button" class="mini-btn" onclick="addCustom('spec')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cSpec" list="specList" placeholder="Start typing or select specialty...">
+          <datalist id="specList"></datalist>
+        </div>
+
+        <!-- 9. DIAGNOSIS (WITH + ADD CUSTOM) -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Diagnosis</label>
@@ -106,20 +129,35 @@
           <datalist id="diagList"></datalist>
         </div>
 
+        <!-- 10. SURGICAL PROCEDURE (WITH + ADD CUSTOM) -->
         <div class="fg">
-          <div class="lbl-row"><label style="margin:0">Surgical Procedure</label><button type="button" class="mini-btn" onclick="addCustom('proc')">+ Add Custom</button></div>
+          <div class="lbl-row">
+            <label style="margin:0">Surgical Procedure</label>
+            <button type="button" class="mini-btn" onclick="addCustom('proc')">+ Add Custom</button>
+          </div>
           <input type="text" id="cProc" list="procList" placeholder="Start typing or select procedure...">
           <datalist id="procList"></datalist>
         </div>
 
-        <div class="row">
-          <div class="fg col"><label>Specialty</label><select id="cSpec"></select></div>
-          <div class="fg col"><label>Supervision</label><select id="cSup"><option>Independent (Sole)</option><option>Direct Supervision</option><option>Indirect Supervision</option></select></div>
-        </div>
-        <div class="fg"><label>ASA Physical Status</label><div class="pill-group" id="asaPills"></div></div>
-        <div class="fg"><label>Comorbidities</label><div class="pill-group" id="comorbidPills"></div><input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:8px"></div>
+        <!-- 11. COMORBIDITIES -->
         <div class="fg">
-          <div class="lbl-row"><label style="margin:0">Anaesthesia Technique</label><button type="button" class="mini-btn" onclick="addCustom('tech')">+ Add Custom</button></div>
+          <label>Comorbidities</label>
+          <div class="pill-group" id="comorbidPills"></div>
+          <input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:8px">
+        </div>
+
+        <!-- 12. ASA STATUS -->
+        <div class="fg">
+          <label>ASA Physical Status</label>
+          <div class="pill-group" id="asaPills"></div>
+        </div>
+
+        <!-- 13. ANAESTHESIA TECHNIQUE (WITH + ADD CUSTOM & AIRWAY BOX) -->
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Anaesthesia Technique</label>
+            <button type="button" class="mini-btn" onclick="addCustom('tech')">+ Add Custom</button>
+          </div>
           <input type="text" id="cTech" list="techList" placeholder="Start typing technique..." oninput="checkAirway()">
           <datalist id="techList"></datalist>
         </div>
@@ -131,15 +169,35 @@
           </div>
           <input type="text" id="cAirNotes" placeholder="Tube size, blade, intubation notes...">
         </div>
-        <div class="fg"><label>Difficult Airway / Special Notes</label><input type="text" id="cDiff" placeholder="e.g. C-MAC, Bougie, Arterial line (or Nil)"></div>
-        <div class="fg"><label>Analgesia</label><div class="pill-group" id="analgPills"></div><input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:8px"></div>
-        <div class="fg"><label>Complications</label><div class="pill-group" id="compPills"></div><input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:8px"></div>
+
+        <!-- 14. ANALGESIA -->
+        <div class="fg">
+          <label>Analgesia</label>
+          <div class="pill-group" id="analgPills"></div>
+          <input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:8px">
+        </div>
+
+        <!-- 15. DIFFICULT AIRWAY / SPECIAL NOTES -->
+        <div class="fg">
+          <label>Difficult Airway / Special Notes</label>
+          <input type="text" id="cDiff" placeholder="e.g. C-MAC, Bougie, Arterial line (or Nil)">
+        </div>
+
+        <!-- 16. COMPLICATIONS -->
+        <div class="fg">
+          <label>Complications</label>
+          <div class="pill-group" id="compPills"></div>
+          <input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:8px">
+        </div>
+
+        <!-- 17. ATTACH OT RECORD SHEET -->
         <div class="fg" style="background:#f0fdfa;padding:12px;border-radius:8px;border:1px dashed var(--pri)">
           <label style="color:var(--pri)">Attach OT Record Sheet</label>
           <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:6px 0" onchange="document.getElementById('fileStatus').textContent = this.files.length ? (this.files.length + ' file(s) selected ready to upload.') : ''">
           <div id="fileStatus" style="font-size:0.78rem;color:#059669;font-weight:700;margin-top:4px"></div>
           <div id="currFiles" style="margin-top:4px"></div>
         </div>
+
         <button type="button" class="btn" id="saveBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> Save & Log Case</button>
         <button type="button" class="btn btn-sec" style="margin-top:8px;display:none" id="cancelBtn" onclick="resetForm();showTab('tabLedger')">Cancel Edit</button>
       </div>
@@ -219,6 +277,23 @@
     const HOSPS = [
       "Government Medical College Hospital, Nilgiris",
       "Government Headquarters Hospital"
+    ];
+
+    const SPECS = [
+      "General Surgery",
+      "Orthopaedics",
+      "Obstetrics & Gynaec",
+      "ENT",
+      "Urology",
+      "Paediatrics",
+      "Neuro/Spine",
+      "Plastic Surgery",
+      "Ophthalmology",
+      "Cardiothoracic",
+      "Emergency/Trauma",
+      "Oncology / Oncosurgery",
+      "Vascular Surgery",
+      "Maxillofacial / Dental"
     ];
 
     const DIAGS = [
@@ -381,7 +456,6 @@
     function init() {
       document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('sUrl').value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
-      document.getElementById('cSpec').innerHTML = ["General Surgery","Orthopaedics","Obstetrics & Gynaec","ENT","Urology","Paediatrics","Neuro/Spine","Plastic Surgery","Ophthalmology","Cardiothoracic","Emergency/Trauma"].map(s=>`<option>${s}</option>`).join('');
       makePills('asaPills','asa',['I','II','III','IV','V','I E','II E','III E','IV E'],'radio','I');
       makePills('comorbidPills','comorbid',COMORBIDS,'checkbox','Nil');
       makePills('analgPills','analgesia',ANALGS,'checkbox','Nil');
@@ -393,6 +467,7 @@
     function renderLists() {
       const esc = s => String(s).replace(/"/g, '&quot;');
       document.getElementById('hospList').innerHTML = [...new Set([...HOSPS,...getLS('el_hosps')])].map(x=>`<option value="${esc(x)}">`).join('');
+      document.getElementById('specList').innerHTML = [...new Set([...SPECS,...getLS('el_specs')])].map(x=>`<option value="${esc(x)}">`).join('');
       document.getElementById('diagList').innerHTML = [...new Set([...DIAGS,...getLS('el_diags')])].map(x=>`<option value="${esc(x)}">`).join('');
       document.getElementById('procList').innerHTML = [...new Set([...PROCS,...getLS('el_procs')])].map(x=>`<option value="${esc(x)}">`).join('');
       document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>`<option value="${esc(x)}">`).join('');
@@ -411,6 +486,7 @@
     function addCustom(type) {
       const cfg = {
         hosp: { prompt: "Enter new Hospital Name:", key: "el_hosps", input: "cHosp" },
+        spec: { prompt: "Enter new Specialty:", key: "el_specs", input: "cSpec" },
         diag: { prompt: "Enter new Diagnosis:", key: "el_diags", input: "cDiag" },
         proc: { prompt: "Enter new Surgical Procedure:", key: "el_procs", input: "cProc" },
         tech: { prompt: "Enter new Anaesthesia Technique:", key: "el_techs", input: "cTech" }
@@ -637,10 +713,12 @@
 
       const hosp = document.getElementById('cHosp').value.trim();
       const patId = document.getElementById('cPatId').value.trim();
+      const spec = document.getElementById('cSpec').value.trim() || "General Surgery";
       const diag = document.getElementById('cDiag').value.trim();
       const tech = document.getElementById('cTech').value.trim() || "General Anaesthesia (GA) - ETT";
 
       if (hosp) setLS('el_hosps', [...new Set([...getLS('el_hosps'), hosp])]);
+      if (spec) setLS('el_specs', [...new Set([...getLS('el_specs'), spec])]);
       if (diag) setLS('el_diags', [...new Set([...getLS('el_diags'), diag])]);
       setLS('el_procs', [...new Set([...getLS('el_procs'), proc])]);
       setLS('el_techs', [...new Set([...getLS('el_techs'), tech])]);
@@ -697,21 +775,21 @@
       const rec = {
         id: eid || ('C'+Date.now()),
         date: document.getElementById('cDate').value,
-        prio: document.getElementById('cPrio').value,
         hosp: hosp || 'N/A',
         patId: patId || 'N/A',
         age: document.getElementById('cAge').value || 'N/A',
         sex: document.getElementById('cSex').value,
+        prio: document.getElementById('cPrio').value,
+        sup: document.getElementById('cSup').value,
+        spec,
         diag: diag || 'N/A',
         proc,
-        spec: document.getElementById('cSpec').value,
-        sup: document.getElementById('cSup').value,
-        asa: document.querySelector('input[name="asa"]:checked')?.value || 'I',
         comorbid: getChecked('comorbid','cComOther'),
+        asa: document.querySelector('input[name="asa"]:checked')?.value || 'I',
         tech,
         airway: isAir ? `MMS: ${document.getElementById('cMMS').value} | CL: ${document.getElementById('cCL').value}${document.getElementById('cAirNotes').value ? ' | ' + document.getElementById('cAirNotes').value.trim() : ''}` : 'N/A',
-        diff: document.getElementById('cDiff').value.trim() || 'Nil',
         analg: getChecked('analgesia','cAnalgOther'),
+        diff: document.getElementById('cDiff').value.trim() || 'Nil',
         comp: getChecked('comp','cCompOther'),
         links
       };
@@ -732,7 +810,7 @@
     function resetForm() {
       document.getElementById('editId').value=''; document.getElementById('formTitle').textContent='Log Anesthetic Case';
       document.getElementById('cancelBtn').style.display='none'; document.getElementById('currFiles').innerHTML=''; document.getElementById('fileStatus').textContent=''; curLinks=[];
-      ['cHosp','cPatId','cDiag','cProc','cAge','cTech','cComOther','cAnalgOther','cCompOther','cAirNotes','cDiff','cFiles'].forEach(id=>document.getElementById(id).value='');
+      ['cHosp','cPatId','cAge','cSpec','cDiag','cProc','cComOther','cTech','cAirNotes','cAnalgOther','cDiff','cCompOther','cFiles'].forEach(id=>document.getElementById(id).value='');
       init(); checkAirway();
     }
 
@@ -796,8 +874,8 @@
           <div class="d-box">
             <div><strong>Comorbidities:</strong> ${c.comorbid||c.comorbidities||'Nil'}</div>
             ${c.airway&&c.airway!=='N/A'?`<div><strong>Airway:</strong> ${c.airway}</div>`:''}
-            <div><strong>Difficult Airway/Notes:</strong> ${c.diff||c.difficultAirway||'Nil'}</div>
             <div><strong>Analgesia:</strong> ${c.analg||c.analgesia||'Nil'}</div>
+            <div><strong>Difficult Airway/Notes:</strong> ${c.diff||c.difficultAirway||'Nil'}</div>
             <div><strong>Complications:</strong> ${c.comp||c.complications||'Nil'}</div>
           </div>
           ${syncBadge ? `<div style="margin:6px 0">${syncBadge}</div>` : ''}
@@ -814,13 +892,17 @@
       const c = getLS('el_cases').find(x=>x.id===id); if(!c) return;
       document.getElementById('editId').value = c.id; document.getElementById('formTitle').textContent = 'Edit Case / Add Files';
       document.getElementById('cancelBtn').style.display = 'block';
-      document.getElementById('cDate').value = c.date; document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
+      document.getElementById('cDate').value = c.date;
       document.getElementById('cHosp').value = (c.hosp && c.hosp !== 'N/A') ? c.hosp : '';
       document.getElementById('cPatId').value = (c.patId && c.patId !== 'N/A') ? c.patId : '';
-      document.getElementById('cAge').value = c.age!=='N/A'?c.age:''; document.getElementById('cSex').value = c.sex||'Male';
+      document.getElementById('cAge').value = c.age!=='N/A'?c.age:'';
+      document.getElementById('cSex').value = c.sex||'Male';
+      document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
+      document.getElementById('cSup').value = c.sup||c.supervision||'Independent (Sole)';
+      document.getElementById('cSpec').value = c.spec||c.specialty||'';
       document.getElementById('cDiag').value = (c.diag && c.diag !== 'N/A') ? c.diag : '';
-      document.getElementById('cProc').value = c.proc||c.procedure||''; document.getElementById('cSpec').value = c.spec||c.specialty||'General Surgery';
-      document.getElementById('cSup').value = c.sup||c.supervision||'Independent (Sole)'; document.getElementById('cTech').value = c.tech||c.technique||'';
+      document.getElementById('cProc').value = c.proc||c.procedure||'';
+      document.getElementById('cTech').value = c.tech||c.technique||'';
       document.getElementById('cDiff').value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
 
       const restorePillsAndOther = (name, knownList, str, otherInputId) => {
@@ -834,8 +916,8 @@
         }
       };
 
-      restorePillsAndOther('asa', ['I','II','III','IV','V','I E','II E','III E','IV E'], c.asa, null);
       restorePillsAndOther('comorbid', COMORBIDS, c.comorbid||c.comorbidities, 'cComOther');
+      restorePillsAndOther('asa', ['I','II','III','IV','V','I E','II E','III E','IV E'], c.asa, null);
       restorePillsAndOther('analgesia', ANALGS, c.analg||c.analgesia, 'cAnalgOther');
       restorePillsAndOther('comp', COMPS, c.comp||c.complications, 'cCompOther');
 
@@ -864,7 +946,7 @@
         }
       }
       
-      let csv = "\uFEFFDate,Priority,Hospital,Patient_ID,Age,Sex,Diagnosis,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheets_Drive_Links\n";
+      let csv = "\uFEFFDate,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,OT_Sheets_Drive_Links\n";
       
       cases.forEach(c => {
         let raw = c.links || [];
@@ -881,21 +963,21 @@
         
         const row = [
             c.date,
-            c.prio||c.priority||'',
             c.hosp||'',
             c.patId||'',
             c.age,
             c.sex,
+            c.prio||c.priority||'',
+            c.sup||c.supervision||'',
+            c.spec||c.specialty||'',
             c.diag||'',
             c.proc||c.procedure||'',
-            c.spec||c.specialty||'',
-            c.sup||c.supervision||'',
-            c.asa,
             c.comorbid||c.comorbidities||'',
+            c.asa,
             c.tech||c.technique||'',
             c.airway||'',
-            c.diff||c.difficultAirway||'',
             c.analg||c.analgesia||'',
+            c.diff||c.difficultAirway||'',
             c.comp||c.complications||'',
             stringLinks
         ].map(v => `"${(v||'').toString().replace(/"/g, '""')}"`).join(',');
