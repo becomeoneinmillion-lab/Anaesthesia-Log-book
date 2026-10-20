@@ -49,7 +49,6 @@
     .badge-warn{background:#fef3c7;color:#b45309;border:1px solid #fde68a;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
     #modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
     #modalOverlay img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;}
-    pre.code-blk{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;font-size:0.75rem;overflow-x:auto;line-height:1.4;margin-top:8px;}
   </style>
 </head>
 <body>
@@ -74,19 +73,45 @@
       <div class="card">
         <h2 id="formTitle" style="font-size:1.12rem;margin-bottom:12px;">Log Anesthetic Case</h2>
         <input type="hidden" id="editId" value="">
+        
         <div class="row">
           <div class="fg col"><label>Date</label><input type="date" id="cDate"></div>
           <div class="fg col"><label>Elective / Emergency</label><select id="cPrio"><option>Elective</option><option>Emergency</option></select></div>
         </div>
-        <div class="row">
-          <div class="fg col"><label>Patient Age</label><input type="number" id="cAge" placeholder="e.g. 45"></div>
-          <div class="fg col"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
+
+        <!-- NEW: HOSPITAL NAME WITH ADD CUSTOM -->
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Hospital Name</label>
+            <button type="button" class="mini-btn" onclick="addCustom('hosp')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cHosp" list="hospList" placeholder="Start typing or select hospital...">
+          <datalist id="hospList"></datalist>
         </div>
+
+        <!-- NEW: PATIENT ID + AGE + SEX -->
+        <div class="row">
+          <div class="fg" style="flex:1.4"><label>Patient ID / IP No.</label><input type="text" id="cPatId" placeholder="e.g. IP / UHID"></div>
+          <div class="fg" style="flex:0.8"><label>Age</label><input type="number" id="cAge" placeholder="e.g. 45"></div>
+          <div class="fg" style="flex:1"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
+        </div>
+
+        <!-- NEW: DIAGNOSIS WITH ADD CUSTOM -->
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Diagnosis</label>
+            <button type="button" class="mini-btn" onclick="addCustom('diag')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cDiag" list="diagList" placeholder="Start typing or select diagnosis...">
+          <datalist id="diagList"></datalist>
+        </div>
+
         <div class="fg">
           <div class="lbl-row"><label style="margin:0">Surgical Procedure</label><button type="button" class="mini-btn" onclick="addCustom('proc')">+ Add Custom</button></div>
           <input type="text" id="cProc" list="procList" placeholder="Start typing or select procedure...">
           <datalist id="procList"></datalist>
         </div>
+
         <div class="row">
           <div class="fg col"><label>Specialty</label><select id="cSpec"></select></div>
           <div class="fg col"><label>Supervision</label><select id="cSup"><option>Independent (Sole)</option><option>Direct Supervision</option><option>Indirect Supervision</option></select></div>
@@ -134,27 +159,28 @@
 
     <!-- TAB 3: SETTINGS & DIAGNOSTICS -->
     <div id="tabSettings" style="display:none">
-      <!-- Card 1: Drive URL & Live Access Test -->
       <div class="card">
         <h2 style="font-size:1.12rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 1. Google Drive Access & Connection</h2>
         <div class="fg">
           <label>Google Apps Script Web App URL</label>
           <input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="autoSaveUrl()">
         </div>
-        <div class="row" style="margin-bottom:6px">
+        <div class="row" style="margin-bottom:8px">
           <button type="button" class="btn" style="flex:1" onclick="saveSettings()"><i class="fa-solid fa-floppy-disk"></i> Save URL</button>
           <button type="button" class="btn" style="flex:1;background:#0284c7" id="btnTestDrive" onclick="testDriveAccess()"><i class="fa-solid fa-vial-circle-check"></i> Check Drive Access</button>
         </div>
+        <button type="button" class="btn btn-sec" style="font-size:0.82rem;padding:9px" onclick="openUrlDirectly()">
+          <i class="fa-solid fa-up-right-from-square"></i> Open Script URL in Browser Tab (Direct Permission Check)
+        </button>
         <div id="testStatus" class="diag-box"></div>
       </div>
 
-      <!-- Card 2: File Upload Status Check & Bulk Sync -->
       <div class="card">
         <div class="lbl-row">
           <h2 style="font-size:1.12rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 2. File Upload Status Check</h2>
           <button type="button" class="mini-btn" onclick="checkUploadStatus()"><i class="fa-solid fa-rotate"></i> Refresh Status</button>
         </div>
-        <p style="font-size:0.8rem;color:#64748b;margin-bottom:10px">Checks whether all attached OT Record Sheets across your logged cases have valid Google Drive links ready for CSV export.</p>
+        <p style="font-size:0.8rem;color:#64748b;margin-bottom:10px">Verifies whether all attached OT Record Sheets across your logged cases have valid Google Drive links for CSV export.</p>
         
         <div class="stat-grid">
           <div class="stat-box">
@@ -176,45 +202,6 @@
         </button>
         <div id="syncStatusBox" class="diag-box"></div>
       </div>
-
-      <!-- Card 3: Reference Google Apps Script -->
-      <div class="card">
-        <div class="lbl-row" style="cursor:pointer" onclick="const b=document.getElementById('gasCodeWrap');b.style.display=b.style.display==='none'?'block':'none'">
-          <h2 style="font-size:0.95rem;color:#334155"><i class="fa-solid fa-code"></i> Need the Google Apps Script Code? (Tap to View)</h2>
-          <span class="mini-btn">Show / Hide</span>
-        </div>
-        <div id="gasCodeWrap" style="display:none;margin-top:10px">
-          <p style="font-size:0.8rem;color:#475569;margin-bottom:6px">If your script isn't returning a link, paste this into <b>Extensions &rarr; Apps Script</b>, click <b>Deploy &rarr; New Deployment &rarr; Web App</b>, set <b>Execute as: Me</b> and <b>Who has access: Anyone</b>.</p>
-          <pre class="code-blk">function doPost(e) {
-  try {
-    var d = JSON.parse(e.postData.contents);
-    var b64 = d.base64Data || d.base64 || d.data || "";
-    if (b64.indexOf(",") > -1) b64 = b64.split(",")[1];
-    var blob = Utilities.newBlob(
-      Utilities.base64Decode(b64),
-      d.mimeType || "image/jpeg",
-      d.fileName || ("EtherLog_" + Date.now())
-    );
-    var folders = DriveApp.getFoldersByName("EtherLog_Records");
-    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder("EtherLog_Records");
-    var file = folder.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    var url = file.getUrl();
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      viewUrl: url,
-      url: url,
-      fileId: file.getId()
-    })).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: err.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}</pre>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -228,6 +215,35 @@
     const getLS = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d} };
     const setLS = (k,v) => localStorage.setItem(k,JSON.stringify(v));
     let curLinks = [];
+
+    const HOSPS = [
+      "Government Medical College Hospital, Nilgiris",
+      "Government Headquarters Hospital"
+    ];
+
+    const DIAGS = [
+      "Acute Appendicitis",
+      "Cholelithiasis / Calculus Cholecystitis",
+      "Hollow Viscus Perforation / Peritonitis",
+      "Inguinal Hernia",
+      "Incisional / Paraumbilical Hernia",
+      "Multinodular Goitre (MNG)",
+      "Carcinoma Breast",
+      "Osteoarthritis Knee",
+      "Osteoarthritis Hip / AVN Femur",
+      "Neck of Femur / Intertrochanteric Fracture",
+      "Both Bones Forearm / Tibia Fracture",
+      "Term Gestation / Previous LSCS",
+      "Cephalopelvic Disproportion (CPD) / Fetal Distress",
+      "Abnormal Uterine Bleeding (AUB) / Fibroid Uterus",
+      "Chronic Tonsillitis / Deviated Nasal Septum (DNS)",
+      "Chronic Suppurative Otitis Media (CSOM)",
+      "Benign Prostatic Hyperplasia (BPH)",
+      "Renal / Ureteric Calculus",
+      "Traumatic Brain Injury / EDH / SDH",
+      "Lumbar Canal Stenosis / IVDP",
+      "Diabetic Foot Ulcer / Raw Area"
+    ];
 
     const PROCS = ["Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy","Inguinal Hernia Repair","Total Thyroidectomy","Modified Radical Mastectomy (MRM)","Total Knee Arthroplasty (TKA)","Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm / Tibia","Elective LSCS","Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Tonsillectomy","FESS","Tympanoplasty / Mastoidectomy","TURP","URSL / PCNL","Craniotomy","Lumbar Discectomy / Laminectomy","Split Skin Grafting (SSG)"];
     const TECHS = ["General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT","General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA","Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)","Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block","USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block","Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block","USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block","USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block","USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block","USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block","USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)","USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)","USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation","Local Infiltration / Field Block"];
@@ -250,6 +266,12 @@
       updateHeaderBadge();
     }
 
+    function openUrlDirectly() {
+      const url = getScriptUrl();
+      if (!url) return alert("Paste your Google Apps Script URL first.");
+      window.open(url, '_blank');
+    }
+
     function updateHeaderBadge() {
       const badge = document.getElementById('hdrDriveBadge');
       const url = getScriptUrl();
@@ -263,7 +285,6 @@
       }
     }
 
-    // Universal extractor that handles any key name returned by Google Apps Script
     function extractDriveUrl(j, rawText) {
       if (typeof j === 'string' && j.trim().startsWith('http')) return j.trim();
       if (j && typeof j === 'object') {
@@ -286,7 +307,6 @@
       return '';
     }
 
-    // Helper to extract drive link from a stored link item in localStorage
     function getItemDriveUrl(item) {
       if (!item) return '';
       if (typeof item === 'string') return item.startsWith('http') ? item : '';
@@ -297,10 +317,9 @@
       return '';
     }
 
-    // Single reusable upload function for both new files & retrying existing base64 files
-    async function uploadBase64ToDrive(b64DataUri, mimeType, fileName) {
+    async function uploadBase64ToDrive(b64DataUri, mimeType, fileName, isTest = false) {
       const url = getScriptUrl();
-      if (!url) return { ok: false, error: 'Google Apps Script URL is not set in Settings.' };
+      if (!url) return { ok: false, error: 'Google Apps Script URL is empty.' };
 
       const cleanB64 = b64DataUri.includes(',') ? b64DataUri.split(',')[1] : b64DataUri;
       const safeName = fileName || `Case_${Date.now()}.jpg`;
@@ -308,9 +327,12 @@
       try {
         const res = await fetch(url, {
           method: 'POST',
+          mode: 'cors',
+          credentials: 'omit',
           redirect: 'follow',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
+            testConnection: isTest,
             fileName: safeName,
             filename: safeName,
             name: safeName,
@@ -331,21 +353,28 @@
           return { ok: true, url: driveUrl, raw: j || rawText };
         }
 
+        if (j && j.status === 'success') {
+          return { ok: true, url: j.viewUrl || j.url || 'https://drive.google.com', raw: j };
+        }
+
         if (rawText.includes('<!DOCTYPE html>') || rawText.includes('<html')) {
           return {
             ok: false,
-            error: 'Apps Script returned a Google sign-in/HTML page instead of JSON. Ensure Deployment has "Who has access: Anyone".',
+            error: 'Google returned an HTML login/error page instead of JSON. Make sure "Who has access" is set to "Anyone" and you ran setupDrivePermission() in Apps Script.',
             raw: 'HTML Page Returned'
           };
         }
 
         return {
           ok: false,
-          error: (j && (j.message || j.error)) ? (j.message || j.error) : 'Script responded, but did not return a Drive file URL in its JSON output.',
+          error: (j && (j.message || j.error)) ? (j.message || j.error) : 'Script responded without a Drive URL.',
           raw: j || rawText
         };
       } catch (err) {
-        return { ok: false, error: 'Network / CORS error reaching Script URL: ' + err.message };
+        return {
+          ok: false,
+          error: 'CORS / Network Block: Google Apps Script rejected or redirected the request. Ensure (1) DriveApp permission was authorized in the script editor, (2) "Who has access" is set to "Anyone", and (3) you deployed a "New version".'
+        };
       }
     }
 
@@ -362,8 +391,11 @@
     }
 
     function renderLists() {
-      document.getElementById('procList').innerHTML = [...new Set([...PROCS,...getLS('el_procs')])].map(x=>`<option value="${x}">`).join('');
-      document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>`<option value="${x}">`).join('');
+      const esc = s => String(s).replace(/"/g, '&quot;');
+      document.getElementById('hospList').innerHTML = [...new Set([...HOSPS,...getLS('el_hosps')])].map(x=>`<option value="${esc(x)}">`).join('');
+      document.getElementById('diagList').innerHTML = [...new Set([...DIAGS,...getLS('el_diags')])].map(x=>`<option value="${esc(x)}">`).join('');
+      document.getElementById('procList').innerHTML = [...new Set([...PROCS,...getLS('el_procs')])].map(x=>`<option value="${esc(x)}">`).join('');
+      document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>`<option value="${esc(x)}">`).join('');
     }
 
     function makePills(id,name,arr,type,def) {
@@ -377,11 +409,21 @@
     }
 
     function addCustom(type) {
-      const val = prompt(type==='proc' ? "Enter new Surgical Procedure:" : "Enter new Anaesthesia Technique:");
-      if(!val || !val.trim()) return;
-      const key = type==='proc' ? 'el_procs' : 'el_techs';
-      setLS(key, [...new Set([...getLS(key), val.trim()])]); renderLists();
-      document.getElementById(type==='proc' ? 'cProc' : 'cTech').value = val.trim(); checkAirway();
+      const cfg = {
+        hosp: { prompt: "Enter new Hospital Name:", key: "el_hosps", input: "cHosp" },
+        diag: { prompt: "Enter new Diagnosis:", key: "el_diags", input: "cDiag" },
+        proc: { prompt: "Enter new Surgical Procedure:", key: "el_procs", input: "cProc" },
+        tech: { prompt: "Enter new Anaesthesia Technique:", key: "el_techs", input: "cTech" }
+      }[type];
+      if (!cfg) return;
+
+      const val = prompt(cfg.prompt);
+      if (!val || !val.trim()) return;
+      const cleanVal = val.trim();
+      setLS(cfg.key, [...new Set([...getLS(cfg.key), cleanVal])]);
+      renderLists();
+      document.getElementById(cfg.input).value = cleanVal;
+      if (type === 'tech') checkAirway();
     }
 
     function checkAirway() {
@@ -430,10 +472,9 @@
       updateHeaderBadge();
       const stat = document.getElementById('testStatus');
       stat.style.display = 'block';
-      stat.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-check-circle"></i> URL saved! Click "Check Drive Access" to verify file upload & Drive link return.</span>';
+      stat.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-check-circle"></i> URL saved! Now click "Check Drive Access" to test.</span>';
     }
 
-    // 1. LIVE DRIVE ACCESS & UPLOAD VERIFICATION
     async function testDriveAccess() {
       const url = getScriptUrl();
       const stat = document.getElementById('testStatus');
@@ -441,42 +482,40 @@
       stat.style.display = 'block';
 
       if (!url) {
-        stat.innerHTML = '<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Step 1 Failed: Google Apps Script URL is empty.</div>';
+        stat.innerHTML = '<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Error: Paste your Google Apps Script URL above first.</div>';
         return;
       }
       if (!url.includes('script.google.com') || !url.endsWith('/exec')) {
-        stat.innerHTML = '<div style="color:#d97706;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> Warning: URL should be a Google Apps Script Web App ending in <code>/exec</code>. Testing anyway...</div>';
+        stat.innerHTML = '<div style="color:#d97706;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> Warning: URL must end in <code>/exec</code> (not <code>/dev</code>). Testing anyway...</div>';
       }
 
       saveSettings();
       btn.disabled = true;
-      stat.innerHTML = '<div style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Uploading a 1x1 test image to verify Drive folder access & link return...</div>';
+      stat.innerHTML = '<div style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Verifying Google Drive write access & link response...</div>';
 
-      // 1x1 transparent PNG base64
       const samplePng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-      const res = await uploadBase64ToDrive(samplePng, "image/png", "EtherLog_Drive_Access_Test.png");
+      const res = await uploadBase64ToDrive(samplePng, "image/png", "EtherLog_Access_Test.png", true);
       btn.disabled = false;
 
       if (res.ok && res.url) {
         stat.innerHTML = `
-          <div style="color:#15803d;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-check"></i> Drive Access & Upload Verified!</div>
+          <div style="color:#15803d;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-check"></i> Success! Google Drive Access & Upload Verified</div>
           <div style="font-size:0.8rem;color:#334155">
-            <div>&#10004; <b>Web App Connection:</b> Connected</div>
-            <div>&#10004; <b>Drive Write Permission:</b> Permitted</div>
-            <div>&#10004; <b>Returned File URL:</b> <a href="${res.url}" target="_blank" style="color:#0284c7;word-break:break-all">${res.url}</a></div>
+            <div>&#10004; <b>CORS & Connection:</b> Passed</div>
+            <div>&#10004; <b>Drive Folder/File Write:</b> Authorized</div>
+            <div>&#10004; <b>Drive Link Returned:</b> <a href="${res.url}" target="_blank" style="color:#0284c7;word-break:break-all">${res.url}</a></div>
           </div>`;
       } else {
         stat.innerHTML = `
-          <div style="color:#dc2626;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-xmark"></i> Drive Upload Test Failed</div>
+          <div style="color:#dc2626;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-xmark"></i> Connection / Drive Authorization Blocked</div>
           <div style="font-size:0.8rem;color:#334155">
-            <div><b>Reason:</b> ${res.error}</div>
-            ${res.raw ? `<div style="margin-top:4px;font-family:monospace;font-size:0.74rem;background:#fee2e2;padding:6px;border-radius:4px;word-break:break-all">Script Response: ${typeof res.raw === 'object' ? JSON.stringify(res.raw) : res.raw}</div>` : ''}
-            <div style="margin-top:6px;color:#475569">Tip: Open the <b>Need the Google Apps Script Code?</b> section below if your script doesn't return <code>viewUrl</code> or <code>url</code>.</div>
+            <div style="margin-bottom:6px">${res.error}</div>
+            ${res.raw ? `<div style="margin-top:4px;font-family:monospace;font-size:0.74rem;background:#fee2e2;padding:6px;border-radius:4px;word-break:break-all">Script output: ${typeof res.raw === 'object' ? JSON.stringify(res.raw) : res.raw}</div>` : ''}
+            <div style="margin-top:8px"><b>Quick check:</b> Tap <b>"Open Script URL in Browser Tab"</b> above to see what Google's server displays directly.</div>
           </div>`;
       }
     }
 
-    // 2. SCAN & CHECK ALL CASE ATTACHMENTS
     function getAttachmentStats() {
       const cases = getLS('el_cases');
       let total = 0, synced = 0, local = 0;
@@ -506,16 +545,15 @@
         box.innerHTML = '<span style="color:#64748b"><i class="fa-solid fa-circle-info"></i> No OT Record Sheets attached in your logbook yet.</span>';
         btn.disabled = true;
       } else if (s.local === 0) {
-        box.innerHTML = `<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> All ${s.synced} attached file(s) have valid Google Drive links and will export cleanly to CSV!</span>`;
+        box.innerHTML = `<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> All ${s.synced} attached file(s) have valid Google Drive links ready for CSV export!</span>`;
         btn.disabled = true;
       } else {
-        box.innerHTML = `<span style="color:#b45309;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> Found ${s.local} file(s) saved locally without a Google Drive URL. Click the button above to upload them now and populate their CSV links.</span>`;
+        box.innerHTML = `<span style="color:#b45309;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> ${s.local} file(s) are saved locally without a Drive link. Tap the green button above to upload them to Google Drive now.</span>`;
         btn.disabled = false;
       }
       updateHeaderBadge();
     }
 
-    // 3. BULK SYNC ANY LOCAL-ONLY FILES TO GOOGLE DRIVE
     async function syncPendingUploads(fromLedger = false) {
       const url = getScriptUrl();
       if (!url) {
@@ -526,7 +564,7 @@
 
       const stats = getAttachmentStats();
       if (stats.local === 0) {
-        if (fromLedger) alert("All attached files are already synced to Google Drive with valid links!");
+        if (fromLedger) alert("All attached files are already synced to Google Drive!");
         else checkUploadStatus();
         return;
       }
@@ -562,9 +600,10 @@
             const mimeMatch = item.thumb.match(/^data:([^;]+);/);
             const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
             const ext = mime.includes('pdf') ? 'pdf' : 'jpg';
-            const fName = `Case_${c.date || c.id}_${(c.proc || 'OT').replace(/[^a-zA-Z0-9]/g, '_')}_${fi + 1}.${ext}`;
+            const patTag = (c.patId && c.patId !== 'N/A') ? `_${c.patId.replace(/[^a-zA-Z0-9]/g, '')}` : '';
+            const fName = `Case_${c.date || c.id}${patTag}_${(c.proc || 'OT').replace(/[^a-zA-Z0-9]/g, '_')}_${fi + 1}.${ext}`;
 
-            const res = await uploadBase64ToDrive(item.thumb, mime, fName);
+            const res = await uploadBase64ToDrive(item.thumb, mime, fName, false);
             if (res.ok && res.url) {
               item.url = res.url;
               newlySynced++;
@@ -581,28 +620,30 @@
       renderLedger();
 
       if (fromLedger) {
-        if (failedCount === 0) alert(`Success! Uploaded ${newlySynced} file(s) to Google Drive. You can now export your CSV with all links.`);
-        else alert(`Uploaded ${newlySynced} file(s), but ${failedCount} failed.\nReason: ${lastError}`);
+        if (failedCount === 0) alert(`Success! Uploaded ${newlySynced} file(s) to Google Drive.`);
+        else alert(`Uploaded ${newlySynced} file(s), ${failedCount} failed.\n\nReason: ${lastError}`);
       } else if (box) {
         if (failedCount === 0) {
-          box.innerHTML = `<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> Sync Complete! ${newlySynced} file(s) uploaded to Google Drive. All CSV links are now populated.</span>`;
+          box.innerHTML = `<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> Sync Complete! ${newlySynced} file(s) uploaded to Google Drive.</span>`;
         } else {
           box.innerHTML = `<span style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Uploaded ${newlySynced} file(s), ${failedCount} failed: ${lastError}</span>`;
         }
       }
     }
 
-    // Sync a single case's files directly from the Ledger
-    async function syncSingleCase(caseId) {
-      await syncPendingUploads(true);
-    }
-
     async function saveCase() {
       const proc = document.getElementById('cProc').value.trim();
       if(!proc) return alert("Enter Surgical Procedure");
+
+      const hosp = document.getElementById('cHosp').value.trim();
+      const patId = document.getElementById('cPatId').value.trim();
+      const diag = document.getElementById('cDiag').value.trim();
       const tech = document.getElementById('cTech').value.trim() || "General Anaesthesia (GA) - ETT";
-      setLS('el_procs',[...new Set([...getLS('el_procs'),proc])]);
-      setLS('el_techs',[...new Set([...getLS('el_techs'),tech])]);
+
+      if (hosp) setLS('el_hosps', [...new Set([...getLS('el_hosps'), hosp])]);
+      if (diag) setLS('el_diags', [...new Set([...getLS('el_diags'), diag])]);
+      setLS('el_procs', [...new Set([...getLS('el_procs'), proc])]);
+      setLS('el_techs', [...new Set([...getLS('el_techs'), tech])]);
       renderLists();
       
       const btn = document.getElementById('saveBtn');
@@ -626,22 +667,23 @@
           } catch(e) { console.error("Compression error", e); }
           
           if(url && b64) {
-            const fName = `Case_${document.getElementById('cDate').value || Date.now()}_${f.name.replace(/\s+/g,'_')}`;
-            const upRes = await uploadBase64ToDrive(b64, mime, fName);
+            const patTag = patId ? `_${patId.replace(/[^a-zA-Z0-9]/g, '')}` : '';
+            const fName = `Case_${document.getElementById('cDate').value || Date.now()}${patTag}_${f.name.replace(/\s+/g,'_')}`;
+            const upRes = await uploadBase64ToDrive(b64, mime, fName, false);
             if (upRes.ok && upRes.url) {
               dUrl = upRes.url;
             } else {
               uploadWarnings.push(`${f.name}: ${upRes.error}`);
             }
           } else if (!url) {
-            uploadWarnings.push(`${f.name}: Saved locally (No Drive Script URL configured in Settings)`);
+            uploadWarnings.push(`${f.name}: Saved locally (No Drive Script URL set)`);
           }
           links.push({url: dUrl, thumb: b64, name: f.name});
         }
       }
 
       if (uploadWarnings.length > 0) {
-        alert("Case will be saved locally, but Drive upload reported:\n\n• " + uploadWarnings.join("\n• ") + "\n\nYou can retry uploading anytime from Settings -> File Upload Status Check.");
+        alert("Case saved locally, but Google Drive upload reported:\n\n" + uploadWarnings.join("\n\n"));
       }
 
       const getChecked = (n,oth) => {
@@ -656,16 +698,19 @@
         id: eid || ('C'+Date.now()),
         date: document.getElementById('cDate').value,
         prio: document.getElementById('cPrio').value,
-        age: document.getElementById('cAge').value||'N/A',
+        hosp: hosp || 'N/A',
+        patId: patId || 'N/A',
+        age: document.getElementById('cAge').value || 'N/A',
         sex: document.getElementById('cSex').value,
+        diag: diag || 'N/A',
         proc,
         spec: document.getElementById('cSpec').value,
         sup: document.getElementById('cSup').value,
-        asa: document.querySelector('input[name="asa"]:checked')?.value||'I',
+        asa: document.querySelector('input[name="asa"]:checked')?.value || 'I',
         comorbid: getChecked('comorbid','cComOther'),
         tech,
         airway: isAir ? `MMS: ${document.getElementById('cMMS').value} | CL: ${document.getElementById('cCL').value}${document.getElementById('cAirNotes').value ? ' | ' + document.getElementById('cAirNotes').value.trim() : ''}` : 'N/A',
-        diff: document.getElementById('cDiff').value.trim()||'Nil',
+        diff: document.getElementById('cDiff').value.trim() || 'Nil',
         analg: getChecked('analgesia','cAnalgOther'),
         comp: getChecked('comp','cCompOther'),
         links
@@ -679,7 +724,7 @@
         btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save & Log Case';
         resetForm(); showTab('tabLedger');
       } catch(e) {
-        alert("Storage Full! Your browser local storage limit is reached. If files already uploaded to Drive, clearing heavy local thumbnails or exporting CSV will free space.");
+        alert("Browser LocalStorage is full! Export your CSV to back up your cases.");
         btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save & Log Case';
       }
     }
@@ -687,7 +732,7 @@
     function resetForm() {
       document.getElementById('editId').value=''; document.getElementById('formTitle').textContent='Log Anesthetic Case';
       document.getElementById('cancelBtn').style.display='none'; document.getElementById('currFiles').innerHTML=''; document.getElementById('fileStatus').textContent=''; curLinks=[];
-      ['cProc','cAge','cTech','cComOther','cAnalgOther','cCompOther','cAirNotes','cDiff','cFiles'].forEach(id=>document.getElementById(id).value='');
+      ['cHosp','cPatId','cDiag','cProc','cAge','cTech','cComOther','cAnalgOther','cCompOther','cAirNotes','cDiff','cFiles'].forEach(id=>document.getElementById(id).value='');
       init(); checkAirway();
     }
 
@@ -728,9 +773,13 @@
           if (syncedCount === raw.length) {
             syncBadge = `<span class="badge-ok"><i class="fa-solid fa-cloud-check"></i> Drive Synced (${syncedCount}/${raw.length})</span>`;
           } else {
-            syncBadge = `<span class="badge-warn" onclick="syncSingleCase('${c.id}')" title="Tap to upload to Google Drive"><i class="fa-solid fa-triangle-exclamation"></i> Local Only (${syncedCount}/${raw.length} on Drive) - Tap to Sync</span>`;
+            syncBadge = `<span class="badge-warn" onclick="syncPendingUploads(true)" title="Tap to upload to Google Drive"><i class="fa-solid fa-triangle-exclamation"></i> Local Only (${syncedCount}/${raw.length} on Drive) - Tap to Sync</span>`;
           }
         }
+
+        const hospDisplay = (c.hosp && c.hosp !== 'N/A') ? `<div><i class="fa-regular fa-hospital" style="color:var(--pri)"></i> <strong>Hospital:</strong> ${c.hosp}</div>` : '';
+        const patIdDisplay = (c.patId && c.patId !== 'N/A') ? ` | <strong>ID:</strong> ${c.patId}` : '';
+        const diagDisplay = (c.diag && c.diag !== 'N/A') ? `<div style="font-size:0.84rem;margin-bottom:2px"><strong>Diagnosis:</strong> ${c.diag}</div>` : '';
 
         return `<div class="case-item">
           <div class="lbl-row">
@@ -740,7 +789,9 @@
               <span class="mini-btn">ASA ${c.asa}</span>
             </span>
           </div>
-          <div style="font-size:0.8rem;color:#64748b;margin:4px 0">${c.date} | ${c.age}Y / ${c.sex} | ${c.spec||c.specialty} (${c.sup||c.supervision})</div>
+          <div style="font-size:0.8rem;color:#64748b;margin:4px 0">${c.date}${patIdDisplay} | ${c.age}Y / ${c.sex} | ${c.spec||c.specialty} (${c.sup||c.supervision})</div>
+          ${hospDisplay ? `<div style="font-size:0.82rem;color:#334155;margin-bottom:3px">${hospDisplay}</div>` : ''}
+          ${diagDisplay}
           <div style="font-size:0.85rem"><strong>Technique:</strong> ${c.tech||c.technique}</div>
           <div class="d-box">
             <div><strong>Comorbidities:</strong> ${c.comorbid||c.comorbidities||'Nil'}</div>
@@ -764,7 +815,10 @@
       document.getElementById('editId').value = c.id; document.getElementById('formTitle').textContent = 'Edit Case / Add Files';
       document.getElementById('cancelBtn').style.display = 'block';
       document.getElementById('cDate').value = c.date; document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
+      document.getElementById('cHosp').value = (c.hosp && c.hosp !== 'N/A') ? c.hosp : '';
+      document.getElementById('cPatId').value = (c.patId && c.patId !== 'N/A') ? c.patId : '';
       document.getElementById('cAge').value = c.age!=='N/A'?c.age:''; document.getElementById('cSex').value = c.sex||'Male';
+      document.getElementById('cDiag').value = (c.diag && c.diag !== 'N/A') ? c.diag : '';
       document.getElementById('cProc').value = c.proc||c.procedure||''; document.getElementById('cSpec').value = c.spec||c.specialty||'General Surgery';
       document.getElementById('cSup').value = c.sup||c.supervision||'Independent (Sole)'; document.getElementById('cTech').value = c.tech||c.technique||'';
       document.getElementById('cDiff').value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
@@ -798,20 +852,19 @@
       }
     }
     
-    // CSV EXPORTER WITH UNIVERSAL LINK EXTRACTION & PENDING SYNC CHECK
     async function exportCSV() {
       let cases = getLS('el_cases'); 
       if(!cases.length) return alert("No cases to export!");
 
       const stats = getAttachmentStats();
       if (stats.local > 0 && getScriptUrl()) {
-        if (confirm(`You have ${stats.local} attached OT sheet(s) that don't have a Google Drive link yet.\n\nWould you like to sync them to Google Drive right now before exporting the CSV?`)) {
+        if (confirm(`You have ${stats.local} attached OT sheet(s) without a Google Drive link.\n\nSync them to Google Drive now before exporting CSV?`)) {
           await syncPendingUploads(false);
           cases = getLS('el_cases');
         }
       }
       
-      let csv = "\uFEFFDate,Priority,Age,Sex,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheets_Drive_Links\n";
+      let csv = "\uFEFFDate,Priority,Hospital,Patient_ID,Age,Sex,Diagnosis,Procedure,Specialty,Supervision,ASA,Comorbidities,Technique,Airway,DifficultAirway,Analgesia,Complications,OT_Sheets_Drive_Links\n";
       
       cases.forEach(c => {
         let raw = c.links || [];
@@ -820,17 +873,31 @@
         let stringLinks = raw.map(x => {
           const dUrl = getItemDriveUrl(x);
           if (dUrl) return dUrl;
-          if (x && x.thumb) return 'Local File Only (Use Sync in Settings to get Drive URL)';
+          if (x && x.thumb) return 'Local File Only (Not Synced to Drive)';
           return '';
         }).filter(Boolean).join(' | ');
         
         if(!stringLinks) stringLinks = 'Nil';
         
         const row = [
-            c.date, c.prio||c.priority||'', c.age, c.sex, c.proc||c.procedure||'',
-            c.spec||c.specialty||'', c.sup||c.supervision||'', c.asa, c.comorbid||c.comorbidities||'',
-            c.tech||c.technique||'', c.airway||'', c.diff||c.difficultAirway||'',
-            c.analg||c.analgesia||'', c.comp||c.complications||'', stringLinks
+            c.date,
+            c.prio||c.priority||'',
+            c.hosp||'',
+            c.patId||'',
+            c.age,
+            c.sex,
+            c.diag||'',
+            c.proc||c.procedure||'',
+            c.spec||c.specialty||'',
+            c.sup||c.supervision||'',
+            c.asa,
+            c.comorbid||c.comorbidities||'',
+            c.tech||c.technique||'',
+            c.airway||'',
+            c.diff||c.difficultAirway||'',
+            c.analg||c.analgesia||'',
+            c.comp||c.complications||'',
+            stringLinks
         ].map(v => `"${(v||'').toString().replace(/"/g, '""')}"`).join(',');
 
         csv += row + "\n";
