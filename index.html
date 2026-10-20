@@ -2,53 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#00897b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Anaesthesiologist Logbook</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root{--pri:#00897b;--bg:#f8fafc;--txt:#0f172a;--bdr:#cbd5e1;}
-    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,sans-serif;-webkit-tap-highlight-color:transparent;}
-    body{background:var(--bg);color:var(--txt);padding-bottom:90px;}
-    header{background:var(--pri);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:10px;}
-    header h1{font-size:1.08rem;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.2;}
-    .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
-    .hdr-doc{font-size:0.78rem;font-weight:700;color:#ffffff;text-align:right;cursor:pointer;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .drv-pill{font-size:0.7rem;padding:3px 9px;border-radius:12px;background:rgba(255,255,255,0.18);color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;}
-    .container{max-width:800px;margin:0 auto;padding:12px;}
-    .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid var(--bdr);}
-    .fg{margin-bottom:14px;}
-    .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px;flex-wrap:wrap;}
-    label{display:block;font-size:0.75rem;font-weight:700;color:#64748b;margin-bottom:5px;text-transform:uppercase;}
-    input[type="text"],input[type="number"],input[type="date"],input[type="url"],select{width:100%;padding:10px;border:1px solid var(--bdr);border-radius:8px;font-size:0.95rem;background:#fff;}
-    .row{display:flex;gap:10px;}.col{flex:1;}
-    .pill-group{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;}
-    .pill-lbl{display:inline-block;cursor:pointer;}.pill-lbl input{display:none;}
-    .pill-sp{display:inline-flex;padding:7px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;background:#e2e8f0;color:#334155;border:1.5px solid var(--bdr);}
+    :root{--pri:#00897b;--pri-dk:#00695c;--bg:#f1f5f9;--txt:#0f172a;--muted:#64748b;--bdr:#cbd5e1;}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
+    body{background:var(--bg);color:var(--txt);padding-bottom:calc(82px + env(safe-area-inset-bottom, 0px));-webkit-font-smoothing:antialiased;}
+    
+    /* Sticky Mobile Header */
+    header{background:var(--pri);color:#fff;padding:10px 14px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,0.12);}
+    header h1{font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:7px;line-height:1.2;}
+    .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+    .hdr-doc{font-size:0.75rem;font-weight:700;color:#ffffff;text-align:right;cursor:pointer;max-width:175px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .drv-pill{font-size:0.66rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.2);color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+    .container{max-width:760px;margin:0 auto;padding:10px;}
+    .card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;border:1px solid var(--bdr);box-shadow:0 1px 2px rgba(0,0,0,0.03);}
+    .fg{margin-bottom:13px;}
+    .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:6px;flex-wrap:wrap;}
+    
+    /* Prominent Section Headings */
+    label{display:block;font-size:0.78rem;font-weight:800;color:#334155;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.02em;}
+    
+    /* Mobile-Optimized Inputs */
+    input[type="text"],input[type="number"],input[type="date"],input[type="url"],input[type="search"],select{
+      width:100%;padding:9px 11px;border:1px solid var(--bdr);border-radius:8px;font-size:0.92rem;background:#fff;color:var(--txt);transition:border-color 0.15s,box-shadow 0.15s;
+    }
+    input:focus,select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 2.5px rgba(0,137,123,0.16);}
+    .row{display:flex;gap:8px;}.col{flex:1;min-width:0;}
+    
+    /* Compact Quick-Selection Pills (Smaller than Headings) */
+    .pill-group{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px;}
+    .pill-lbl{display:inline-block;cursor:pointer;user-select:none;}.pill-lbl input{display:none;}
+    .pill-sp{
+      display:inline-flex;align-items:center;padding:4px 9px;border-radius:12px;
+      font-size:0.68rem;font-weight:600;line-height:1.2;
+      background:#f1f5f9;color:#475569;border:1px solid var(--bdr);transition:all 0.12s ease;
+    }
     .pill-lbl input[type="radio"]:checked+.pill-sp{background:#00897b!important;color:#fff!important;border-color:#004d40!important;}
     .pill-lbl.comorbid input:checked+.pill-sp{background:#0284c7!important;color:#fff!important;border-color:#0369a1!important;}
     .pill-lbl.analgesia input:checked+.pill-sp{background:#059669!important;color:#fff!important;border-color:#047857!important;}
     .pill-lbl.comp input:checked+.pill-sp{background:#ef4444!important;color:#fff!important;border-color:#b91c1c!important;}
     .pill-lbl.comp input[value="Nil"]:checked+.pill-sp,.pill-lbl.comorbid input[value="Nil"]:checked+.pill-sp{background:#10b981!important;color:#fff!important;border-color:#047857!important;}
-    .cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:12px;margin-bottom:14px;display:none;}
-    nav.b-nav{position:fixed;bottom:0;left:0;right:0;height:64px;background:#fff;border-top:2px solid var(--bdr);display:flex;z-index:999;}
-    .nav-btn{background:none;border:none;color:#64748b;display:flex;flex-direction:column;align-items:center;font-size:0.75rem;gap:4px;cursor:pointer;flex:1;justify-content:center;}
+    
+    .cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:11px;margin-bottom:13px;display:none;}
+    
+    /* Mobile Bottom Navigation with Safe Area Support */
+    nav.b-nav{
+      position:fixed;bottom:0;left:0;right:0;
+      height:calc(60px + env(safe-area-inset-bottom, 0px));
+      padding-bottom:env(safe-area-inset-bottom, 0px);
+      background:#fff;border-top:1px solid var(--bdr);display:flex;z-index:999;
+      box-shadow:0 -2px 8px rgba(0,0,0,0.05);
+    }
+    .nav-btn{background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;font-size:0.7rem;gap:3px;cursor:pointer;flex:1;justify-content:center;font-weight:600;}
+    .nav-btn i{font-size:1.05rem;}
     .nav-btn.active{color:var(--pri)!important;font-weight:700;}
-    .btn{width:100%;padding:12px;border-radius:8px;font-size:0.95rem;font-weight:600;border:none;cursor:pointer;background:var(--pri);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:7px;}
+    
+    .btn{width:100%;padding:11px;border-radius:8px;font-size:0.93rem;font-weight:700;border:none;cursor:pointer;background:var(--pri);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:7px;}
+    .btn:active{transform:scale(0.99);background:var(--pri-dk);}
     .btn:disabled{opacity:0.6;cursor:not-allowed;}
     .btn-sec{background:#e2e8f0;color:var(--txt);}
-    .mini-btn{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:700;cursor:pointer;}
-    .case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:12px;}
-    .d-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:8px 0;font-size:0.83rem;line-height:1.4;border-left:3px solid var(--pri);}
-    .act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.78rem;padding:6px 11px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:6px 6px 0 0;}
+    .mini-btn{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:2px 7px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;}
+    
+    /* Ledger Cards */
+    .case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px;}
+    .d-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:7px 0;font-size:0.81rem;line-height:1.45;border-left:3px solid var(--pri);}
+    .act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;padding:6px 10px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:5px 5px 0 0;}
     .thumb-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0;}
-    .thumb-img{width:64px;height:64px;object-fit:cover;border-radius:6px;border:2px solid var(--pri);cursor:pointer;}
+    .thumb-img{width:58px;height:58px;object-fit:cover;border-radius:6px;border:2px solid var(--pri);cursor:pointer;}
+    
+    /* Summary & Stats UI */
     .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
-    .stat-box{background:#f8fafc;border:1px solid var(--bdr);border-radius:8px;padding:10px;text-align:center;}
+    .stat-grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+    @media(min-width:500px){.stat-grid-4{grid-template-columns:repeat(4,1fr);}}
+    .stat-box{background:#f8fafc;border:1px solid var(--bdr);border-radius:8px;padding:10px 8px;text-align:center;}
     .stat-num{font-size:1.25rem;font-weight:800;color:var(--txt);}
-    .stat-lbl{font-size:0.7rem;color:#64748b;font-weight:700;text-transform:uppercase;margin-top:2px;}
-    .diag-box{padding:12px;border-radius:8px;font-size:0.84rem;line-height:1.5;background:#f8fafc;border:1px solid var(--bdr);margin-top:10px;display:none;}
-    .badge-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
-    .badge-warn{background:#fef3c7;color:#b45309;border:1px solid #fde68a;padding:3px 8px;border-radius:6px;font-size:0.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
+    .stat-lbl{font-size:0.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:2px;}
+    .bar-row{margin-bottom:8px;font-size:0.8rem;}
+    .bar-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-weight:600;color:#334155;}
+    .bar-track{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;}
+    .bar-fill{height:100%;background:var(--pri);border-radius:4px;}
+
+    .diag-box{padding:11px;border-radius:8px;font-size:0.82rem;line-height:1.45;background:#f8fafc;border:1px solid var(--bdr);margin-top:10px;display:none;}
+    .badge-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:2px 7px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+    .badge-warn{background:#fef3c7;color:#b45309;border:1px solid #fde68a;padding:2px 7px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
+    
     #modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
     #modalOverlay img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;}
   </style>
@@ -73,10 +115,10 @@
   </div>
 
   <div class="container">
-    <!-- TAB 1: LOGGER -->
+    <!-- TAB 1: LOGBOOK ENTRY -->
     <div id="tabLogger">
       <div class="card">
-        <div id="formTitle" style="display:none;font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:12px;"></div>
+        <div id="formTitle" style="display:none;font-size:1rem;font-weight:700;color:var(--pri);margin-bottom:10px;"></div>
         <input type="hidden" id="editId" value="">
         
         <!-- 1. DATE -->
@@ -85,7 +127,7 @@
           <input type="date" id="cDate">
         </div>
 
-        <!-- 2. HOSPITAL NAME (WITH + ADD CUSTOM) -->
+        <!-- 2. HOSPITAL NAME -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Hospital Name</label>
@@ -97,8 +139,8 @@
 
         <!-- 3. PATIENT ID, 4. AGE, 5. SEX -->
         <div class="row">
-          <div class="fg" style="flex:1.4"><label>Patient ID / IP No.</label><input type="text" id="cPatId" placeholder="e.g. IP / UHID"></div>
-          <div class="fg" style="flex:0.8"><label>Age</label><input type="number" id="cAge" placeholder="e.g. 45"></div>
+          <div class="fg" style="flex:1.35"><label>Patient ID</label><input type="text" id="cPatId" placeholder="IP / UHID"></div>
+          <div class="fg" style="flex:0.75"><label>Age</label><input type="number" id="cAge" inputmode="numeric" placeholder="Yrs"></div>
           <div class="fg" style="flex:1"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
         </div>
 
@@ -110,11 +152,15 @@
           </div>
           <div class="fg col">
             <label>Supervision</label>
-            <select id="cSup"><option>Independent (Sole)</option><option>Direct Supervision</option><option>Indirect Supervision</option></select>
+            <select id="cSup">
+              <option>No Supervision</option>
+              <option>Direct Supervision</option>
+              <option>Indirect Supervision</option>
+            </select>
           </div>
         </div>
 
-        <!-- 8. SPECIALTY (WITH + ADD CUSTOM) -->
+        <!-- 8. SPECIALTY -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Specialty</label>
@@ -124,7 +170,7 @@
           <datalist id="specList"></datalist>
         </div>
 
-        <!-- 9. DIAGNOSIS (WITH + ADD CUSTOM) -->
+        <!-- 9. DIAGNOSIS -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Diagnosis</label>
@@ -134,7 +180,7 @@
           <datalist id="diagList"></datalist>
         </div>
 
-        <!-- 10. SURGICAL PROCEDURE (WITH + ADD CUSTOM) -->
+        <!-- 10. SURGICAL PROCEDURE -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Surgical Procedure</label>
@@ -148,7 +194,7 @@
         <div class="fg">
           <label>Comorbidities</label>
           <div class="pill-group" id="comorbidPills"></div>
-          <input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:8px">
+          <input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:7px">
         </div>
 
         <!-- 12. ASA STATUS -->
@@ -157,7 +203,7 @@
           <div class="pill-group" id="asaPills"></div>
         </div>
 
-        <!-- 13. ANAESTHESIA TECHNIQUE (WITH + ADD CUSTOM & AIRWAY BOX) -->
+        <!-- 13. ANAESTHESIA TECHNIQUE -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Anaesthesia Technique</label>
@@ -179,7 +225,7 @@
         <div class="fg">
           <label>Analgesia</label>
           <div class="pill-group" id="analgPills"></div>
-          <input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:8px">
+          <input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:7px">
         </div>
 
         <!-- 15. DIFFICULT AIRWAY / SPECIAL NOTES -->
@@ -192,15 +238,15 @@
         <div class="fg">
           <label>Complications</label>
           <div class="pill-group" id="compPills"></div>
-          <input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:8px">
+          <input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:7px">
         </div>
 
         <!-- 17. ATTACH OT RECORD SHEET -->
-        <div class="fg" style="background:#f0fdfa;padding:12px;border-radius:8px;border:1px dashed var(--pri)">
+        <div class="fg" style="background:#f0fdfa;padding:11px;border-radius:8px;border:1px dashed var(--pri)">
           <label style="color:var(--pri)">Attach OT Record Sheet</label>
-          <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:6px 0" onchange="document.getElementById('fileStatus').textContent = this.files.length ? (this.files.length + ' file(s) selected ready to upload.') : ''">
-          <div id="fileStatus" style="font-size:0.78rem;color:#059669;font-weight:700;margin-top:4px"></div>
-          <div id="currFiles" style="margin-top:4px"></div>
+          <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:4px 0;font-size:0.84rem" onchange="document.getElementById('fileStatus').textContent = this.files.length ? (this.files.length + ' file(s) selected ready to upload.') : ''">
+          <div id="fileStatus" style="font-size:0.75rem;color:#059669;font-weight:700;margin-top:3px"></div>
+          <div id="currFiles" style="margin-top:3px"></div>
         </div>
 
         <button type="button" class="btn" id="saveBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> Save Case</button>
@@ -210,25 +256,86 @@
 
     <!-- TAB 2: LEDGER -->
     <div id="tabLedger" style="display:none">
-      <div class="lbl-row" style="margin-bottom:12px">
-        <h2>My Logbook Records</h2>
+      <div class="lbl-row" style="margin-bottom:8px">
+        <h2 style="font-size:1.08rem">My Logbook Records</h2>
         <div style="display:flex;gap:6px">
-          <button type="button" class="mini-btn" style="padding:7px 11px;font-size:0.78rem;background:#0284c7;color:#fff;border:none" onclick="syncPendingUploads(true)"><i class="fa-solid fa-cloud-arrow-up"></i> Sync Missing Links</button>
-          <button type="button" class="mini-btn" style="padding:7px 12px;font-size:0.78rem;background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+          <button type="button" class="mini-btn" style="padding:6px 10px;font-size:0.74rem;background:#0284c7;color:#fff;border:none" onclick="syncPendingUploads(true)"><i class="fa-solid fa-cloud-arrow-up"></i> Sync Links</button>
+          <button type="button" class="mini-btn" style="padding:6px 10px;font-size:0.74rem;background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
         </div>
+      </div>
+      <div class="fg" style="margin-bottom:10px">
+        <input type="search" id="ledgerSearch" placeholder="Search procedure, diagnosis, patient ID, specialty..." oninput="renderLedger()">
       </div>
       <div id="ledgerList"></div>
     </div>
 
-    <!-- TAB 3: SETTINGS & DIAGNOSTICS -->
-    <div id="tabSettings" style="display:none">
-      <!-- 1. DOCTOR PROFILE & DETAILS (FIRST SECTION IN SETTINGS) -->
+    <!-- TAB 3: SUMMARY (PRIOR TO SETTINGS TAB) -->
+    <div id="tabSummary" style="display:none">
+      <div class="lbl-row" style="margin-bottom:10px">
+        <h2 style="font-size:1.08rem"><i class="fa-solid fa-chart-pie" style="color:var(--pri)"></i> Logbook Summary</h2>
+        <button type="button" class="mini-btn" style="padding:6px 10px;font-size:0.74rem;background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+      </div>
+
+      <div class="stat-grid-4">
+        <div class="stat-box" style="border-top:3px solid var(--pri)">
+          <div class="stat-num" id="sumTotal">0</div>
+          <div class="stat-lbl">Total Cases</div>
+        </div>
+        <div class="stat-box" style="border-top:3px solid #0284c7">
+          <div class="stat-num" id="sumElective">0</div>
+          <div class="stat-lbl">Elective</div>
+        </div>
+        <div class="stat-box" style="border-top:3px solid #ef4444">
+          <div class="stat-num" id="sumEmergency">0</div>
+          <div class="stat-lbl">Emergency</div>
+        </div>
+        <div class="stat-box" style="border-top:3px solid #059669">
+          <div class="stat-num" id="sumNoSup">0</div>
+          <div class="stat-lbl">No Supervision</div>
+        </div>
+      </div>
+
       <div class="card">
-        <h2 style="font-size:1.12rem;margin-bottom:12px"><i class="fa-solid fa-user-doctor" style="color:var(--pri)"></i> 1. Doctor Profile & Logbook Details</h2>
+        <label style="margin-bottom:8px">Supervision Breakdown</label>
+        <div id="sumSupList"></div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px">Specialty Breakdown</label>
+        <div id="sumSpecList"></div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px">Anaesthesia Technique Breakdown</label>
+        <div id="sumTechList"></div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px">ASA Physical Status</label>
+        <div id="sumAsaList"></div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px">Hospital Breakdown</label>
+        <div id="sumHospList"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: SETTINGS & DIAGNOSTICS -->
+    <div id="tabSettings" style="display:none">
+      <!-- 1. DOCTOR PROFILE & DETAILS -->
+      <div class="card">
+        <h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-user-doctor" style="color:var(--pri)"></i> 1. Doctor Profile & Details</h2>
         
-        <div class="fg">
-          <label>Name of the Doctor</label>
-          <input type="text" id="dName" placeholder="e.g. Dr. Naveenkumar S" oninput="saveDocProfile(false)">
+        <div class="row">
+          <div class="fg" style="flex:1.4">
+            <label>Name of the Doctor</label>
+            <input type="text" id="dName" placeholder="e.g. Dr. Naveenkumar S" oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg" style="flex:1">
+            <label>Date of Birth</label>
+            <input type="date" id="dDob" oninput="saveDocProfile(false)">
+          </div>
         </div>
 
         <div class="row">
@@ -245,7 +352,7 @@
         <div class="row">
           <div class="fg col">
             <label>Designation</label>
-            <input type="text" id="dDesig" placeholder="e.g. Assistant Professor / Consultant" oninput="saveDocProfile(false)">
+            <input type="text" id="dDesig" placeholder="e.g. Assistant Professor" oninput="saveDocProfile(false)">
           </div>
           <div class="fg col">
             <label>Medical Council</label>
@@ -253,27 +360,14 @@
           </div>
         </div>
 
-        <div class="fg">
-          <label>Address</label>
-          <input type="text" id="dAddr" placeholder="Hospital / Residential Address..." oninput="saveDocProfile(false)">
-        </div>
-
         <div class="row">
-          <div class="fg col">
+          <div class="fg" style="flex:1.5">
+            <label>Address</label>
+            <input type="text" id="dAddr" placeholder="Hospital / Residential Address..." oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg" style="flex:1">
             <label>Country</label>
             <input type="text" id="dCountry" placeholder="e.g. India" oninput="saveDocProfile(false)">
-          </div>
-          <div class="fg col">
-            <label>Who is using this Logbook App</label>
-            <input type="text" id="dRole" list="roleList" placeholder="Select or type role..." oninput="saveDocProfile(false)">
-            <datalist id="roleList">
-              <option value="Consultant Anaesthesiologist">
-              <option value="Senior Resident (SR)">
-              <option value="Postgraduate Resident (MD / DNB)">
-              <option value="Junior Resident (JR)">
-              <option value="Critical Care / Anaesthesia Fellow">
-              <option value="Freelance Anaesthesiologist">
-            </datalist>
           </div>
         </div>
 
@@ -283,7 +377,7 @@
 
       <!-- 2. GOOGLE DRIVE ACCESS & CONNECTION -->
       <div class="card">
-        <h2 style="font-size:1.12rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 2. Google Drive Access & Connection</h2>
+        <h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 2. Google Drive Access & Connection</h2>
         <div class="fg">
           <label>Google Apps Script Web App URL</label>
           <input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="autoSaveUrl()">
@@ -292,8 +386,8 @@
           <button type="button" class="btn" style="flex:1" onclick="saveSettings()"><i class="fa-solid fa-floppy-disk"></i> Save URL</button>
           <button type="button" class="btn" style="flex:1;background:#0284c7" id="btnTestDrive" onclick="testDriveAccess()"><i class="fa-solid fa-vial-circle-check"></i> Check Drive Access</button>
         </div>
-        <button type="button" class="btn btn-sec" style="font-size:0.82rem;padding:9px" onclick="openUrlDirectly()">
-          <i class="fa-solid fa-up-right-from-square"></i> Open Script URL in Browser Tab (Direct Permission Check)
+        <button type="button" class="btn btn-sec" style="font-size:0.8rem;padding:9px" onclick="openUrlDirectly()">
+          <i class="fa-solid fa-up-right-from-square"></i> Open Script URL in Browser Tab
         </button>
         <div id="testStatus" class="diag-box"></div>
       </div>
@@ -301,10 +395,10 @@
       <!-- 3. FILE UPLOAD STATUS CHECK -->
       <div class="card">
         <div class="lbl-row">
-          <h2 style="font-size:1.12rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 3. File Upload Status Check</h2>
+          <h2 style="font-size:1.05rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 3. File Upload Status Check</h2>
           <button type="button" class="mini-btn" onclick="checkUploadStatus()"><i class="fa-solid fa-rotate"></i> Refresh Status</button>
         </div>
-        <p style="font-size:0.8rem;color:#64748b;margin-bottom:10px">Verifies whether all attached OT Record Sheets across your logged cases have valid Google Drive links for CSV export.</p>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Verifies whether all attached OT Record Sheets across your logged cases have valid Google Drive links for CSV export.</p>
         
         <div class="stat-grid">
           <div class="stat-box">
@@ -313,7 +407,7 @@
           </div>
           <div class="stat-box" style="border-color:#86efac;background:#f0fdf4">
             <div class="stat-num" style="color:#15803d" id="stSyncedFiles">0</div>
-            <div class="stat-lbl" style="color:#15803d">On Google Drive</div>
+            <div class="stat-lbl" style="color:#15803d">On Drive</div>
           </div>
           <div class="stat-box" style="border-color:#fde68a;background:#fffbeb">
             <div class="stat-num" style="color:#b45309" id="stLocalFiles">0</div>
@@ -329,10 +423,12 @@
     </div>
   </div>
 
+  <!-- 4-TAB MOBILE BOTTOM NAVIGATION -->
   <nav class="b-nav">
     <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Logbook</span></button>
     <button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
-    <button type="button" class="nav-btn" id="nav2" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
+    <button type="button" class="nav-btn" id="nav2" onclick="showTab('tabSummary')"><i class="fa-solid fa-chart-pie"></i><span>Summary</span></button>
+    <button type="button" class="nav-btn" id="nav3" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
   </nav>
 
   <script>
@@ -392,37 +488,42 @@
     const ANALGS = ['Nil','IV Paracetamol','IV NSAID','IV Opioid','IV Multimodal','Regional Block','Local Infiltration','Epidural Infusion','IV PCA'];
     const COMPS = ['Nil','Hypotension','Bradycardia','Desaturation','Bronchospasm','Laryngospasm','Difficult Intubation','High Spinal','PDPH','PONV'];
 
+    function normalizeSupervision(val) {
+      if (!val || val === 'Independent (Sole)') return 'No Supervision';
+      return val;
+    }
+
     // DOCTOR PROFILE FUNCTIONS
     function loadDocProfile() {
       const p = getLS('el_doc_profile', {});
       document.getElementById('dName').value = p.name || '';
+      document.getElementById('dDob').value = p.dob || '';
       document.getElementById('dReg').value = p.reg || '';
       document.getElementById('dQual').value = p.qual || '';
       document.getElementById('dDesig').value = p.desig || '';
       document.getElementById('dCouncil').value = p.council || '';
       document.getElementById('dAddr').value = p.addr || '';
       document.getElementById('dCountry').value = p.country || '';
-      document.getElementById('dRole').value = p.role || '';
       updateHeaderDocName();
     }
 
     function saveDocProfile(showMsg = false) {
       const p = {
         name: document.getElementById('dName').value.trim(),
+        dob: document.getElementById('dDob').value.trim(),
         reg: document.getElementById('dReg').value.trim(),
         qual: document.getElementById('dQual').value.trim(),
         desig: document.getElementById('dDesig').value.trim(),
         council: document.getElementById('dCouncil').value.trim(),
         addr: document.getElementById('dAddr').value.trim(),
-        country: document.getElementById('dCountry').value.trim(),
-        role: document.getElementById('dRole').value.trim()
+        country: document.getElementById('dCountry').value.trim()
       };
       setLS('el_doc_profile', p);
       updateHeaderDocName();
       if (showMsg) {
         const st = document.getElementById('docSaveStatus');
         st.style.display = 'block';
-        st.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-circle-check"></i> Doctor profile saved! Your details will appear in the top-right header and exported CSV files.</span>';
+        st.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-circle-check"></i> Doctor profile saved! Your details will appear in the header and exported CSV files.</span>';
       }
     }
 
@@ -622,11 +723,12 @@
     }
 
     function showTab(id) {
-      ['tabLogger','tabLedger','tabSettings'].forEach((t,i) => {
+      ['tabLogger','tabLedger','tabSummary','tabSettings'].forEach((t,i) => {
         document.getElementById(t).style.display = (t===id) ? 'block' : 'none';
         document.getElementById('nav'+i).classList.toggle('active', t===id);
       });
       if(id==='tabLedger') renderLedger();
+      if(id==='tabSummary') renderSummary();
       if(id==='tabSettings') {
         loadDocProfile();
         checkUploadStatus();
@@ -937,11 +1039,28 @@
     }
 
     function renderLedger() {
-      const cases = getLS('el_cases'); const box = document.getElementById('ledgerList');
-      if(!cases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
-      window._cases = cases; 
+      const allCases = getLS('el_cases');
+      const box = document.getElementById('ledgerList');
+      const q = (document.getElementById('ledgerSearch')?.value || '').trim().toLowerCase();
+
+      if(!allCases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
+      window._cases = allCases;
+
+      const filtered = allCases.map((c, idx) => ({ c, idx })).filter(({ c }) => {
+        if (!q) return true;
+        const hay = [
+          c.date, c.hosp, c.patId, c.proc, c.procedure,
+          c.diag, c.spec, c.specialty, c.tech, c.technique,
+          c.comorbid, c.diff, c.comp
+        ].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+
+      if (!filtered.length) {
+        return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:24px">No matching cases found.</p>';
+      }
       
-      box.innerHTML = cases.map((c,ci) => {
+      box.innerHTML = filtered.map(({ c, idx: ci }) => {
         let raw = c.links || [];
         if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl, thumb: c.attachmentUrl.startsWith('http')?'':c.attachmentUrl, name:'OT_Record'}];
         
@@ -977,22 +1096,25 @@
           }
         }
 
-        const hospDisplay = (c.hosp && c.hosp !== 'N/A') ? `<div><i class="fa-regular fa-hospital" style="color:var(--pri)"></i> <strong>Hospital:</strong> ${c.hosp}</div>` : '';
-        const patIdDisplay = (c.patId && c.patId !== 'N/A') ? ` | <strong>ID:</strong> ${c.patId}` : '';
-        const diagDisplay = (c.diag && c.diag !== 'N/A') ? `<div style="font-size:0.84rem;margin-bottom:2px"><strong>Diagnosis:</strong> ${c.diag}</div>` : '';
+        const procText = c.proc || c.procedure || 'N/A';
+        const hospText = (c.hosp && c.hosp !== 'N/A') ? c.hosp : '';
+        const patIdText = (c.patId && c.patId !== 'N/A') ? ` | <strong>ID:</strong> ${c.patId}` : '';
+        const diagText = (c.diag && c.diag !== 'N/A') ? c.diag : 'N/A';
+        const supText = normalizeSupervision(c.sup || c.supervision);
 
         return `<div class="case-item">
           <div class="lbl-row">
-            <strong>${c.proc||c.procedure}</strong>
+            <span style="font-size:0.8rem;font-weight:700;color:#475569"><i class="fa-regular fa-calendar"></i> ${c.date}${patIdText} | ${c.age}Y / ${c.sex}</span>
             <span>
               <span class="mini-btn">${c.prio||c.priority||'Elective'}</span>
               <span class="mini-btn">ASA ${c.asa}</span>
             </span>
           </div>
-          <div style="font-size:0.8rem;color:#64748b;margin:4px 0">${c.date}${patIdDisplay} | ${c.age}Y / ${c.sex} | ${c.spec||c.specialty} (${c.sup||c.supervision})</div>
-          ${hospDisplay ? `<div style="font-size:0.82rem;color:#334155;margin-bottom:3px">${hospDisplay}</div>` : ''}
-          ${diagDisplay}
-          <div style="font-size:0.85rem"><strong>Technique:</strong> ${c.tech||c.technique}</div>
+          ${hospText ? `<div style="font-size:0.8rem;color:#334155;margin-top:4px"><i class="fa-regular fa-hospital" style="color:var(--pri)"></i> <strong>Hospital:</strong> ${hospText}</div>` : ''}
+          <div style="font-size:0.8rem;color:#475569;margin-top:2px"><strong>Specialty:</strong> ${c.spec||c.specialty||'N/A'} | <strong>Supervision:</strong> ${supText}</div>
+          <div style="font-size:0.84rem;margin-top:4px"><strong>Diagnosis:</strong> ${diagText}</div>
+          <div style="font-size:0.88rem;margin-top:2px;color:#0f172a"><strong>Surgical Procedure:</strong> <span style="color:var(--pri-dk);font-weight:700">${procText}</span></div>
+          <div style="font-size:0.84rem;margin-top:2px"><strong>Technique:</strong> ${c.tech||c.technique||'N/A'}</div>
           <div class="d-box">
             <div><strong>Comorbidities:</strong> ${c.comorbid||c.comorbidities||'Nil'}</div>
             ${c.airway&&c.airway!=='N/A'?`<div><strong>Airway:</strong> ${c.airway}</div>`:''}
@@ -1010,6 +1132,67 @@
       }).join('');
     }
 
+    // RENDER SUMMARY TAB
+    function renderSummary() {
+      const cases = getLS('el_cases');
+      const total = cases.length;
+      document.getElementById('sumTotal').textContent = total;
+
+      let elective = 0, emergency = 0, noSup = 0;
+      const supCounts = {};
+      const specCounts = {};
+      const techCounts = {};
+      const asaCounts = {};
+      const hospCounts = {};
+
+      cases.forEach(c => {
+        const pr = (c.prio || c.priority || 'Elective');
+        if (pr === 'Emergency') emergency++; else elective++;
+
+        const sup = normalizeSupervision(c.sup || c.supervision);
+        if (sup === 'No Supervision') noSup++;
+        supCounts[sup] = (supCounts[sup] || 0) + 1;
+
+        const sp = c.spec || c.specialty || 'Unspecified';
+        specCounts[sp] = (specCounts[sp] || 0) + 1;
+
+        const tc = c.tech || c.technique || 'Unspecified';
+        techCounts[tc] = (techCounts[tc] || 0) + 1;
+
+        const asa = 'ASA ' + (c.asa || 'I');
+        asaCounts[asa] = (asaCounts[asa] || 0) + 1;
+
+        const hp = (c.hosp && c.hosp !== 'N/A') ? c.hosp : 'Unspecified';
+        hospCounts[hp] = (hospCounts[hp] || 0) + 1;
+      });
+
+      document.getElementById('sumElective').textContent = elective;
+      document.getElementById('sumEmergency').textContent = emergency;
+      document.getElementById('sumNoSup').textContent = noSup;
+
+      const buildBars = (obj, containerId, color = 'var(--pri)') => {
+        const el = document.getElementById(containerId);
+        const entries = Object.entries(obj).sort((a,b) => b[1] - a[1]);
+        if (!entries.length) {
+          el.innerHTML = '<div style="font-size:0.8rem;color:#64748b">No data logged yet.</div>';
+          return;
+        }
+        el.innerHTML = entries.map(([k, count]) => {
+          const pct = total ? Math.round((count / total) * 100) : 0;
+          return `<div class="bar-row">
+            <div class="bar-lbl"><span>${k}</span><span>${count} (${pct}%)</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+          </div>`;
+        }).join('');
+      };
+
+      buildBars(supCounts, 'sumSupList', '#059669');
+      buildBars(specCounts, 'sumSpecList', '#00897b');
+      buildBars(techCounts, 'sumTechList', '#0284c7');
+      buildBars(asaCounts, 'sumAsaList', '#6366f1');
+      buildBars(hospCounts, 'sumHospList', '#0f766e');
+    }
+
     function editCase(id) {
       const c = getLS('el_cases').find(x=>x.id===id); if(!c) return;
       document.getElementById('editId').value = c.id;
@@ -1023,7 +1206,7 @@
       document.getElementById('cAge').value = c.age!=='N/A'?c.age:'';
       document.getElementById('cSex').value = c.sex||'Male';
       document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
-      document.getElementById('cSup').value = c.sup||c.supervision||'Independent (Sole)';
+      document.getElementById('cSup').value = normalizeSupervision(c.sup||c.supervision);
       document.getElementById('cSpec').value = c.spec||c.specialty||'';
       document.getElementById('cDiag').value = (c.diag && c.diag !== 'N/A') ? c.diag : '';
       document.getElementById('cProc').value = c.proc||c.procedure||'';
@@ -1076,21 +1259,21 @@
 
       // PREPEND DOCTOR DETAILS IF SET IN SETTINGS
       const p = getLS('el_doc_profile', {});
-      const hasDocDetails = p && Object.values(p).some(val => val && val.trim() !== '');
+      const hasDocDetails = p && [p.name, p.dob, p.reg, p.qual, p.desig, p.council, p.addr, p.country].some(val => val && val.trim() !== '');
       if (hasDocDetails) {
         csv += `${q("ANAESTHESIOLOGIST LOGBOOK - DOCTOR DETAILS")}\n`;
         if (p.name)    csv += `${q("Name of the Doctor")},${q(p.name)}\n`;
+        if (p.dob)     csv += `${q("Date of Birth")},${q(p.dob)}\n`;
         if (p.reg)     csv += `${q("Registration Number")},${q(p.reg)}\n`;
         if (p.qual)    csv += `${q("Qualifications")},${q(p.qual)}\n`;
         if (p.desig)   csv += `${q("Designation")},${q(p.desig)}\n`;
         if (p.council) csv += `${q("Medical Council")},${q(p.council)}\n`;
         if (p.addr)    csv += `${q("Address")},${q(p.addr)}\n`;
         if (p.country) csv += `${q("Country")},${q(p.country)}\n`;
-        if (p.role)    csv += `${q("Logbook User")},${q(p.role)}\n`;
         csv += "\n";
       }
 
-      csv += "Date,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,OT_Sheets_Drive_Links\n";
+      csv += "Date,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Surgical_Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,OT_Sheets_Drive_Links\n";
       
       cases.forEach(c => {
         let raw = c.links || [];
@@ -1112,7 +1295,7 @@
             c.age,
             c.sex,
             c.prio||c.priority||'',
-            c.sup||c.supervision||'',
+            normalizeSupervision(c.sup||c.supervision||''),
             c.spec||c.specialty||'',
             c.diag||'',
             c.proc||c.procedure||'',
