@@ -8,11 +8,11 @@
   <title>Anaesthesiologist Logbook</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    :root{--pri:#00897b;--pri-dk:#00695c;--bg:#f1f5f9;--txt:#0f172a;--muted:#64748b;--bdr:#cbd5e1;}
+    :root{--pri:#00897b;--pri-dk:#00695c;--bg:#f8fafc;--txt:#0f172a;--muted:#64748b;--bdr:#cbd5e1;}
     *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
     body{background:var(--bg);color:var(--txt);padding-bottom:calc(82px + env(safe-area-inset-bottom, 0px));-webkit-font-smoothing:antialiased;}
     
-    /* Sticky Mobile Header */
+    /* Header */
     header{background:var(--pri);color:#fff;padding:10px 14px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,0.12);}
     header h1{font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:7px;line-height:1.2;}
     .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
@@ -20,37 +20,42 @@
     .drv-pill{font-size:0.66rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.2);color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;}
 
     .container{max-width:760px;margin:0 auto;padding:10px;}
-    .card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;border:1px solid var(--bdr);box-shadow:0 1px 2px rgba(0,0,0,0.03);}
-    .fg{margin-bottom:13px;}
-    .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:6px;flex-wrap:wrap;}
+    .card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,0.03);}
+    .fg{margin-bottom:14px;}
+    .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:6px;flex-wrap:wrap;}
     
-    /* Prominent Section Headings */
-    label{display:block;font-size:0.78rem;font-weight:800;color:#334155;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.02em;}
+    /* High-Prominence Section Headings */
+    label{
+      display:inline-block;font-size:0.82rem;font-weight:800;color:#1e293b;
+      margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;
+      border-left:3px solid var(--pri);padding-left:6px;line-height:1.15;
+    }
     
-    /* Mobile-Optimized Inputs */
     input[type="text"],input[type="number"],input[type="date"],input[type="url"],input[type="search"],select{
       width:100%;padding:9px 11px;border:1px solid var(--bdr);border-radius:8px;font-size:0.92rem;background:#fff;color:var(--txt);transition:border-color 0.15s,box-shadow 0.15s;
     }
     input:focus,select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 2.5px rgba(0,137,123,0.16);}
     .row{display:flex;gap:8px;}.col{flex:1;min-width:0;}
     
-    /* Compact Quick-Selection Pills (Smaller than Headings) */
-    .pill-group{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px;}
+    /* Ultra-Compact Micro Pills */
+    .pill-group{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
     .pill-lbl{display:inline-block;cursor:pointer;user-select:none;}.pill-lbl input{display:none;}
     .pill-sp{
-      display:inline-flex;align-items:center;padding:4px 9px;border-radius:12px;
-      font-size:0.68rem;font-weight:600;line-height:1.2;
-      background:#f1f5f9;color:#475569;border:1px solid var(--bdr);transition:all 0.12s ease;
+      display:inline-flex;align-items:center;padding:2.5px 7.5px;border-radius:10px;
+      font-size:0.65rem;font-weight:600;line-height:1.2;
+      background:#f8fafc;color:#475569;border:1px solid #cbd5e1;transition:all 0.1s ease;
     }
     .pill-lbl input[type="radio"]:checked+.pill-sp{background:#00897b!important;color:#fff!important;border-color:#004d40!important;}
     .pill-lbl.comorbid input:checked+.pill-sp{background:#0284c7!important;color:#fff!important;border-color:#0369a1!important;}
     .pill-lbl.analgesia input:checked+.pill-sp{background:#059669!important;color:#fff!important;border-color:#047857!important;}
     .pill-lbl.comp input:checked+.pill-sp{background:#ef4444!important;color:#fff!important;border-color:#b91c1c!important;}
+    .pill-lbl.pain input:checked+.pill-sp{background:#8b5cf6!important;color:#fff!important;border-color:#6d28d9!important;}
+    .pill-lbl.postop input:checked+.pill-sp{background:#0d9488!important;color:#fff!important;border-color:#0f766e!important;}
     .pill-lbl.comp input[value="Nil"]:checked+.pill-sp,.pill-lbl.comorbid input[value="Nil"]:checked+.pill-sp{background:#10b981!important;color:#fff!important;border-color:#047857!important;}
     
     .cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:11px;margin-bottom:13px;display:none;}
     
-    /* Mobile Bottom Navigation with Safe Area Support */
+    /* Bottom Navigation */
     nav.b-nav{
       position:fixed;bottom:0;left:0;right:0;
       height:calc(60px + env(safe-area-inset-bottom, 0px));
@@ -68,24 +73,32 @@
     .btn-sec{background:#e2e8f0;color:var(--txt);}
     .mini-btn{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:2px 7px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;}
     
-    /* Ledger Cards */
     .case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px;}
     .d-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:7px 0;font-size:0.81rem;line-height:1.45;border-left:3px solid var(--pri);}
     .act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;padding:6px 10px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:5px 5px 0 0;}
     .thumb-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0;}
     .thumb-img{width:58px;height:58px;object-fit:cover;border-radius:6px;border:2px solid var(--pri);cursor:pointer;}
     
-    /* Summary & Stats UI */
-    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
+    /* Visual Analytics UI */
     .stat-grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
     @media(min-width:500px){.stat-grid-4{grid-template-columns:repeat(4,1fr);}}
-    .stat-box{background:#f8fafc;border:1px solid var(--bdr);border-radius:8px;padding:10px 8px;text-align:center;}
-    .stat-num{font-size:1.25rem;font-weight:800;color:var(--txt);}
-    .stat-lbl{font-size:0.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:2px;}
-    .bar-row{margin-bottom:8px;font-size:0.8rem;}
+    .stat-box{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:10px 8px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
+    .stat-num{font-size:1.3rem;font-weight:800;color:var(--txt);}
+    .stat-lbl{font-size:0.66rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:2px;}
+    
+    .chart-container{display:flex;align-items:center;justify-content:space-around;gap:12px;flex-wrap:wrap;padding:8px 0;}
+    .donut-wrap{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center;}
+    .donut-center{position:absolute;text-align:center;pointer-events:none;}
+    .donut-center .dc-num{font-size:1.15rem;font-weight:800;color:var(--txt);line-height:1;}
+    .donut-center .dc-lbl{font-size:0.62rem;color:var(--muted);font-weight:700;text-transform:uppercase;}
+    .legend-box{display:flex;flex-direction:column;gap:5px;min-width:130px;}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:600;color:#334155;}
+    .legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+
+    .bar-row{margin-bottom:8px;font-size:0.78rem;}
     .bar-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-weight:600;color:#334155;}
     .bar-track{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;}
-    .bar-fill{height:100%;background:var(--pri);border-radius:4px;}
+    .bar-fill{height:100%;background:var(--pri);border-radius:4px;transition:width 0.3s ease;}
 
     .diag-box{padding:11px;border-radius:8px;font-size:0.82rem;line-height:1.45;background:#f8fafc;border:1px solid var(--bdr);margin-top:10px;display:none;}
     .badge-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:2px 7px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
@@ -148,7 +161,7 @@
         <div class="row">
           <div class="fg col">
             <label>Elective / Emergency</label>
-            <select id="cPrio"><option>Elective</option><option>Emergency</option></select>
+            <select id="cPrio" onchange="renderAsaPills()"><option>Elective</option><option>Emergency</option></select>
           </div>
           <div class="fg col">
             <label>Supervision</label>
@@ -166,7 +179,7 @@
             <label style="margin:0">Specialty</label>
             <button type="button" class="mini-btn" onclick="addCustom('spec')">+ Add Custom</button>
           </div>
-          <input type="text" id="cSpec" list="specList" placeholder="Start typing or select specialty...">
+          <input type="text" id="cSpec" list="specList" placeholder="Start typing specialty..." oninput="updateProcedureSuggestions()">
           <datalist id="specList"></datalist>
         </div>
 
@@ -180,7 +193,7 @@
           <datalist id="diagList"></datalist>
         </div>
 
-        <!-- 10. SURGICAL PROCEDURE -->
+        <!-- 10. SURGICAL PROCEDURE (SPECIALTY-FILTERED SUGGESTIONS) -->
         <div class="fg">
           <div class="lbl-row">
             <label style="margin:0">Surgical Procedure</label>
@@ -188,16 +201,17 @@
           </div>
           <input type="text" id="cProc" list="procList" placeholder="Start typing or select procedure...">
           <datalist id="procList"></datalist>
+          <div id="procSpecHint" style="font-size:0.7rem;color:var(--muted);margin-top:3px"></div>
         </div>
 
         <!-- 11. COMORBIDITIES -->
         <div class="fg">
           <label>Comorbidities</label>
           <div class="pill-group" id="comorbidPills"></div>
-          <input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:7px">
+          <input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:6px">
         </div>
 
-        <!-- 12. ASA STATUS -->
+        <!-- 12. ASA STATUS (DYNAMIC: ELECTIVE VS EMERGENCY) -->
         <div class="fg">
           <label>ASA Physical Status</label>
           <div class="pill-group" id="asaPills"></div>
@@ -225,7 +239,7 @@
         <div class="fg">
           <label>Analgesia</label>
           <div class="pill-group" id="analgPills"></div>
-          <input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:7px">
+          <input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:6px">
         </div>
 
         <!-- 15. DIFFICULT AIRWAY / SPECIAL NOTES -->
@@ -238,7 +252,23 @@
         <div class="fg">
           <label>Complications</label>
           <div class="pill-group" id="compPills"></div>
-          <input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:7px">
+          <input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:6px">
+        </div>
+
+        <!-- NEW: POST OP DETAILS (SUBSECTIONS: PLAN & PAIN SCORE) -->
+        <div class="card" style="background:#f8fafc;border:1px solid #94a3b8;margin-bottom:14px">
+          <div style="font-size:0.86rem;font-weight:800;color:var(--pri-dk);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.03em;">
+            <i class="fa-solid fa-bed-pulse"></i> Post-op Details
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label style="font-size:0.75rem">Post-op Plan</label>
+            <div class="pill-group" id="postOpPlanPills"></div>
+            <input type="text" id="cPostOpPlanOther" placeholder="Other post-op plan..." style="margin-top:6px">
+          </div>
+          <div class="fg" style="margin-bottom:4px">
+            <label style="font-size:0.75rem">Immediate Post-op Pain Score (NRS 0–10)</label>
+            <div class="pill-group" id="painScorePills"></div>
+          </div>
         </div>
 
         <!-- 17. ATTACH OT RECORD SHEET -->
@@ -269,10 +299,10 @@
       <div id="ledgerList"></div>
     </div>
 
-    <!-- TAB 3: SUMMARY (PRIOR TO SETTINGS TAB) -->
+    <!-- TAB 3: SUMMARY (VISUAL CHARTS & METRICS) -->
     <div id="tabSummary" style="display:none">
       <div class="lbl-row" style="margin-bottom:10px">
-        <h2 style="font-size:1.08rem"><i class="fa-solid fa-chart-pie" style="color:var(--pri)"></i> Logbook Summary</h2>
+        <h2 style="font-size:1.08rem"><i class="fa-solid fa-chart-pie" style="color:var(--pri)"></i> Analytics & Summary</h2>
         <button type="button" class="mini-btn" style="padding:6px 10px;font-size:0.74rem;background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
       </div>
 
@@ -291,39 +321,65 @@
         </div>
         <div class="stat-box" style="border-top:3px solid #059669">
           <div class="stat-num" id="sumNoSup">0</div>
-          <div class="stat-lbl">No Supervision</div>
+          <div class="stat-lbl">Independent / No Sup</div>
+        </div>
+      </div>
+
+      <!-- VISUAL CHARTS CARD -->
+      <div class="card">
+        <label style="margin-bottom:8px"><i class="fa-solid fa-chart-donut"></i> Case Distribution Charts</label>
+        <div class="chart-container">
+          <!-- Donut 1: Urgency -->
+          <div style="text-align:center">
+            <div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Case Priority</div>
+            <div class="donut-wrap">
+              <svg id="donutUrgency" width="130" height="130" viewBox="0 0 42 42"></svg>
+              <div class="donut-center">
+                <div class="dc-num" id="donutUrgTotal">0</div>
+                <div class="dc-lbl">Cases</div>
+              </div>
+            </div>
+            <div class="legend-box" id="legendUrgency" style="margin-top:6px"></div>
+          </div>
+
+          <!-- Donut 2: Supervision -->
+          <div style="text-align:center">
+            <div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Supervision Level</div>
+            <div class="donut-wrap">
+              <svg id="donutSupervision" width="130" height="130" viewBox="0 0 42 42"></svg>
+              <div class="donut-center">
+                <div class="dc-num" id="donutSupTotal">0</div>
+                <div class="dc-lbl">Cases</div>
+              </div>
+            </div>
+            <div class="legend-box" id="legendSupervision" style="margin-top:6px"></div>
+          </div>
         </div>
       </div>
 
       <div class="card">
-        <label style="margin-bottom:8px">Supervision Breakdown</label>
-        <div id="sumSupList"></div>
-      </div>
-
-      <div class="card">
-        <label style="margin-bottom:8px">Specialty Breakdown</label>
+        <label style="margin-bottom:8px"><i class="fa-solid fa-stethoscope"></i> Specialty Distribution</label>
         <div id="sumSpecList"></div>
       </div>
 
       <div class="card">
-        <label style="margin-bottom:8px">Anaesthesia Technique Breakdown</label>
+        <label style="margin-bottom:8px"><i class="fa-solid fa-syringe"></i> Anaesthesia Techniques</label>
         <div id="sumTechList"></div>
       </div>
 
       <div class="card">
-        <label style="margin-bottom:8px">ASA Physical Status</label>
+        <label style="margin-bottom:8px"><i class="fa-solid fa-heart-pulse"></i> ASA Physical Status</label>
         <div id="sumAsaList"></div>
       </div>
 
       <div class="card">
-        <label style="margin-bottom:8px">Hospital Breakdown</label>
+        <label style="margin-bottom:8px"><i class="fa-regular fa-hospital"></i> Hospital Distribution</label>
         <div id="sumHospList"></div>
       </div>
     </div>
 
     <!-- TAB 4: SETTINGS & DIAGNOSTICS -->
     <div id="tabSettings" style="display:none">
-      <!-- 1. DOCTOR PROFILE & DETAILS -->
       <div class="card">
         <h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-user-doctor" style="color:var(--pri)"></i> 1. Doctor Profile & Details</h2>
         
@@ -375,7 +431,6 @@
         <div id="docSaveStatus" class="diag-box"></div>
       </div>
 
-      <!-- 2. GOOGLE DRIVE ACCESS & CONNECTION -->
       <div class="card">
         <h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 2. Google Drive Access & Connection</h2>
         <div class="fg">
@@ -392,7 +447,6 @@
         <div id="testStatus" class="diag-box"></div>
       </div>
 
-      <!-- 3. FILE UPLOAD STATUS CHECK -->
       <div class="card">
         <div class="lbl-row">
           <h2 style="font-size:1.05rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 3. File Upload Status Check</h2>
@@ -400,7 +454,7 @@
         </div>
         <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Verifies whether all attached OT Record Sheets across your logged cases have valid Google Drive links for CSV export.</p>
         
-        <div class="stat-grid">
+        <div class="stat-grid-4" style="grid-template-columns:repeat(3,1fr);margin-top:8px">
           <div class="stat-box">
             <div class="stat-num" id="stTotalFiles">0</div>
             <div class="stat-lbl">Total Files</div>
@@ -423,7 +477,6 @@
     </div>
   </div>
 
-  <!-- 4-TAB MOBILE BOTTOM NAVIGATION -->
   <nav class="b-nav">
     <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Logbook</span></button>
     <button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
@@ -458,42 +511,107 @@
       "Maxillofacial / Dental"
     ];
 
-    const DIAGS = [
-      "Acute Appendicitis",
-      "Cholelithiasis / Calculus Cholecystitis",
-      "Hollow Viscus Perforation / Peritonitis",
-      "Inguinal Hernia",
-      "Incisional / Paraumbilical Hernia",
-      "Multinodular Goitre (MNG)",
-      "Carcinoma Breast",
-      "Osteoarthritis Knee",
-      "Osteoarthritis Hip / AVN Femur",
-      "Neck of Femur / Intertrochanteric Fracture",
-      "Both Bones Forearm / Tibia Fracture",
-      "Term Gestation / Previous LSCS",
-      "Cephalopelvic Disproportion (CPD) / Fetal Distress",
-      "Abnormal Uterine Bleeding (AUB) / Fibroid Uterus",
-      "Chronic Tonsillitis / Deviated Nasal Septum (DNS)",
-      "Chronic Suppurative Otitis Media (CSOM)",
-      "Benign Prostatic Hyperplasia (BPH)",
-      "Renal / Ureteric Calculus",
-      "Traumatic Brain Injury / EDH / SDH",
-      "Lumbar Canal Stenosis / IVDP",
-      "Diabetic Foot Ulcer / Raw Area"
+    // Specialty-Mapped Procedures
+    const SPEC_PROC_MAP = {
+      "General Surgery": ["Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy","Inguinal Hernia Repair","Incisional Hernia Repair","Total Thyroidectomy","Hemithyroidectomy","Modified Radical Mastectomy (MRM)","Excision of Fibroadenoma","Haemorrhoidectomy","Fistula in Ano Excision","Perianal Abscess Drainage","Perforation Closure","Splenectomy"],
+      "Orthopaedics": ["Total Knee Arthroplasty (TKA)","Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm","ORIF Tibia / Fibula","Hemiarthroplasty Hip","Tension Band Wiring (TBW) Patella / Olecranon","Implant Removal","Carpal Tunnel Release","Arthroscopic ACL Reconstruction","External Fixator Application"],
+      "Obstetrics & Gynaec": ["Elective LSCS","Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Vaginal Hysterectomy (VH / PFR)","Laparoscopic Ovarian Cystectomy","Salpingectomy for Ectopic","Dilatation & Curettage (D&C)","Suction Evacuation","Cervical Encirclage"],
+      "ENT": ["Tonsillectomy","Adenoidectomy","Functional Endoscopic Sinus Surgery (FESS)","Tympanoplasty / Mastoidectomy","Septoplasty / SMR","Microlaryngeal Surgery (MLS)","Tracheostomy","Preauricular Sinus Excision"],
+      "Urology": ["Transurethral Resection of Prostate (TURP)","Ureteroscopic Lithotripsy (URSL)","Percutaneous Nephrolithotomy (PCNL)","DJ Stenting / Stent Removal","Cystoscopy & Biopsy","Optical Internal Urethrotomy (OIU)","Radical / Simple Nephrectomy","Varicocelectomy","Hydrocele Surgery"],
+      "Paediatrics": ["Herniotomy","Circumcision","Orchiopexy","Pyloromyotomy","Colostomy Closure","Intussusception Reduction","Foreign Body Bronchus Removal"],
+      "Neuro/Spine": ["Craniotomy for EDH / SDH / Tumor","Burr Hole Evacuation","Lumbar Discectomy / Laminectomy","Anterior Cervical Discectomy & Fusion (ACDF)","Ventriculoperitoneal (VP) Shunt","Posterior Fossa Decompression"],
+      "Plastic Surgery": ["Split Skin Grafting (SSG)","Full Thickness Skin Grafting (FTSG)","Microvascular Free Flap","Contracture Release","Cleft Lip / Palate Repair","Tendon Repair / Transfer"],
+      "Ophthalmology": ["Phacoemulsification with IOL","Extracapsular Cataract Extraction (ECCE)","Trabeculectomy","Vitrectomy","Dacryocystorhinostomy (DCR)","Evisceration / Enucleation"],
+      "Cardiothoracic": ["CABG On-Pump","CABG Off-Pump (OPCAB)","Valve Replacement (MVR / AVR)","Thoracotomy & Decortication","Lobectomy / Pneumonectomy","Thymectomy"],
+      "Emergency/Trauma": ["Emergency Trauma Laparotomy","Emergency Craniotomy","Emergency LSCS","Emergency Wound Debridement & Washout","Emergency Amputation","Damage Control Laparotomy"],
+      "Oncology / Oncosurgery": ["Modified Radical Mastectomy","Radical Neck Dissection","Commando Procedure","Whipple's Pancreaticoduodenectomy","Radical Gastrectomy","Anterior Resection / APR"],
+      "Vascular Surgery": ["AV Fistula Creation","Femoro-Popliteal Bypass","Embolectomy","Varicose Vein Stripping / EVLT"],
+      "Maxillofacial / Dental": ["ORIF Mandible Fracture","ORIF Maxilla / Zygoma","Orthognathic Le Fort Surgery","Excision of Ameloblastoma","Impaction Dental Extraction"]
+    };
+
+    const DEFAULT_PROCS = [
+      "Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy",
+      "Inguinal Hernia Repair","Total Thyroidectomy","Modified Radical Mastectomy (MRM)","Total Knee Arthroplasty (TKA)",
+      "Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm / Tibia","Elective LSCS",
+      "Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Tonsillectomy",
+      "FESS","Tympanoplasty / Mastoidectomy","TURP","URSL / PCNL","Craniotomy","Lumbar Discectomy / Laminectomy","Split Skin Grafting (SSG)"
     ];
 
-    const PROCS = ["Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy","Inguinal Hernia Repair","Total Thyroidectomy","Modified Radical Mastectomy (MRM)","Total Knee Arthroplasty (TKA)","Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm / Tibia","Elective LSCS","Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Tonsillectomy","FESS","Tympanoplasty / Mastoidectomy","TURP","URSL / PCNL","Craniotomy","Lumbar Discectomy / Laminectomy","Split Skin Grafting (SSG)"];
-    const TECHS = ["General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT","General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA","Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)","Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block","USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block","Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block","USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block","USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block","USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block","USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block","USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)","USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)","USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation","Local Infiltration / Field Block"];
+    const DIAGS = [
+      "Acute Appendicitis","Cholelithiasis / Calculus Cholecystitis","Hollow Viscus Perforation / Peritonitis",
+      "Inguinal Hernia","Incisional / Paraumbilical Hernia","Multinodular Goitre (MNG)","Carcinoma Breast",
+      "Osteoarthritis Knee","Osteoarthritis Hip / AVN Femur","Neck of Femur / Intertrochanteric Fracture",
+      "Both Bones Forearm / Tibia Fracture","Term Gestation / Previous LSCS","Cephalopelvic Disproportion (CPD) / Fetal Distress",
+      "Abnormal Uterine Bleeding (AUB) / Fibroid Uterus","Chronic Tonsillitis / Deviated Nasal Septum (DNS)",
+      "Chronic Suppurative Otitis Media (CSOM)","Benign Prostatic Hyperplasia (BPH)","Renal / Ureteric Calculus",
+      "Traumatic Brain Injury / EDH / SDH","Lumbar Canal Stenosis / IVDP","Diabetic Foot Ulcer / Raw Area"
+    ];
+
+    const TECHS = [
+      "General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT",
+      "General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA",
+      "Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)",
+      "Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block",
+      "USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block",
+      "Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block",
+      "USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block",
+      "USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block",
+      "USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block",
+      "USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block",
+      "USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)",
+      "USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)",
+      "USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation",
+      "Local Infiltration / Field Block"
+    ];
+
     const COMORBIDS = ['Nil','T2DM','SHTN','Asthma','Anaemia','Seizure Disorder','Hypothyroidism','Hyperthyroidism','CKD','CAD','CLD','COPD','AKI','Obesity/OSA','GERD'];
     const ANALGS = ['Nil','IV Paracetamol','IV NSAID','IV Opioid','IV Multimodal','Regional Block','Local Infiltration','Epidural Infusion','IV PCA'];
     const COMPS = ['Nil','Hypotension','Bradycardia','Desaturation','Bronchospasm','Laryngospasm','Difficult Intubation','High Spinal','PDPH','PONV'];
+    const POSTOP_PLANS = ['Routine Monitoring','Extubated on table & Routine Monitoring','Post op Elective Ventilation in PACU / ICU'];
+    const PAIN_SCORES = ['0','1','2','3','4','5','6','7','8','9','10','Not Assessed'];
 
     function normalizeSupervision(val) {
       if (!val || val === 'Independent (Sole)') return 'No Supervision';
       return val;
     }
 
-    // DOCTOR PROFILE FUNCTIONS
+    // Dynamic ASA Pills depending on Elective vs Emergency
+    function renderAsaPills(selectedVal) {
+      const isEmerg = document.getElementById('cPrio').value === 'Emergency';
+      const asaList = isEmerg ? ['I E','II E','III E','IV E','V E'] : ['I','II','III','IV','V'];
+      
+      let def = selectedVal;
+      if (!def) {
+        const cur = document.querySelector('input[name="asa"]:checked')?.value || 'I';
+        if (isEmerg && !cur.endsWith('E')) def = cur + ' E';
+        else if (!isEmerg && cur.endsWith('E')) def = cur.replace(' E','');
+        else def = cur;
+      }
+      if (!asaList.includes(def)) def = asaList[0];
+      makePills('asaPills','asa',asaList,'radio',def);
+    }
+
+    // Specialty-Aware Procedure Suggestions
+    function updateProcedureSuggestions() {
+      const spec = document.getElementById('cSpec').value.trim();
+      const hint = document.getElementById('procSpecHint');
+      const customProcs = getLS('el_procs', []);
+      let list = [];
+
+      if (spec && SPEC_PROC_MAP[spec]) {
+        list = [...SPEC_PROC_MAP[spec]];
+        hint.innerHTML = `<i class="fa-solid fa-filter" style="color:var(--pri)"></i> Showing suggestions tailored for <b>${spec}</b>`;
+      } else {
+        list = [...DEFAULT_PROCS];
+        hint.textContent = spec ? `Specialty custom list (${spec})` : "Showing common surgical procedures";
+      }
+
+      const merged = [...new Set([...list, ...customProcs])];
+      const esc = s => String(s).replace(/"/g, '&quot;');
+      document.getElementById('procList').innerHTML = merged.map(x=>`<option value="${esc(x)}">`).join('');
+    }
+
+    // Doctor Profile Functions
     function loadDocProfile() {
       const p = getLS('el_doc_profile', {});
       document.getElementById('dName').value = p.name || '';
@@ -649,7 +767,7 @@
         if (rawText.includes('<!DOCTYPE html>') || rawText.includes('<html')) {
           return {
             ok: false,
-            error: 'Google returned an HTML login/error page instead of JSON. Make sure "Who has access" is set to "Anyone" and you ran setupDrivePermission() in Apps Script.',
+            error: 'Google returned an HTML login/error page. Ensure "Who has access" is set to "Anyone" and setupDrivePermission() ran in Apps Script.',
             raw: 'HTML Page Returned'
           };
         }
@@ -662,7 +780,7 @@
       } catch (err) {
         return {
           ok: false,
-          error: 'CORS / Network Block: Google Apps Script rejected or redirected the request. Ensure (1) DriveApp permission was authorized in the script editor, (2) "Who has access" is set to "Anyone", and (3) you deployed a "New version".'
+          error: 'CORS / Network Block: Google Apps Script rejected or redirected request. Check permissions & deploy a New version.'
         };
       }
     }
@@ -670,10 +788,12 @@
     function init() {
       document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
       document.getElementById('sUrl').value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
-      makePills('asaPills','asa',['I','II','III','IV','V','I E','II E','III E','IV E'],'radio','I');
+      renderAsaPills('I');
       makePills('comorbidPills','comorbid',COMORBIDS,'checkbox','Nil');
       makePills('analgPills','analgesia',ANALGS,'checkbox','Nil');
       makePills('compPills','comp',COMPS,'checkbox','Nil');
+      makePills('postOpPlanPills','postOpPlan',POSTOP_PLANS,'radio','Extubated on table & Routine Monitoring');
+      makePills('painScorePills','painScore',PAIN_SCORES,'radio','0');
       renderLists();
       loadDocProfile();
       updateHeaderBadge();
@@ -684,8 +804,8 @@
       document.getElementById('hospList').innerHTML = [...new Set([...HOSPS,...getLS('el_hosps')])].map(x=>`<option value="${esc(x)}">`).join('');
       document.getElementById('specList').innerHTML = [...new Set([...SPECS,...getLS('el_specs')])].map(x=>`<option value="${esc(x)}">`).join('');
       document.getElementById('diagList').innerHTML = [...new Set([...DIAGS,...getLS('el_diags')])].map(x=>`<option value="${esc(x)}">`).join('');
-      document.getElementById('procList').innerHTML = [...new Set([...PROCS,...getLS('el_procs')])].map(x=>`<option value="${esc(x)}">`).join('');
       document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>`<option value="${esc(x)}">`).join('');
+      updateProcedureSuggestions();
     }
 
     function makePills(id,name,arr,type,def) {
@@ -714,6 +834,7 @@
       setLS(cfg.key, [...new Set([...getLS(cfg.key), cleanVal])]);
       renderLists();
       document.getElementById(cfg.input).value = cleanVal;
+      if (type === 'spec') updateProcedureSuggestions();
       if (type === 'tech') checkAirway();
     }
 
@@ -985,8 +1106,14 @@
 
       const getChecked = (n,oth) => {
         let a = Array.from(document.querySelectorAll(`input[name="${n}"]:checked`)).map(c=>c.value);
-        let o = document.getElementById(oth).value.trim(); if(o) a.push(o);
+        let o = document.getElementById(oth)?.value?.trim(); if(o) a.push(o);
         return a.join(', ') || 'Nil';
+      };
+
+      const getPostOpPlan = () => {
+        let p = document.querySelector('input[name="postOpPlan"]:checked')?.value || 'Routine Monitoring';
+        let o = document.getElementById('cPostOpPlanOther')?.value?.trim();
+        return o ? `${p} (${o})` : p;
       };
       
       const isAir = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(tech.toUpperCase());
@@ -1010,6 +1137,8 @@
         analg: getChecked('analgesia','cAnalgOther'),
         diff: document.getElementById('cDiff').value.trim() || 'Nil',
         comp: getChecked('comp','cCompOther'),
+        postOpPlan: getPostOpPlan(),
+        painScore: document.querySelector('input[name="painScore"]:checked')?.value || 'Not Assessed',
         links
       };
       
@@ -1034,7 +1163,9 @@
       document.getElementById('currFiles').innerHTML='';
       document.getElementById('fileStatus').textContent='';
       curLinks=[];
-      ['cHosp','cPatId','cAge','cSpec','cDiag','cProc','cComOther','cTech','cAirNotes','cAnalgOther','cDiff','cCompOther','cFiles'].forEach(id=>document.getElementById(id).value='');
+      ['cHosp','cPatId','cAge','cSpec','cDiag','cProc','cComOther','cTech','cAirNotes','cAnalgOther','cDiff','cCompOther','cPostOpPlanOther','cFiles'].forEach(id=>{
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
       init(); checkAirway();
     }
 
@@ -1051,7 +1182,7 @@
         const hay = [
           c.date, c.hosp, c.patId, c.proc, c.procedure,
           c.diag, c.spec, c.specialty, c.tech, c.technique,
-          c.comorbid, c.diff, c.comp
+          c.comorbid, c.diff, c.comp, c.postOpPlan, c.painScore
         ].join(' ').toLowerCase();
         return hay.includes(q);
       });
@@ -1121,6 +1252,9 @@
             <div><strong>Analgesia:</strong> ${c.analg||c.analgesia||'Nil'}</div>
             <div><strong>Difficult Airway/Notes:</strong> ${c.diff||c.difficultAirway||'Nil'}</div>
             <div><strong>Complications:</strong> ${c.comp||c.complications||'Nil'}</div>
+            <div style="margin-top:4px;padding-top:4px;border-top:1px dashed #cbd5e1">
+              <strong>Post-op Plan:</strong> ${c.postOpPlan||'Routine Monitoring'} | <strong>Pain Score (NRS):</strong> <span style="font-weight:700;color:#8b5cf6">${c.painScore||'Not Assessed'}</span>
+            </div>
           </div>
           ${syncBadge ? `<div style="margin:6px 0">${syncBadge}</div>` : ''}
           ${thumbs ? `<div class="thumb-row">${thumbs}</div>` : ''}
@@ -1132,11 +1266,48 @@
       }).join('');
     }
 
-    // RENDER SUMMARY TAB
+    // Interactive Donut Chart Builder (Pure SVG, 0 Dependencies)
+    function renderSvgDonut(svgId, legendId, data) {
+      const svg = document.getElementById(svgId);
+      const leg = document.getElementById(legendId);
+      if (!svg || !leg) return;
+
+      const total = data.reduce((acc, d) => acc + d.val, 0);
+      if (total === 0) {
+        svg.innerHTML = '<circle cx="21" cy="21" r="15.915" fill="none" stroke="#e2e8f0" stroke-width="4.5"/>';
+        leg.innerHTML = '<span style="font-size:0.75rem;color:#64748b">No records</span>';
+        return;
+      }
+
+      let offset = 25; // 12 o'clock start
+      let circles = '';
+      let legendHtml = '';
+
+      data.forEach(d => {
+        if (d.val <= 0) return;
+        const pct = (d.val / total) * 100;
+        circles += `<circle cx="21" cy="21" r="15.915" fill="none" stroke="${d.color}" stroke-width="4.5"
+                     stroke-dasharray="${pct.toFixed(2)} ${(100 - pct).toFixed(2)}"
+                     stroke-dashoffset="${offset.toFixed(2)}"></circle>`;
+        offset -= pct;
+
+        legendHtml += `<div class="legend-item">
+          <span class="legend-dot" style="background:${d.color}"></span>
+          <span>${d.label}: <b>${d.val}</b> (${Math.round(pct)}%)</span>
+        </div>`;
+      });
+
+      svg.innerHTML = circles;
+      leg.innerHTML = legendHtml;
+    }
+
+    // RENDER VISUAL SUMMARY TAB
     function renderSummary() {
       const cases = getLS('el_cases');
       const total = cases.length;
       document.getElementById('sumTotal').textContent = total;
+      document.getElementById('donutUrgTotal').textContent = total;
+      document.getElementById('donutSupTotal').textContent = total;
 
       let elective = 0, emergency = 0, noSup = 0;
       const supCounts = {};
@@ -1159,7 +1330,7 @@
         const tc = c.tech || c.technique || 'Unspecified';
         techCounts[tc] = (techCounts[tc] || 0) + 1;
 
-        const asa = 'ASA ' + (c.asa || 'I');
+        const asa = (c.asa || 'I');
         asaCounts[asa] = (asaCounts[asa] || 0) + 1;
 
         const hp = (c.hosp && c.hosp !== 'N/A') ? c.hosp : 'Unspecified';
@@ -1169,6 +1340,18 @@
       document.getElementById('sumElective').textContent = elective;
       document.getElementById('sumEmergency').textContent = emergency;
       document.getElementById('sumNoSup').textContent = noSup;
+
+      // Render Visual SVG Donut Charts
+      renderSvgDonut('donutUrgency', 'legendUrgency', [
+        { label: 'Elective', val: elective, color: '#0284c7' },
+        { label: 'Emergency', val: emergency, color: '#ef4444' }
+      ]);
+
+      renderSvgDonut('donutSupervision', 'legendSupervision', [
+        { label: 'No Sup', val: supCounts['No Supervision'] || 0, color: '#059669' },
+        { label: 'Direct', val: supCounts['Direct Supervision'] || 0, color: '#0284c7' },
+        { label: 'Indirect', val: supCounts['Indirect Supervision'] || 0, color: '#eab308' }
+      ]);
 
       const buildBars = (obj, containerId, color = 'var(--pri)') => {
         const el = document.getElementById(containerId);
@@ -1186,10 +1369,9 @@
         }).join('');
       };
 
-      buildBars(supCounts, 'sumSupList', '#059669');
       buildBars(specCounts, 'sumSpecList', '#00897b');
       buildBars(techCounts, 'sumTechList', '#0284c7');
-      buildBars(asaCounts, 'sumAsaList', '#6366f1');
+      buildBars(asaCounts, 'sumAsaList', '#8b5cf6');
       buildBars(hospCounts, 'sumHospList', '#0f766e');
     }
 
@@ -1208,6 +1390,7 @@
       document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
       document.getElementById('cSup').value = normalizeSupervision(c.sup||c.supervision);
       document.getElementById('cSpec').value = c.spec||c.specialty||'';
+      updateProcedureSuggestions();
       document.getElementById('cDiag').value = (c.diag && c.diag !== 'N/A') ? c.diag : '';
       document.getElementById('cProc').value = c.proc||c.procedure||'';
       document.getElementById('cTech').value = c.tech||c.technique||'';
@@ -1220,14 +1403,30 @@
         });
         if (otherInputId) {
           const customVals = arr.filter(v => !knownList.includes(v));
-          document.getElementById(otherInputId).value = customVals.join(', ');
+          const el = document.getElementById(otherInputId);
+          if (el) el.value = customVals.join(', ');
         }
       };
 
       restorePillsAndOther('comorbid', COMORBIDS, c.comorbid||c.comorbidities, 'cComOther');
-      restorePillsAndOther('asa', ['I','II','III','IV','V','I E','II E','III E','IV E'], c.asa, null);
+      renderAsaPills(c.asa || 'I');
       restorePillsAndOther('analgesia', ANALGS, c.analg||c.analgesia, 'cAnalgOther');
       restorePillsAndOther('comp', COMPS, c.comp||c.complications, 'cCompOther');
+
+      // Restore Post-op Details
+      if (c.postOpPlan) {
+        let basePlan = POSTOP_PLANS.find(p => c.postOpPlan.startsWith(p)) || 'Routine Monitoring';
+        let match = document.querySelector(`input[name="postOpPlan"][value="${basePlan}"]`);
+        if (match) match.checked = true;
+        if (c.postOpPlan.includes('(')) {
+          let extra = c.postOpPlan.split('(')[1].replace(')','').trim();
+          document.getElementById('cPostOpPlanOther').value = extra;
+        }
+      }
+      if (c.painScore) {
+        let pMatch = document.querySelector(`input[name="painScore"][value="${c.painScore}"]`);
+        if (pMatch) pMatch.checked = true;
+      }
 
       curLinks = c.links || (c.attachmentUrl ? [{url:c.attachmentUrl, thumb:''}] : []);
       document.getElementById('currFiles').innerHTML = curLinks.length ? `<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>` : '';
@@ -1257,7 +1456,7 @@
       const q = v => `"${(v || '').toString().replace(/"/g, '""')}"`;
       let csv = "\uFEFF";
 
-      // PREPEND DOCTOR DETAILS IF SET IN SETTINGS
+      // Doctor Profile Header Block
       const p = getLS('el_doc_profile', {});
       const hasDocDetails = p && [p.name, p.dob, p.reg, p.qual, p.desig, p.council, p.addr, p.country].some(val => val && val.trim() !== '');
       if (hasDocDetails) {
@@ -1273,7 +1472,7 @@
         csv += "\n";
       }
 
-      csv += "Date,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Surgical_Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,OT_Sheets_Drive_Links\n";
+      csv += "Date,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Surgical_Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,PostOp_Plan,PostOp_Pain_Score,OT_Sheets_Drive_Links\n";
       
       cases.forEach(c => {
         let raw = c.links || [];
@@ -1306,6 +1505,8 @@
             c.analg||c.analgesia||'',
             c.diff||c.difficultAirway||'',
             c.comp||c.complications||'',
+            c.postOpPlan||'Routine Monitoring',
+            c.painScore||'Not Assessed',
             stringLinks
         ].map(q).join(',');
 
