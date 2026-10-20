@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>EtherLog</title>
+  <title>Anaesthesiologist Logbook</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root{--pri:#00897b;--bg:#f8fafc;--txt:#0f172a;--bdr:#cbd5e1;}
     *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,sans-serif;-webkit-tap-highlight-color:transparent;}
     body{background:var(--bg);color:var(--txt);padding-bottom:90px;}
-    header{background:var(--pri);color:#fff;padding:14px 18px;position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;}
-    header h1{font-size:1.18rem;font-weight:700;display:flex;align-items:center;gap:8px;}
-    .drv-pill{font-size:0.72rem;padding:4px 9px;border-radius:12px;background:rgba(255,255,255,0.18);color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;}
+    header{background:var(--pri);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+    header h1{font-size:1.08rem;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.2;}
+    .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+    .hdr-doc{font-size:0.78rem;font-weight:700;color:#ffffff;text-align:right;cursor:pointer;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .drv-pill{font-size:0.7rem;padding:3px 9px;border-radius:12px;background:rgba(255,255,255,0.18);color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;}
     .container{max-width:800px;margin:0 auto;padding:12px;}
     .card{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid var(--bdr);}
     .fg{margin-bottom:14px;}
@@ -53,9 +55,12 @@
 </head>
 <body>
   <header>
-    <h1><i class="fa-solid fa-syringe"></i> EtherLog</h1>
-    <div id="hdrDriveBadge" class="drv-pill" onclick="showTab('tabSettings')">
-      <i class="fa-solid fa-cloud"></i> <span>Drive Status</span>
+    <h1><i class="fa-solid fa-syringe"></i> Anaesthesiologist Logbook</h1>
+    <div class="hdr-right">
+      <div id="hdrDocName" class="hdr-doc" onclick="showTab('tabSettings')" style="display:none"></div>
+      <div id="hdrDriveBadge" class="drv-pill" onclick="showTab('tabSettings')">
+        <i class="fa-solid fa-cloud"></i> <span>Drive Status</span>
+      </div>
     </div>
   </header>
   
@@ -71,7 +76,7 @@
     <!-- TAB 1: LOGGER -->
     <div id="tabLogger">
       <div class="card">
-        <h2 id="formTitle" style="font-size:1.12rem;margin-bottom:12px;">Log Anesthetic Case</h2>
+        <div id="formTitle" style="display:none;font-size:1.05rem;font-weight:700;color:var(--pri);margin-bottom:12px;"></div>
         <input type="hidden" id="editId" value="">
         
         <!-- 1. DATE -->
@@ -198,7 +203,7 @@
           <div id="currFiles" style="margin-top:4px"></div>
         </div>
 
-        <button type="button" class="btn" id="saveBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> Save & Log Case</button>
+        <button type="button" class="btn" id="saveBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> Save Case</button>
         <button type="button" class="btn btn-sec" style="margin-top:8px;display:none" id="cancelBtn" onclick="resetForm();showTab('tabLedger')">Cancel Edit</button>
       </div>
     </div>
@@ -217,8 +222,68 @@
 
     <!-- TAB 3: SETTINGS & DIAGNOSTICS -->
     <div id="tabSettings" style="display:none">
+      <!-- 1. DOCTOR PROFILE & DETAILS (FIRST SECTION IN SETTINGS) -->
       <div class="card">
-        <h2 style="font-size:1.12rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 1. Google Drive Access & Connection</h2>
+        <h2 style="font-size:1.12rem;margin-bottom:12px"><i class="fa-solid fa-user-doctor" style="color:var(--pri)"></i> 1. Doctor Profile & Logbook Details</h2>
+        
+        <div class="fg">
+          <label>Name of the Doctor</label>
+          <input type="text" id="dName" placeholder="e.g. Dr. Naveenkumar S" oninput="saveDocProfile(false)">
+        </div>
+
+        <div class="row">
+          <div class="fg col">
+            <label>Registration Number</label>
+            <input type="text" id="dReg" placeholder="e.g. 123456" oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg col">
+            <label>Qualifications</label>
+            <input type="text" id="dQual" placeholder="e.g. MBBS, MD (Anaes)" oninput="saveDocProfile(false)">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="fg col">
+            <label>Designation</label>
+            <input type="text" id="dDesig" placeholder="e.g. Assistant Professor / Consultant" oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg col">
+            <label>Medical Council</label>
+            <input type="text" id="dCouncil" placeholder="e.g. Tamil Nadu Medical Council" oninput="saveDocProfile(false)">
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Address</label>
+          <input type="text" id="dAddr" placeholder="Hospital / Residential Address..." oninput="saveDocProfile(false)">
+        </div>
+
+        <div class="row">
+          <div class="fg col">
+            <label>Country</label>
+            <input type="text" id="dCountry" placeholder="e.g. India" oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg col">
+            <label>Who is using this Logbook App</label>
+            <input type="text" id="dRole" list="roleList" placeholder="Select or type role..." oninput="saveDocProfile(false)">
+            <datalist id="roleList">
+              <option value="Consultant Anaesthesiologist">
+              <option value="Senior Resident (SR)">
+              <option value="Postgraduate Resident (MD / DNB)">
+              <option value="Junior Resident (JR)">
+              <option value="Critical Care / Anaesthesia Fellow">
+              <option value="Freelance Anaesthesiologist">
+            </datalist>
+          </div>
+        </div>
+
+        <button type="button" class="btn" onclick="saveDocProfile(true)"><i class="fa-solid fa-user-check"></i> Save Doctor Details</button>
+        <div id="docSaveStatus" class="diag-box"></div>
+      </div>
+
+      <!-- 2. GOOGLE DRIVE ACCESS & CONNECTION -->
+      <div class="card">
+        <h2 style="font-size:1.12rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 2. Google Drive Access & Connection</h2>
         <div class="fg">
           <label>Google Apps Script Web App URL</label>
           <input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="autoSaveUrl()">
@@ -233,9 +298,10 @@
         <div id="testStatus" class="diag-box"></div>
       </div>
 
+      <!-- 3. FILE UPLOAD STATUS CHECK -->
       <div class="card">
         <div class="lbl-row">
-          <h2 style="font-size:1.12rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 2. File Upload Status Check</h2>
+          <h2 style="font-size:1.12rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 3. File Upload Status Check</h2>
           <button type="button" class="mini-btn" onclick="checkUploadStatus()"><i class="fa-solid fa-rotate"></i> Refresh Status</button>
         </div>
         <p style="font-size:0.8rem;color:#64748b;margin-bottom:10px">Verifies whether all attached OT Record Sheets across your logged cases have valid Google Drive links for CSV export.</p>
@@ -264,7 +330,7 @@
   </div>
 
   <nav class="b-nav">
-    <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Log Case</span></button>
+    <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Logbook</span></button>
     <button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
     <button type="button" class="nav-btn" id="nav2" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
   </nav>
@@ -326,6 +392,52 @@
     const ANALGS = ['Nil','IV Paracetamol','IV NSAID','IV Opioid','IV Multimodal','Regional Block','Local Infiltration','Epidural Infusion','IV PCA'];
     const COMPS = ['Nil','Hypotension','Bradycardia','Desaturation','Bronchospasm','Laryngospasm','Difficult Intubation','High Spinal','PDPH','PONV'];
 
+    // DOCTOR PROFILE FUNCTIONS
+    function loadDocProfile() {
+      const p = getLS('el_doc_profile', {});
+      document.getElementById('dName').value = p.name || '';
+      document.getElementById('dReg').value = p.reg || '';
+      document.getElementById('dQual').value = p.qual || '';
+      document.getElementById('dDesig').value = p.desig || '';
+      document.getElementById('dCouncil').value = p.council || '';
+      document.getElementById('dAddr').value = p.addr || '';
+      document.getElementById('dCountry').value = p.country || '';
+      document.getElementById('dRole').value = p.role || '';
+      updateHeaderDocName();
+    }
+
+    function saveDocProfile(showMsg = false) {
+      const p = {
+        name: document.getElementById('dName').value.trim(),
+        reg: document.getElementById('dReg').value.trim(),
+        qual: document.getElementById('dQual').value.trim(),
+        desig: document.getElementById('dDesig').value.trim(),
+        council: document.getElementById('dCouncil').value.trim(),
+        addr: document.getElementById('dAddr').value.trim(),
+        country: document.getElementById('dCountry').value.trim(),
+        role: document.getElementById('dRole').value.trim()
+      };
+      setLS('el_doc_profile', p);
+      updateHeaderDocName();
+      if (showMsg) {
+        const st = document.getElementById('docSaveStatus');
+        st.style.display = 'block';
+        st.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-circle-check"></i> Doctor profile saved! Your details will appear in the top-right header and exported CSV files.</span>';
+      }
+    }
+
+    function updateHeaderDocName() {
+      const p = getLS('el_doc_profile', {});
+      const el = document.getElementById('hdrDocName');
+      if (p && p.name) {
+        el.textContent = p.name;
+        el.style.display = 'block';
+      } else {
+        el.textContent = '';
+        el.style.display = 'none';
+      }
+    }
+
     function getScriptUrl() {
       const inputVal = document.getElementById('sUrl')?.value?.trim();
       if (inputVal) return inputVal;
@@ -358,6 +470,7 @@
       } else {
         badge.innerHTML = '<i class="fa-solid fa-cloud-check" style="color:#86efac"></i> <span>Drive Ready</span>';
       }
+      updateHeaderDocName();
     }
 
     function extractDriveUrl(j, rawText) {
@@ -461,6 +574,7 @@
       makePills('analgPills','analgesia',ANALGS,'checkbox','Nil');
       makePills('compPills','comp',COMPS,'checkbox','Nil');
       renderLists();
+      loadDocProfile();
       updateHeaderBadge();
     }
 
@@ -513,7 +627,10 @@
         document.getElementById('nav'+i).classList.toggle('active', t===id);
       });
       if(id==='tabLedger') renderLedger();
-      if(id==='tabSettings') checkUploadStatus();
+      if(id==='tabSettings') {
+        loadDocProfile();
+        checkUploadStatus();
+      }
       updateHeaderBadge();
       window.scrollTo(0,0);
     }
@@ -570,7 +687,7 @@
       stat.innerHTML = '<div style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Verifying Google Drive write access & link response...</div>';
 
       const samplePng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-      const res = await uploadBase64ToDrive(samplePng, "image/png", "EtherLog_Access_Test.png", true);
+      const res = await uploadBase64ToDrive(samplePng, "image/png", "Logbook_Access_Test.png", true);
       btn.disabled = false;
 
       if (res.ok && res.url) {
@@ -799,17 +916,22 @@
       
       try {
         setLS('el_cases',cases); 
-        btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save & Log Case';
+        btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case';
         resetForm(); showTab('tabLedger');
       } catch(e) {
         alert("Browser LocalStorage is full! Export your CSV to back up your cases.");
-        btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save & Log Case';
+        btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case';
       }
     }
 
     function resetForm() {
-      document.getElementById('editId').value=''; document.getElementById('formTitle').textContent='Log Anesthetic Case';
-      document.getElementById('cancelBtn').style.display='none'; document.getElementById('currFiles').innerHTML=''; document.getElementById('fileStatus').textContent=''; curLinks=[];
+      document.getElementById('editId').value='';
+      const ft = document.getElementById('formTitle');
+      ft.textContent=''; ft.style.display='none';
+      document.getElementById('cancelBtn').style.display='none';
+      document.getElementById('currFiles').innerHTML='';
+      document.getElementById('fileStatus').textContent='';
+      curLinks=[];
       ['cHosp','cPatId','cAge','cSpec','cDiag','cProc','cComOther','cTech','cAirNotes','cAnalgOther','cDiff','cCompOther','cFiles'].forEach(id=>document.getElementById(id).value='');
       init(); checkAirway();
     }
@@ -890,7 +1012,10 @@
 
     function editCase(id) {
       const c = getLS('el_cases').find(x=>x.id===id); if(!c) return;
-      document.getElementById('editId').value = c.id; document.getElementById('formTitle').textContent = 'Edit Case / Add Files';
+      document.getElementById('editId').value = c.id;
+      const ft = document.getElementById('formTitle');
+      ft.textContent = 'Edit Case / Add Files';
+      ft.style.display = 'block';
       document.getElementById('cancelBtn').style.display = 'block';
       document.getElementById('cDate').value = c.date;
       document.getElementById('cHosp').value = (c.hosp && c.hosp !== 'N/A') ? c.hosp : '';
@@ -946,7 +1071,26 @@
         }
       }
       
-      let csv = "\uFEFFDate,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,OT_Sheets_Drive_Links\n";
+      const q = v => `"${(v || '').toString().replace(/"/g, '""')}"`;
+      let csv = "\uFEFF";
+
+      // PREPEND DOCTOR DETAILS IF SET IN SETTINGS
+      const p = getLS('el_doc_profile', {});
+      const hasDocDetails = p && Object.values(p).some(val => val && val.trim() !== '');
+      if (hasDocDetails) {
+        csv += `${q("ANAESTHESIOLOGIST LOGBOOK - DOCTOR DETAILS")}\n`;
+        if (p.name)    csv += `${q("Name of the Doctor")},${q(p.name)}\n`;
+        if (p.reg)     csv += `${q("Registration Number")},${q(p.reg)}\n`;
+        if (p.qual)    csv += `${q("Qualifications")},${q(p.qual)}\n`;
+        if (p.desig)   csv += `${q("Designation")},${q(p.desig)}\n`;
+        if (p.council) csv += `${q("Medical Council")},${q(p.council)}\n`;
+        if (p.addr)    csv += `${q("Address")},${q(p.addr)}\n`;
+        if (p.country) csv += `${q("Country")},${q(p.country)}\n`;
+        if (p.role)    csv += `${q("Logbook User")},${q(p.role)}\n`;
+        csv += "\n";
+      }
+
+      csv += "Date,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,OT_Sheets_Drive_Links\n";
       
       cases.forEach(c => {
         let raw = c.links || [];
@@ -980,14 +1124,14 @@
             c.diff||c.difficultAirway||'',
             c.comp||c.complications||'',
             stringLinks
-        ].map(v => `"${(v||'').toString().replace(/"/g, '""')}"`).join(',');
+        ].map(q).join(',');
 
         csv += row + "\n";
       });
       
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-      a.download = `Anesthesia_Logbook_${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = `Anaesthesiologist_Logbook_${new Date().toISOString().split('T')[0]}.csv`;
       a.click();
     }
     
