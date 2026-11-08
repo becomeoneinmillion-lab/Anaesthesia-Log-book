@@ -730,7 +730,89 @@ function doGet(e) {
     const getLS = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d} };
     const setLS = (k,v) => localStorage.setItem(k,JSON.stringify(v));
     let curLinks = [];
+    // 1. PUSH local cases & doc profile to Google Drive
+async function pushDatabaseToDrive(silent = false) {
+  const url = getScriptUrl();
+  if (!url) return;
 
+  const cases = getLS('el_cases', []);
+  const docProfile = getLS('el_doc_profile', {});
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'omit',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'syncDatabase',
+        allCases: cases,
+        doctorProfile: docProfile
+      })
+    });
+    const data = await res.json();
+    if (!silent && data.status === 'success') {
+      alert(`Cloud sync complete! ${data.totalCases} cases up to date on Google Drive.`);
+    }
+  } catch (e) {
+    console.warn("Could not push database to Drive (saved locally):", e);
+  }
+}
+
+// 2. PULL central cases & doc profile from Google Drive to this device
+async function pullDatabaseFromDrive(silent = false) {
+  const url = getScriptUrl();
+  if (!url) {
+    if (!silent) alert("Please enter and save your Google Apps Script URL in Settings first.");
+    return;
+  }
+
+  const badge = document.getElementById('hdrDriveBadge');
+  if (badge) badge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Syncing...</span>';
+
+  try {
+    const res = await fetch(url, { method: 'GET', mode: 'cors' });
+    const cloudData = await res.json();
+
+    if (cloudData && Array.isArray(cloudData.cases)) {
+      const localCases = getLS('el_cases', []);
+      
+      // Merge strategy: Union by Unique Case ID, preferring latest changes
+      const map = new Map();
+      cloudData.cases.forEach(c => map.set(c.id, c));
+      localCases.forEach(c => {
+        if (!map.has(c.id)) {
+          map.set(c.id, c); // Retain cases logged locally while offline
+        }
+      });
+
+      const merged = Array.from(map.values()).sort((a, b) => (b.date > a.date ? 1 : -1));
+      setLS('el_cases', merged);
+
+      // Restore doctor profile if present in cloud
+      if (cloudData.doctorProfile && Object.keys(cloudData.doctorProfile).length) {
+        setLS('el_doc_profile', cloudData.doctorProfile);
+        loadDocProfile();
+      }
+
+      renderLedger();
+      if (typeof renderSummary === 'function') renderSummary();
+      updateHeaderBadge();
+
+      // If local cases contained offline entries not in cloud, push merged back
+      if (merged.length > cloudData.cases.length) {
+        pushDatabaseToDrive(true);
+      }
+
+      if (!silent) alert(`Synced! Logbook updated with ${merged.length} total cases.`);
+    }
+  } catch (e) {
+    console.warn("Pull from Drive failed:", e);
+    if (!silent) alert("Could not fetch data from Google Drive. Check internet or Script URL.");
+  } finally {
+    updateHeaderBadge();
+  }
+}
     const HOSPS = [
       "Government Medical College Hospital, Nilgiris",
       "Government Headquarters Hospital"
