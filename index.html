@@ -1746,6 +1746,7 @@ async function pullDatabaseFromDrive(silent = false) {
       
       try {
         setLS('el_cases',cases); 
+        pushDatabaseToDrive(true);
         btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case';
         resetForm(); showTab('tabLedger');
       } catch(e) {
@@ -2033,6 +2034,7 @@ async function pullDatabaseFromDrive(silent = false) {
     function delCase(id) {
       if(confirm("Delete this case?")) {
         setLS('el_cases',getLS('el_cases').filter(x=>x.id!==id));
+        pushDatabaseToDrive(true);
         renderLedger();
         updateHeaderBadge();
       }
