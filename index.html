@@ -1112,6 +1112,79 @@ async function pullDatabaseFromDrive(silent = false) {
         data: cleanB64
       });
     }
+    // --- CLOUD SYNC FUNCTIONS ---
+    async function pushDatabaseToDrive(silent = false) {
+      const url = getScriptUrl();
+      if (!url) return;
+      const cases = getLS('el_cases', []);
+      const docProfile = getLS('el_doc_profile', {});
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          mode: 'cors',
+          credentials: 'omit',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'syncDatabase',
+            allCases: cases,
+            doctorProfile: docProfile
+          })
+        });
+        const data = await res.json();
+        if (!silent && data.status === 'success') {
+          alert(`Cloud sync complete! ${data.totalCases} cases up to date on Google Drive.`);
+        }
+      } catch (e) {
+        console.warn("Could not push database to Drive (saved locally):", e);
+      }
+    }
+
+    async function pullDatabaseFromDrive(silent = false) {
+      const url = getScriptUrl();
+      if (!url) {
+        if (!silent) alert("Please enter and save your Google Apps Script URL in Settings first.");
+        return;
+      }
+      const badge = document.getElementById('hdrDriveBadge');
+      if (badge) badge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Syncing...</span>';
+
+      try {
+        const res = await fetch(url, { method: 'GET', mode: 'cors' });
+        const cloudData = await res.json();
+
+        if (cloudData && Array.isArray(cloudData.cases)) {
+          const localCases = getLS('el_cases', []);
+          const map = new Map();
+          cloudData.cases.forEach(c => map.set(c.id, c));
+          localCases.forEach(c => {
+            if (!map.has(c.id)) map.set(c.id, c);
+          });
+
+          const merged = Array.from(map.values()).sort((a, b) => (b.date > a.date ? 1 : -1));
+          setLS('el_cases', merged);
+
+          if (cloudData.doctorProfile && Object.keys(cloudData.doctorProfile).length) {
+            setLS('el_doc_profile', cloudData.doctorProfile);
+            loadDocProfile();
+          }
+
+          renderLedger();
+          if (typeof renderSummary === 'function') renderSummary();
+          updateHeaderBadge();
+
+          if (merged.length > cloudData.cases.length) {
+            pushDatabaseToDrive(true);
+          }
+
+          if (!silent) alert(`Synced! Logbook updated with ${merged.length} total cases.`);
+        }
+      } catch (e) {
+        console.warn("Pull from Drive failed:", e);
+        if (!silent) alert("Could not fetch data from Google Drive. Check internet or Script URL.");
+      } finally {
+        updateHeaderBadge();
+      }
+    }
 
     function init() {
       document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
@@ -1125,6 +1198,11 @@ async function pullDatabaseFromDrive(silent = false) {
       renderLists();
       loadDocProfile();
       updateHeaderBadge();
+
+      // Automatically pull cases from Google Drive when the app starts
+      if (getScriptUrl()) {
+        pullDatabaseFromDrive(true);
+      }
     }
 
     function renderLists() {
