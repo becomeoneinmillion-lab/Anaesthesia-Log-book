@@ -1,0 +1,16 @@
+{
+  "name": "Anaesthesiologist's logbook",
+  "version": "1.0.0",
+  "description": "Standalone Android APK",
+  "scripts": {
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/assets": "^3.0.5"
+  }
+}
