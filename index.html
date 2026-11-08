@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#00897b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Anaesthesiologist Logbook</title>
-  <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root{--pri:#00897b;--pri-dk:#00695c;--bg:#f8fafc;--txt:#0f172a;--muted:#64748b;--bdr:#cbd5e1;}
     *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
@@ -24,7 +24,7 @@
     .fg{margin-bottom:14px;}
     .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:6px;flex-wrap:wrap;}
     
-    /* High-Prominence Section Headings */
+    /* Section Headings */
     label{
       display:inline-block;font-size:0.82rem;font-weight:800;color:#1e293b;
       margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;
@@ -37,7 +37,7 @@
     input:focus,select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 2.5px rgba(0,137,123,0.16);}
     .row{display:flex;gap:8px;}.col{flex:1;min-width:0;}
     
-    /* Ultra-Compact Micro Pills */
+    /* Micro Pills */
     .pill-group{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
     .pill-lbl{display:inline-block;cursor:pointer;user-select:none;}.pill-lbl input{display:none;}
     .pill-sp{
@@ -109,6 +109,7 @@
     .step-title{font-size:0.88rem;font-weight:800;color:#0f172a;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
     .step-desc{font-size:0.81rem;color:#334155;line-height:1.5;}
     .step-mock{background:#fff;border:1px dashed #94a3b8;border-radius:6px;padding:8px 10px;margin-top:8px;font-size:0.76rem;color:#1e293b;}
+    .code-box{width:100%;height:150px;background:#0f172a;color:#f8fafc;font-family:Consolas,monaco,monospace;font-size:0.72rem;padding:8px;border-radius:6px;border:1px solid #334155;margin-top:8px;resize:vertical;}
 
     #modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
     #modalOverlay img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;}
@@ -381,15 +382,126 @@
           <div class="step-desc">
             Tap the button below to open Google Apps Script and click <b>"New Project"</b> (top-left).
             <div style="margin-top:8px">
-              <a href="[https://script.google.com/home/start](https://script.google.com/home/start)" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:7px 12px"><i class="fa-solid fa-up-right-from-square"></i> Open Google Apps Script</a>
+              <a href="https://script.google.com/home/start" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:7px 12px"><i class="fa-solid fa-up-right-from-square"></i> Open Google Apps Script</a>
             </div>
           </div>
         </div>
 
         <div class="step-card">
-          <div class="step-title"><i class="fa-solid fa-2" style="background:var(--pri);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem"></i> Paste the Backend Script Code</div>
+          <div class="step-title"><i class="fa-solid fa-2" style="background:var(--pri);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem"></i> Copy & Paste Backend Script Code</div>
           <div class="step-desc">
-            Delete any code inside <code>Code.gs</code>, paste the Google Apps Script code we provided earlier, and click the <b>Save icon</b> <i class="fa-solid fa-floppy-disk"></i>.
+            Tap the button below to copy the complete backend code, delete everything currently inside <code>Code.gs</code>, paste this code, and click the <b>Save icon</b> <i class="fa-solid fa-floppy-disk"></i>.
+            <div style="margin-top:8px">
+              <button type="button" class="btn" id="btnCopyCode" style="background:#059669;padding:8px 12px;font-size:0.8rem" onclick="copyBackendCode()"><i class="fa-solid fa-copy"></i> Copy Script Code to Clipboard</button>
+            </div>
+            <textarea id="rawScriptCode" class="code-box" readonly onclick="this.select()">var FOLDER_NAME = "Anaesthesiologist Logbook";
+var DB_FILE_NAME = "logbook_database.json";
+
+function getOrCreateFolder() {
+  var folders = DriveApp.getFoldersByName(FOLDER_NAME);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  return DriveApp.createFolder(FOLDER_NAME);
+}
+
+function getDatabaseFile() {
+  var folder = getOrCreateFolder();
+  var files = folder.getFilesByName(DB_FILE_NAME);
+  if (files.hasNext()) {
+    return files.next();
+  }
+  var initData = JSON.stringify({ cases: [], doctorProfile: {} }, null, 2);
+  return folder.createFile(DB_FILE_NAME, initData, "application/json");
+}
+
+function doGet(e) {
+  try {
+    var dbFile = getDatabaseFile();
+    var content = dbFile.getBlob().getDataAsString();
+    return ContentService.createTextOutput(content)
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    var errObj = { status: "error", error: err.toString() };
+    return ContentService.createTextOutput(JSON.stringify(errObj))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      return responseJson({ status: "error", message: "No data payload received." });
+    }
+
+    var payload = JSON.parse(e.postData.contents);
+    var folder = getOrCreateFolder();
+
+    if (payload.testConnection) {
+      return responseJson({
+        status: "success",
+        message: "Drive write access confirmed.",
+        url: folder.getUrl()
+      });
+    }
+
+    if (payload.action === "syncDatabase" || payload.allCases) {
+      var dbFile = getDatabaseFile();
+      var casesToSave = payload.allCases || payload.cases || [];
+      var docProf = payload.doctorProfile || {};
+      var dbData = {
+        updatedAt: new Date().toISOString(),
+        doctorProfile: docProf,
+        cases: casesToSave
+      };
+      dbFile.setContent(JSON.stringify(dbData, null, 2));
+      return responseJson({
+        status: "success",
+        message: "Database updated on Google Drive.",
+        totalCases: casesToSave.length,
+        updatedAt: dbData.updatedAt
+      });
+    }
+
+    if (payload.action === "saveCsv" || payload.csvContent) {
+      var fileName = payload.fileName || ("Anaesthesiologist_Logbook_" + Utilities.formatDate(new Date(), "GMT", "yyyy-MM-dd") + ".csv");
+      var csvFile = folder.createFile(fileName, payload.csvContent, "text/csv;charset=utf-8");
+      csvFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      return responseJson({
+        status: "success",
+        viewUrl: csvFile.getUrl(),
+        downloadUrl: csvFile.getDownloadUrl(),
+        fileName: fileName
+      });
+    }
+
+    var base64Data = payload.base64Data || payload.base64 || payload.data;
+    if (base64Data) {
+      var cleanB64 = base64Data.indexOf(",") > -1 ? base64Data.split(",")[1] : base64Data;
+      var fileTitle = payload.fileName || payload.filename || payload.name || ("File_" + Date.now() + ".jpg");
+      var mimeType = payload.mimeType || payload.type || "image/jpeg";
+      var decodedBytes = Utilities.base64Decode(cleanB64);
+      var blob = Utilities.newBlob(decodedBytes, mimeType, fileTitle);
+      var uploadedFile = folder.createFile(blob);
+      uploadedFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+      return responseJson({
+        status: "success",
+        viewUrl: uploadedFile.getUrl(),
+        fileId: uploadedFile.getId()
+      });
+    }
+
+    return responseJson({ status: "error", message: "Unknown action payload." });
+  } catch (err) {
+    return responseJson({ status: "error", error: err.toString() });
+  }
+}
+
+function responseJson(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}</textarea>
           </div>
         </div>
 
@@ -477,7 +589,7 @@
         <h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 2. Google Drive Access & Multi-Device Sync</h2>
         <div class="fg">
           <label>Google Apps Script Web App URL</label>
-          <input type="url" id="sUrl" placeholder="[https://script.google.com/macros/s/.../exec](https://script.google.com/macros/s/.../exec)" oninput="autoSaveUrl()">
+          <input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="autoSaveUrl()">
         </div>
         <div class="row" style="margin-bottom:8px">
           <button type="button" class="btn" style="flex:1" onclick="saveSettings()"><i class="fa-solid fa-floppy-disk"></i> Save URL</button>
@@ -748,14 +860,14 @@
 
         const fid = j.fileId || j.id || (j.data && (j.data.fileId || j.data.id));
         if (fid && typeof fid === 'string' && fid.length > 10 && !fid.includes(' ')) {
-          return `[https://drive.google.com/file/d/$](https://drive.google.com/file/d/$){fid.trim()}/view`;
+          return `https://drive.google.com/file/d/${fid.trim()}/view`;
         }
 
         for (const val of Object.values(j)) {
-          if (typeof val === 'string' && val.startsWith('[https://drive.google.com](https://drive.google.com)')) return val.trim();
+          if (typeof val === 'string' && val.startsWith('https://drive.google.com')) return val.trim();
         }
       }
-      if (typeof rawText === 'string' && rawText.trim().startsWith('[https://drive.google.com](https://drive.google.com)')) {
+      if (typeof rawText === 'string' && rawText.trim().startsWith('https://drive.google.com')) {
         return rawText.trim();
       }
       return '';
@@ -808,7 +920,7 @@
         }
 
         if (j && j.status === 'success') {
-          return { ok: true, url: j.viewUrl || j.url || '[https://drive.google.com](https://drive.google.com)', raw: j };
+          return { ok: true, url: j.viewUrl || j.url || 'https://drive.google.com', raw: j };
         }
 
         if (rawText.includes('<!DOCTYPE html>') || rawText.includes('<html')) {
@@ -1020,6 +1132,28 @@
         }
       } catch (e) {
         alert("Upload encountered a network error. Please verify your Script URL in Settings.");
+      }
+    }
+
+    function copyBackendCode() {
+      const el = document.getElementById('rawScriptCode');
+      if (!el) return;
+      el.select();
+      el.setSelectionRange(0, 99999);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(el.value).then(() => {
+          const btn = document.getElementById('btnCopyCode');
+          if (btn) btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Code Copied to Clipboard!';
+          setTimeout(() => {
+            if (btn) btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Script Code to Clipboard';
+          }, 3000);
+        }).catch(() => {
+          document.execCommand('copy');
+          alert('Script code copied!');
+        });
+      } else {
+        document.execCommand('copy');
+        alert('Script code copied!');
       }
     }
 
