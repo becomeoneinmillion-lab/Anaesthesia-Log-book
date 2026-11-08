@@ -25,7 +25,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
 body{background:var(--bg);color:var(--txt);padding-bottom:calc(84px + env(safe-area-inset-bottom, 0px));-webkit-font-smoothing:antialiased;}
-/* Header */
 header{background:var(--pri);color:#fff;padding:11px 16px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,0.12);}
 header h1{font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.2;}
 .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
@@ -36,7 +35,6 @@ header h1{font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:
 .card{background:var(--card-bg);border-radius:12px;padding:15px;margin-bottom:14px;border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,0.03);}
 .fg{margin-bottom:14px;}
 .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:6px;flex-wrap:wrap;}
-/* Section Headings */
 label{
 display:inline-block;font-size:0.82rem;font-weight:800;color:#1e293b;
 margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;
@@ -47,7 +45,6 @@ width:100%;padding:9px 11px;border:1px solid var(--bdr);border-radius:8px;font-s
 }
 input:focus,select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 2.5px rgba(0,137,123,0.16);}
 .row{display:flex;gap:8px;}.col{flex:1;min-width:0;}
-/* Micro Pills */
 .pill-group{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
 .pill-lbl{display:inline-block;cursor:pointer;user-select:none;}.pill-lbl input{display:none;}
 .pill-sp{
@@ -63,7 +60,6 @@ background:#f8fafc;color:#475569;border:1px solid #cbd5e1;transition:all 0.1s ea
 .pill-lbl.postop input:checked+.pill-sp{background:#0d9488!important;color:#fff!important;border-color:#0f766e!important;}
 .pill-lbl.comp input[value="Nil"]:checked+.pill-sp,.pill-lbl.comorbid input[value="Nil"]:checked+.pill-sp{background:#10b981!important;color:#fff!important;border-color:#047857!important;}
 .cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:12px;margin-bottom:13px;display:none;}
-/* Bottom Navigation */
 nav.b-nav{
 position:fixed;bottom:0;left:0;right:0;
 height:calc(62px + env(safe-area-inset-bottom, 0px));
@@ -86,7 +82,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 .act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;padding:6px 10px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:5px 5px 0 0;}
 .thumb-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0;}
 .thumb-img{width:60px;height:60px;object-fit:cover;border-radius:6px;border:2px solid var(--pri);cursor:pointer;}
-/* Visual Analytics UI */
 .stat-grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
 @media(min-width:520px){.stat-grid-4{grid-template-columns:repeat(4,1fr);}}
 .stat-box{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:10px 8px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
@@ -107,7 +102,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 .diag-box{padding:12px;border-radius:8px;font-size:0.83rem;line-height:1.45;background:#f8fafc;border:1px solid var(--bdr);margin-top:10px;display:none;}
 .badge-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:3px 8px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
 .badge-warn{background:#fef3c7;color:#b45309;border:1px solid #fde68a;padding:3px 8px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
-/* Tutorial Specific Styles */
 .step-card{border-left:4px solid var(--pri);background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);border-top:1px solid #f1f5f9;border-right:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;}
 .step-header{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
 .step-badge{background:var(--pri);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.78rem;flex-shrink:0;}
@@ -144,12 +138,10 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <div class="card">
 <div id="formTitle" style="display:none;font-size:1rem;font-weight:700;color:var(--pri);margin-bottom:10px;"></div>
 <input type="hidden" id="editId" value="">
-<!-- 1. DATE -->
 <div class="fg">
 <label>Date</label>
 <input type="date" id="cDate">
 </div>
-<!-- 2. HOSPITAL NAME -->
 <div class="fg">
 <div class="lbl-row">
 <label style="margin:0">Hospital Name</label>
@@ -158,13 +150,11 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <input type="text" id="cHosp" list="hospList" placeholder="Start typing or select hospital...">
 <datalist id="hospList"></datalist>
 </div>
-<!-- 3. PATIENT ID, 4. AGE, 5. SEX -->
 <div class="row">
 <div class="fg" style="flex:1.35"><label>Patient ID</label><input type="text" id="cPatId" placeholder="IP / UHID"></div>
 <div class="fg" style="flex:0.75"><label>Age</label><input type="number" id="cAge" inputmode="numeric" placeholder="Yrs"></div>
 <div class="fg" style="flex:1"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
 </div>
-<!-- 6. ELECTIVE OR EMERGENCY & 7. SUPERVISION -->
 <div class="row">
 <div class="fg col">
 <label>Elective / Emergency</label>
@@ -179,7 +169,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 </select>
 </div>
 </div>
-<!-- 8. SPECIALTY -->
 <div class="fg">
 <div class="lbl-row">
 <label style="margin:0">Specialty</label>
@@ -188,7 +177,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <input type="text" id="cSpec" list="specList" placeholder="Start typing specialty..." oninput="updateProcedureSuggestions()">
 <datalist id="specList"></datalist>
 </div>
-<!-- 9. DIAGNOSIS -->
 <div class="fg">
 <div class="lbl-row">
 <label style="margin:0">Diagnosis</label>
@@ -197,7 +185,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <input type="text" id="cDiag" list="diagList" placeholder="Start typing or select diagnosis...">
 <datalist id="diagList"></datalist>
 </div>
-<!-- 10. SURGICAL PROCEDURE -->
 <div class="fg">
 <div class="lbl-row">
 <label style="margin:0">Surgical Procedure</label>
@@ -207,18 +194,15 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <datalist id="procList"></datalist>
 <div id="procSpecHint" style="font-size:0.72rem;color:var(--muted);margin-top:3px"></div>
 </div>
-<!-- 11. COMORBIDITIES -->
 <div class="fg">
 <label>Comorbidities</label>
 <div class="pill-group" id="comorbidPills"></div>
 <input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:6px">
 </div>
-<!-- 12. ASA STATUS -->
 <div class="fg">
 <label>ASA Physical Status</label>
 <div class="pill-group" id="asaPills"></div>
 </div>
-<!-- 13. ANAESTHESIA TECHNIQUE -->
 <div class="fg">
 <div class="lbl-row">
 <label style="margin:0">Anaesthesia Technique</label>
@@ -235,24 +219,20 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 </div>
 <input type="text" id="cAirNotes" placeholder="Tube size, blade, intubation notes...">
 </div>
-<!-- 14. ANALGESIA -->
 <div class="fg">
 <label>Analgesia</label>
 <div class="pill-group" id="analgPills"></div>
 <input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:6px">
 </div>
-<!-- 15. DIFFICULT AIRWAY / SPECIAL NOTES -->
 <div class="fg">
 <label>Difficult Airway / Special Notes</label>
 <input type="text" id="cDiff" placeholder="e.g. C-MAC, Bougie, Arterial line (or Nil)">
 </div>
-<!-- 16. COMPLICATIONS -->
 <div class="fg">
 <label>Complications</label>
 <div class="pill-group" id="compPills"></div>
 <input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:6px">
 </div>
-<!-- POST OP DETAILS -->
 <div class="card" style="background:#f8fafc;border:1px solid #94a3b8;margin-bottom:14px">
 <div style="font-size:0.86rem;font-weight:800;color:var(--pri-dk);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.03em;">
 <i class="fa-solid fa-bed-pulse"></i> Post-op Details
@@ -267,7 +247,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <div class="pill-group" id="painScorePills"></div>
 </div>
 </div>
-<!-- 17. ATTACH OT RECORD SHEET -->
 <div class="fg" style="background:#f0fdfa;padding:11px;border-radius:8px;border:1px dashed var(--pri)">
 <label style="color:var(--pri)">Attach OT Record Sheet</label>
 <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:4px 0;font-size:0.84rem" onchange="document.getElementById('fileStatus').textContent = this.files.length ? (this.files.length + ' file(s) selected ready to upload.') : ''">
@@ -321,11 +300,9 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <div class="stat-lbl">Independent / No Sup</div>
 </div>
 </div>
-<!-- VISUAL CHARTS CARD -->
 <div class="card">
 <label style="margin-bottom:8px"><i class="fa-solid fa-chart-donut"></i> Case Distribution Charts</label>
 <div class="chart-container">
-<!-- Donut 1: Urgency -->
 <div style="text-align:center">
 <div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Case Priority</div>
 <div class="donut-wrap">
@@ -337,7 +314,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 </div>
 <div class="legend-box" id="legendUrgency" style="margin-top:6px"></div>
 </div>
-<!-- Donut 2: Supervision -->
 <div style="text-align:center">
 <div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Supervision Level</div>
 <div class="donut-wrap">
@@ -378,7 +354,6 @@ box-shadow:0 -2px 10px rgba(0,0,0,0.06);
 <p style="font-size:0.83rem;color:var(--muted);line-height:1.45;margin-bottom:14px">
 Follow these 5 simple steps to connect your personal Google Drive. Once connected, your logbook will sync automatically across your phone, tablet, and computer using your single Web App URL.
 </p>
-<!-- STEP 1 -->
 <div class="step-card">
 <div class="step-header">
 <div class="step-badge">1</div>
@@ -394,87 +369,20 @@ Follow these 5 simple steps to connect your personal Google Drive. Once connecte
 <p>Click on <b>"+ New Project"</b> in the top-left corner. Name the project <code>Anaesthesiologist Logbook Sync</code>.</p>
 </div>
 </div>
-<!-- STEP 2 -->
 <div class="step-card">
 <div class="step-header">
 <div class="step-badge">2</div>
 <div class="step-title">Paste the Backend Code</div>
 </div>
 <div class="step-body">
-<p>Delete everything in the script editor, and paste the code from the <b>google_apps_script_code.txt</b> file into <code>Code.gs</code>.</p>
-<div class="code-preview-wrap">
-<div class="code-bar">
-<span>Code.gs Preview</span>
-<button type="button" class="mini-btn" style="background:#00897b;color:#fff;border:none;padding:2px 8px" onclick="copyBackendCode()">
-<i class="fa-regular fa-copy"></i> <span id="copyBtnTxt">Copy Code</span>
-</button>
-</div>
-<pre class="code-box" id="backendCodeText">const FOLDER_NAME = "Anaesthesiologist Logbook";
-const DB_FILE_NAME = "logbook_database.json";
-function getOrCreateFolder() {
-const folders = DriveApp.getFoldersByName(FOLDER_NAME);
-if (folders.hasNext()) return folders.next();
-return DriveApp.createFolder(FOLDER_NAME);
-}
-function getDatabaseFile() {
-const folder = getOrCreateFolder();
-const files = folder.getFilesByName(DB_FILE_NAME);
-if (files.hasNext()) return files.next();
-return folder.createFile(DB_FILE_NAME, JSON.stringify({ cases: [], doctorProfile: {} }), "application/json");
-}
-function doGet(e) {
-try {
-const dbFile = getDatabaseFile();
-const content = dbFile.getBlob().getDataAsString();
-return ContentService.createTextOutput(content).setMimeType(ContentService.MimeType.JSON);
-} catch (err) {
-return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
-}
-}
-function doPost(e) {
-try {
-if (!e || !e.postData || !e.postData.contents) return responseJson({ status: "error", message: "No data" });
-const payload = JSON.parse(e.postData.contents);
-const folder = getOrCreateFolder();
-if (payload.testConnection) {
-return responseJson({ status: "success", message: "Drive access confirmed", url: folder.getUrl() });
-}
-if (payload.action === "syncDatabase" || payload.allCases) {
-const dbFile = getDatabaseFile();
-const dbData = { updatedAt: new Date().toISOString(), doctorProfile: payload.doctorProfile || {}, cases: payload.allCases || payload.cases || [] };
-dbFile.setContent(JSON.stringify(dbData, null, 2));
-return responseJson({ status: "success", message: "Database updated on Google Drive", totalCases: dbData.cases.length });
-}
-if (payload.action === "saveCsv" || payload.csvContent) {
-const fName = payload.fileName || ("Anaesthesiologist_Logbook_" + new Date().toISOString().split("T")[0] + ".csv");
-const csvFile = folder.createFile(fName, payload.csvContent, "text/csv;charset=utf-8");
-csvFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-return responseJson({ status: "success", viewUrl: csvFile.getUrl(), fileName: fName });
-}
-const b64 = payload.base64Data || payload.base64 || payload.data;
-if (b64) {
-const fName = payload.fileName || ("File_" + Date.now() + ".jpg");
-const mime = payload.mimeType || "image/jpeg";
-const blob = Utilities.newBlob(Utilities.base64Decode(b64), mime, fName);
-const file = folder.createFile(blob);
-file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-return responseJson({ status: "success", viewUrl: file.getUrl(), fileId: file.getId() });
-}
-return responseJson({ status: "error", message: "Unknown action" });
-} catch (err) {
-return responseJson({ status: "error", error: err.toString() });
-}
-}
-function responseJson(obj) {
-return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}</pre>
-</div>
-<button type="button" class="btn" style="background:#0f172a;font-size:0.83rem;padding:9px" onclick="copyBackendCode()">
+<p>Delete everything in the script editor (Code.gs), and paste the Apps Script code.</p>
+<div style="margin:10px 0">
+<button type="button" class="btn" style="background:#0f172a;font-size:0.83rem;padding:9px" onclick="copyBackendCodeDirect()">
 <i class="fa-regular fa-copy"></i> Click to Copy Full Script Code
 </button>
 </div>
 </div>
-<!-- STEP 3 -->
+</div>
 <div class="step-card">
 <div class="step-header">
 <div class="step-badge">3</div>
@@ -499,7 +407,6 @@ return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentS
 <p>4. Click <b>Deploy</b>.</p>
 </div>
 </div>
-<!-- STEP 4 -->
 <div class="step-card">
 <div class="step-header">
 <div class="step-badge">4</div>
@@ -511,7 +418,6 @@ return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentS
 <p style="margin-top:4px">3. Click <b>Allow</b>.</p>
 </div>
 </div>
-<!-- STEP 5 -->
 <div class="step-card">
 <div class="step-header">
 <div class="step-badge">5</div>
@@ -602,7 +508,6 @@ return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentS
 </button>
 <div id="testStatus" class="diag-box"></div>
 </div>
-<!-- CSV & LEDGER CLOUD BACKUP SECTION -->
 <div class="card">
 <div class="lbl-row">
 <h2 style="font-size:1.05rem"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 3. Upload CSV & Ledger Data to Drive</h2>
@@ -620,7 +525,6 @@ Upload your formatted <b>CSV spreadsheet</b> or full <b>JSON ledger database</b>
 </div>
 <div id="cloudUploadStatus" class="diag-box"></div>
 </div>
-<!-- OT RECORD SHEETS ATTACHMENT SYNC -->
 <div class="card">
 <div class="lbl-row">
 <h2 style="font-size:1.05rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 4. Attached Sheets Sync Status</h2>
@@ -648,7 +552,6 @@ Upload your formatted <b>CSV spreadsheet</b> or full <b>JSON ledger database</b>
 </div>
 </div>
 </div>
-<!-- BOTTOM NAVIGATION (5 TABS) -->
 <nav class="b-nav">
 <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Logbook</span></button>
 <button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
@@ -658,7 +561,7 @@ Upload your formatted <b>CSV spreadsheet</b> or full <b>JSON ledger database</b>
 </nav>
 <script>
 const getLS = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d} };
-const setLS = (k,v) => localStorage.setItem(k,JSON.stringify(v));
+const setLS = (k,v) => { try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.warn(e)} };
 let curLinks = [];
 const HOSPS = [
 "Government Medical College Hospital, Nilgiris",
@@ -738,7 +641,8 @@ if (!val || val === 'Independent (Sole)') return 'No Supervision';
 return val;
 }
 function renderAsaPills(selectedVal) {
-const isEmerg = document.getElementById('cPrio').value === 'Emergency';
+const prioEl = document.getElementById('cPrio');
+const isEmerg = prioEl && prioEl.value === 'Emergency';
 const asaList = isEmerg ? ['I E','II E','III E','IV E','V E'] : ['I','II','III','IV','V'];
 let def = selectedVal;
 if (!def) {
@@ -751,56 +655,63 @@ if (!asaList.includes(def)) def = asaList[0];
 makePills('asaPills','asa',asaList,'radio',def);
 }
 function updateProcedureSuggestions() {
-const spec = document.getElementById('cSpec').value.trim();
+const specEl = document.getElementById('cSpec');
+const spec = specEl ? specEl.value.trim() : '';
 const hint = document.getElementById('procSpecHint');
 const customProcs = getLS('el_procs', []);
 let list = [];
 if (spec && SPEC_PROC_MAP[spec]) {
 list = [...SPEC_PROC_MAP[spec]];
-hint.innerHTML = ⁠<i class="fa-solid fa-filter" style="color:var(--pri)"></i> Showing suggestions tailored for <b>${spec}</b>⁠;
+if (hint) hint.innerHTML = ⁠<i class="fa-solid fa-filter" style="color:var(--pri)"></i> Showing suggestions tailored for <b>${spec}</b>⁠;
 } else {
 list = [...DEFAULT_PROCS];
-hint.textContent = spec ? ⁠Specialty custom list (${spec})⁠ : "Showing common surgical procedures";
+if (hint) hint.textContent = spec ? ⁠Specialty custom list (${spec})⁠ : "Showing common surgical procedures";
 }
 const merged = [...new Set([...list, ...customProcs])];
 const esc = s => String(s).replace(/"/g, '"');
-document.getElementById('procList').innerHTML = merged.map(x=>⁠<option value="${esc(x)}">⁠).join('');
+const pList = document.getElementById('procList');
+if (pList) pList.innerHTML = merged.map(x=>⁠<option value="${esc(x)}">⁠).join('');
 }
 function loadDocProfile() {
 const p = getLS('el_doc_profile', {});
-document.getElementById('dName').value = p.name || '';
-document.getElementById('dDob').value = p.dob || '';
-document.getElementById('dReg').value = p.reg || '';
-document.getElementById('dQual').value = p.qual || '';
-document.getElementById('dDesig').value = p.desig || '';
-document.getElementById('dCouncil').value = p.council || '';
-document.getElementById('dAddr').value = p.addr || '';
-document.getElementById('dCountry').value = p.country || '';
+const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
+setVal('dName', p.name);
+setVal('dDob', p.dob);
+setVal('dReg', p.reg);
+setVal('dQual', p.qual);
+setVal('dDesig', p.desig);
+setVal('dCouncil', p.council);
+setVal('dAddr', p.addr);
+setVal('dCountry', p.country);
 updateHeaderDocName();
 }
 function saveDocProfile(showMsg = false) {
+const getVal = id => (document.getElementById(id)?.value || '').trim();
 const p = {
-name: document.getElementById('dName').value.trim(),
-dob: document.getElementById('dDob').value.trim(),
-reg: document.getElementById('dReg').value.trim(),
-qual: document.getElementById('dQual').value.trim(),
-desig: document.getElementById('dDesig').value.trim(),
-council: document.getElementById('dCouncil').value.trim(),
-addr: document.getElementById('dAddr').value.trim(),
-country: document.getElementById('dCountry').value.trim()
+name: getVal('dName'),
+dob: getVal('dDob'),
+reg: getVal('dReg'),
+qual: getVal('dQual'),
+desig: getVal('dDesig'),
+council: getVal('dCouncil'),
+addr: getVal('dAddr'),
+country: getVal('dCountry')
 };
 setLS('el_doc_profile', p);
 updateHeaderDocName();
 pushDatabaseToDrive(true);
 if (showMsg) {
 const st = document.getElementById('docSaveStatus');
+if (st) {
 st.style.display = 'block';
 st.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-circle-check"></i> Doctor profile saved & synced!</span>';
+}
 }
 }
 function updateHeaderDocName() {
 const p = getLS('el_doc_profile', {});
 const el = document.getElementById('hdrDocName');
+if (!el) return;
 if (p && p.name) {
 el.textContent = p.name;
 el.style.display = 'block';
@@ -815,7 +726,7 @@ if (inputVal) return inputVal;
 return (localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '').trim();
 }
 function autoSaveUrl() {
-const url = document.getElementById('sUrl').value.trim();
+const url = document.getElementById('sUrl')?.value?.trim() || '';
 if (url) {
 localStorage.setItem('el_url', url);
 localStorage.setItem('etherlog_script_url', url);
@@ -829,6 +740,7 @@ window.open(url, '_blank');
 }
 function updateHeaderBadge() {
 const badge = document.getElementById('hdrDriveBadge');
+if (!badge) return;
 const url = getScriptUrl();
 const stats = getAttachmentStats();
 if (!url) {
@@ -884,29 +796,14 @@ const rawText = await res.text();
 let j = null;
 try { j = JSON.parse(rawText); } catch (e) {}
 const driveUrl = extractDriveUrl(j, rawText);
-if (driveUrl) {
-return { ok: true, url: driveUrl, raw: j || rawText };
-}
-if (j && j.status === 'success') {
-return { ok: true, url: j.fileUrl || j.viewUrl || j.url || 'https://drive.google.com', raw: j };
-}
+if (driveUrl) return { ok: true, url: driveUrl, raw: j || rawText };
+if (j && j.status === 'success') return { ok: true, url: j.fileUrl || j.viewUrl || j.url || 'https://drive.google.com', raw: j };
 if (rawText.includes('<!DOCTYPE html>') || rawText.includes('<html')) {
-return {
-ok: false,
-error: 'Google returned an HTML login or error page. Ensure "Who has access" is set to "Anyone" in Google Apps Script.',
-raw: 'HTML Page Returned'
-};
+return { ok: false, error: 'Google returned an HTML login page. Set "Who has access" to "Anyone" in Apps Script.', raw: 'HTML Page' };
 }
-return {
-ok: false,
-error: (j && (j.message || j.error)) ? (j.message || j.error) : 'Script responded without a Drive URL.',
-raw: j || rawText
-};
+return { ok: false, error: (j && (j.message || j.error)) ? (j.message || j.error) : 'Script responded without a Drive URL.', raw: j || rawText };
 } catch (err) {
-return {
-ok: false,
-error: 'CORS / Network Block: Check internet connection, ensure Apps Script web app is deployed with access for "Anyone".'
-};
+return { ok: false, error: 'Connection Error: Make sure script is deployed with access for "Anyone".' };
 }
 }
 async function uploadBase64ToDrive(b64DataUri, mimeType, fileName, isTest = false) {
@@ -923,7 +820,6 @@ base64: cleanB64,
 data: cleanB64
 });
 }
-// TWO-WAY CLOUD SYNC FUNCTIONS
 async function pushDatabaseToDrive(silent = false) {
 const url = getScriptUrl();
 if (!url) return;
@@ -934,7 +830,6 @@ const res = await fetch(url, {
 method: 'POST',
 mode: 'cors',
 credentials: 'omit',
-redirect: 'follow',
 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
 body: JSON.stringify({
 action: 'syncDatabase',
@@ -947,7 +842,7 @@ if (!silent && data.status === 'success') {
 alert(⁠Cloud sync complete! ${data.totalCases} cases up to date on Google Drive.⁠);
 }
 } catch (e) {
-console.warn("Could not push database to Drive (saved locally):", e);
+console.warn("Could not push database to Drive:", e);
 }
 }
 async function pullDatabaseFromDrive(silent = false) {
@@ -984,7 +879,7 @@ pushDatabaseToDrive(true);
 }
 if (!silent) alert(⁠Synced! Logbook updated with ${merged.length} total cases.⁠);
 } else if (!silent) {
-alert("Connected to script, but no cases database found yet. Try 'Push All Cases' first.");
+alert("Connected to script, but no central cases found. Try 'Push All Cases' first.");
 }
 } catch (e) {
 console.warn("Pull from Drive failed:", e);
@@ -994,8 +889,11 @@ updateHeaderBadge();
 }
 }
 function init() {
-document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
-document.getElementById('sUrl').value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
+try {
+const dateEl = document.getElementById('cDate');
+if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+const sUrlEl = document.getElementById('sUrl');
+if (sUrlEl) sUrlEl.value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
 renderAsaPills('I');
 makePills('comorbidPills','comorbid',COMORBIDS,'checkbox','Nil');
 makePills('analgPills','analgesia',ANALGS,'checkbox','Nil');
@@ -1005,21 +903,29 @@ makePills('painScorePills','painScore',PAIN_SCORES,'radio','0');
 renderLists();
 loadDocProfile();
 updateHeaderBadge();
-// Automatically pull cases from Google Drive when the app starts
 if (getScriptUrl()) {
-pullDatabaseFromDrive(true);
+setTimeout(() => { pullDatabaseFromDrive(true); }, 200);
+}
+} catch (err) {
+console.error("Initialization error:", err);
 }
 }
 function renderLists() {
 const esc = s => String(s).replace(/"/g, '"');
-document.getElementById('hospList').innerHTML = [...new Set([...HOSPS,...getLS('el_hosps')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
-document.getElementById('specList').innerHTML = [...new Set([...SPECS,...getLS('el_specs')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
-document.getElementById('diagList').innerHTML = [...new Set([...DIAGS,...getLS('el_diags')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
-document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
+const hList = document.getElementById('hospList');
+if (hList) hList.innerHTML = [...new Set([...HOSPS,...getLS('el_hosps')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
+const sList = document.getElementById('specList');
+if (sList) sList.innerHTML = [...new Set([...SPECS,...getLS('el_specs')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
+const dList = document.getElementById('diagList');
+if (dList) dList.innerHTML = [...new Set([...DIAGS,...getLS('el_diags')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
+const tList = document.getElementById('techList');
+if (tList) tList.innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
 updateProcedureSuggestions();
 }
 function makePills(id,name,arr,type,def) {
-document.getElementById(id).innerHTML = arr.map(v=>⁠<label class="pill-lbl ${name}"><input type="${type}" name="${name}" value="${v}" ${v===def?'checked':''} onchange="pillClick(this,'${name}')"><span class="pill-sp">${v}</span></label>⁠).join('');
+const el = document.getElementById(id);
+if (!el) return;
+el.innerHTML = arr.map(v=>⁠<label class="pill-lbl ${name}"><input type="${type}" name="${name}" value="${v}" ${v===def?'checked':''} onchange="pillClick(this,'${name}')"><span class="pill-sp">${v}</span></label>⁠).join('');
 }
 function pillClick(el,name) {
 if(el.type==='radio') return;
@@ -1040,13 +946,16 @@ if (!val || !val.trim()) return;
 const cleanVal = val.trim();
 setLS(cfg.key, [...new Set([...getLS(cfg.key), cleanVal])]);
 renderLists();
-document.getElementById(cfg.input).value = cleanVal;
+const inEl = document.getElementById(cfg.input);
+if (inEl) inEl.value = cleanVal;
 if (type === 'spec') updateProcedureSuggestions();
 if (type === 'tech') checkAirway();
 }
 function checkAirway() {
-const v = document.getElementById('cTech').value.toUpperCase();
-document.getElementById('airwayBox').style.display = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(v) ? 'block' : 'none';
+const inEl = document.getElementById('cTech');
+const v = inEl ? inEl.value.toUpperCase() : '';
+const box = document.getElementById('airwayBox');
+if (box) box.style.display = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(v) ? 'block' : 'none';
 }
 function showTab(id) {
 const tabs = ['tabLogger','tabLedger','tabSummary','tabTutorial','tabSettings'];
@@ -1081,10 +990,15 @@ img.src=e.target.result;
 });
 }
 function openPreview(src, driveUrl) {
-document.getElementById('modalImg').src = src;
+const mImg = document.getElementById('modalImg');
+if (mImg) mImg.src = src;
 const dBtn = document.getElementById('modalDriveBtn');
-if(driveUrl && driveUrl.startsWith('http')) { dBtn.href = driveUrl; dBtn.style.display = 'inline-flex'; } else dBtn.style.display = 'none';
-document.getElementById('modalOverlay').style.display = 'flex';
+if(dBtn) {
+if(driveUrl && driveUrl.startsWith('http')) { dBtn.href = driveUrl; dBtn.style.display = 'inline-flex'; }
+else dBtn.style.display = 'none';
+}
+const overlay = document.getElementById('modalOverlay');
+if (overlay) overlay.style.display = 'flex';
 }
 function handlePreviewClick(caseIdx, fileIdx) {
 const c = window._cases && window._cases[caseIdx];
@@ -1097,18 +1011,21 @@ const dUrl = getItemDriveUrl(item);
 openPreview(src, dUrl);
 }
 function saveSettings() {
-const url = document.getElementById('sUrl').value.trim();
+const url = document.getElementById('sUrl')?.value?.trim() || '';
 localStorage.setItem('el_url', url);
 localStorage.setItem('etherlog_script_url', url);
 updateHeaderBadge();
 const stat = document.getElementById('testStatus');
+if (stat) {
 stat.style.display = 'block';
 stat.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-check-circle"></i> URL saved! Now click "Check Access" or "Pull Cloud Data".</span>';
+}
 }
 async function testDriveAccess() {
 const url = getScriptUrl();
 const stat = document.getElementById('testStatus');
 const btn = document.getElementById('btnTestDrive');
+if (!stat) return;
 stat.style.display = 'block';
 if (!url) {
 stat.innerHTML = '<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Error: Paste your Google Apps Script URL above first.</div>';
@@ -1118,15 +1035,15 @@ if (!url.includes('script.google.com') || !url.endsWith('/exec')) {
 stat.innerHTML = '<div style="color:#d97706;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> Warning: URL should end in <code>/exec</code> (not <code>/dev</code>). Testing...</div>';
 }
 saveSettings();
-btn.disabled = true;
+if (btn) btn.disabled = true;
 stat.innerHTML = '<div style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Verifying Google Drive write access & folder creation...</div>';
 const samplePng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 const res = await uploadBase64ToDrive(samplePng, "image/png", "Logbook_Access_Test.png", true);
-btn.disabled = false;
+if (btn) btn.disabled = false;
 if (res.ok) {
-stat.innerHTML = ⁠ <div style="color:#15803d;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-check"></i> Success! Google Drive Access Verified</div> <div style="font-size:0.8rem;color:#334155"> <div>&#10004; <b>CORS & Connection:</b> Active</div> <div>&#10004; <b>Folder 'Anaesthesiologist Logbook':</b> Accessible</div> <div>&#10004; <b>Two-Way Sync:</b> Ready for cross-device usage!</div> </div>⁠;
+stat.innerHTML = ⁠ <div style="color:#15803d;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-check"></i> Success! Google Drive Access Verified</div> <div style="font-size:0.8rem;color:#334155"> <div>&#10004; <b>Connection:</b> Active</div> <div>&#10004; <b>Folder:</b> 'Anaesthesiologist Logbook' Accessible</div> <div>&#10004; <b>Cross-Device Sync:</b> Ready!</div> </div>⁠;
 } else {
-stat.innerHTML = ⁠ <div style="color:#dc2626;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-xmark"></i> Connection / Drive Authorization Blocked</div> <div style="font-size:0.8rem;color:#334155"> <div style="margin-bottom:6px">${res.error}</div> <div style="margin-top:8px"><b>Quick Tip:</b> Open the <b>Tutorial tab</b> to review the required "Execute as: Me" & "Who has access: Anyone" settings in Google Apps Script.</div> </div>⁠;
+stat.innerHTML = ⁠ <div style="color:#dc2626;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-xmark"></i> Connection Blocked</div> <div style="font-size:0.8rem;color:#334155"> <div style="margin-bottom:6px">${res.error}</div> <div style="margin-top:8px"><b>Quick Tip:</b> Open the <b>Tutorial tab</b> to review the required "Execute as: Me" & "Who has access: Anyone" settings in Google Apps Script.</div> </div>⁠;
 }
 }
 function getAttachmentStats() {
@@ -1145,21 +1062,25 @@ return { total, synced, local };
 }
 function checkUploadStatus() {
 const s = getAttachmentStats();
-document.getElementById('stTotalFiles').textContent = s.total;
-document.getElementById('stSyncedFiles').textContent = s.synced;
-document.getElementById('stLocalFiles').textContent = s.local;
+const elTot = document.getElementById('stTotalFiles');
+if (elTot) elTot.textContent = s.total;
+const elSyn = document.getElementById('stSyncedFiles');
+if (elSyn) elSyn.textContent = s.synced;
+const elLoc = document.getElementById('stLocalFiles');
+if (elLoc) elLoc.textContent = s.local;
 const box = document.getElementById('syncStatusBox');
 const btn = document.getElementById('btnSyncAll');
+if (!box) return;
 box.style.display = 'block';
 if (s.total === 0) {
 box.innerHTML = '<span style="color:#64748b"><i class="fa-solid fa-circle-info"></i> No OT Record Sheets attached in your logbook yet.</span>';
-btn.disabled = true;
+if (btn) btn.disabled = true;
 } else if (s.local === 0) {
 box.innerHTML = ⁠<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> All ${s.synced} attached file(s) have valid Google Drive links!</span>⁠;
-btn.disabled = true;
+if (btn) btn.disabled = true;
 } else {
 box.innerHTML = ⁠<span style="color:#b45309;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> ${s.local} file(s) are stored locally. Tap the green button above to sync them to your Google Drive.</span>⁠;
-btn.disabled = false;
+if (btn) btn.disabled = false;
 }
 updateHeaderBadge();
 }
@@ -1342,8 +1263,10 @@ alert("Your logbook is currently empty.");
 return;
 }
 const statusBox = document.getElementById('cloudUploadStatus');
+if (statusBox) {
 statusBox.style.display = 'block';
 statusBox.innerHTML = '<span style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Uploading Ledger JSON backup to Google Drive...</span>';
+}
 const fullData = {
 exportedAt: new Date().toISOString(),
 doctorProfile: getLS('el_doc_profile', {}),
@@ -1357,44 +1280,91 @@ fileName: fileName,
 ledgerJson: JSON.stringify(fullData, null, 2)
 });
 if (res.ok && res.url) {
+if (statusBox) {
 statusBox.innerHTML = ⁠ <div style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> Ledger JSON Backup Uploaded to Google Drive!</div> <div style="margin-top:4px;font-size:0.8rem"> <b>Backup Link:</b> <a href="${res.url}" target="_blank" style="color:#0284c7;word-break:break-all">${res.url}</a> </div>⁠;
+}
 alert("Complete ledger data backup successfully saved to Google Drive!");
 } else {
-statusBox.innerHTML = ⁠<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Ledger Backup Failed: ${res.error}</div>⁠;
+if (statusBox) statusBox.innerHTML = ⁠<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Ledger Backup Failed: ${res.error}</div>⁠;
 alert("Backup failed: " + res.error);
 }
 }
-function copyBackendCode() {
-const el = document.getElementById('backendCodeText');
-if (!el) return;
-const code = el.innerText;
-if (navigator.clipboard && navigator.clipboard.writeText) {
-navigator.clipboard.writeText(code).then(() => {
-alert("Apps Script code copied to clipboard!");
-}).catch(() => {
-manualCopy(code);
-});
-} else {
-manualCopy(code);
+function copyBackendCodeDirect() {
+const scriptCode = `const FOLDER_NAME = "Anaesthesiologist Logbook";
+const DB_FILE_NAME = "logbook_database.json";
+function getOrCreateFolder() {
+const folders = DriveApp.getFoldersByName(FOLDER_NAME);
+if (folders.hasNext()) return folders.next();
+return DriveApp.createFolder(FOLDER_NAME);
+}
+function getDatabaseFile() {
+const folder = getOrCreateFolder();
+const files = folder.getFilesByName(DB_FILE_NAME);
+if (files.hasNext()) return files.next();
+return folder.createFile(DB_FILE_NAME, JSON.stringify({ cases: [], doctorProfile: {} }), "application/json");
+}
+function doGet(e) {
+try {
+const dbFile = getDatabaseFile();
+const content = dbFile.getBlob().getDataAsString();
+return ContentService.createTextOutput(content).setMimeType(ContentService.MimeType.JSON);
+} catch (err) {
+return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
 }
 }
-function manualCopy(text) {
+function doPost(e) {
+try {
+if (!e || !e.postData || !e.postData.contents) return responseJson({ status: "error", message: "No data" });
+const payload = JSON.parse(e.postData.contents);
+const folder = getOrCreateFolder();
+if (payload.testConnection) {
+return responseJson({ status: "success", message: "Drive access confirmed", url: folder.getUrl() });
+}
+if (payload.action === "syncDatabase" || payload.allCases) {
+const dbFile = getDatabaseFile();
+const dbData = { updatedAt: new Date().toISOString(), doctorProfile: payload.doctorProfile || {}, cases: payload.allCases || payload.cases || [] };
+dbFile.setContent(JSON.stringify(dbData, null, 2));
+return responseJson({ status: "success", message: "Database updated on Google Drive", totalCases: dbData.cases.length });
+}
+if (payload.action === "saveCsv" || payload.csvContent) {
+const fName = payload.fileName || ("Anaesthesiologist_Logbook_" + new Date().toISOString().split("T")[0] + ".csv");
+const csvFile = folder.createFile(fName, payload.csvContent, "text/csv;charset=utf-8");
+csvFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+return responseJson({ status: "success", viewUrl: csvFile.getUrl(), fileName: fName });
+}
+const b64 = payload.base64Data || payload.base64 || payload.data;
+if (b64) {
+const fName = payload.fileName || ("File_" + Date.now() + ".jpg");
+const mime = payload.mimeType || "image/jpeg";
+const blob = Utilities.newBlob(Utilities.base64Decode(b64), mime, fName);
+const file = folder.createFile(blob);
+file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+return responseJson({ status: "success", viewUrl: file.getUrl(), fileId: file.getId() });
+}
+return responseJson({ status: "error", message: "Unknown action" });
+} catch (err) {
+return responseJson({ status: "error", error: err.toString() });
+}
+}
+function responseJson(obj) {
+return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}`;
 const ta = document.createElement('textarea');
-ta.value = text;
+ta.value = scriptCode;
 document.body.appendChild(ta);
 ta.select();
 document.execCommand('copy');
 document.body.removeChild(ta);
-alert("Apps Script code copied to clipboard!");
+alert("Google Apps Script code copied to clipboard! Paste it into Code.gs at script.google.com");
 }
 async function saveCase() {
-const proc = document.getElementById('cProc').value.trim();
+const proc = document.getElementById('cProc')?.value?.trim();
 if(!proc) return alert("Enter Surgical Procedure");
-const hosp = document.getElementById('cHosp').value.trim();
-const patId = document.getElementById('cPatId').value.trim();
-const spec = document.getElementById('cSpec').value.trim() || "General Surgery";
-const diag = document.getElementById('cDiag').value.trim();
-const tech = document.getElementById('cTech').value.trim() || "General Anaesthesia (GA) - ETT";
+const hosp = document.getElementById('cHosp')?.value?.trim() || '';
+const patId = document.getElementById('cPatId')?.value?.trim() || '';
+const spec = document.getElementById('cSpec')?.value?.trim() || "General Surgery";
+const diag = document.getElementById('cDiag')?.value?.trim() || '';
+const tech = document.getElementById('cTech')?.value?.trim() || "General Anaesthesia (GA) - ETT";
 if (hosp) setLS('el_hosps', [...new Set([...getLS('el_hosps'), hosp])]);
 if (spec) setLS('el_specs', [...new Set([...getLS('el_specs'), spec])]);
 if (diag) setLS('el_diags', [...new Set([...getLS('el_diags'), diag])]);
@@ -1402,15 +1372,16 @@ setLS('el_procs', [...new Set([...getLS('el_procs'), proc])]);
 setLS('el_techs', [...new Set([...getLS('el_techs'), tech])]);
 renderLists();
 const btn = document.getElementById('saveBtn');
-btn.disabled = true;
-const files = document.getElementById('cFiles').files;
+if (btn) btn.disabled = true;
+const fileIn = document.getElementById('cFiles');
+const files = fileIn ? fileIn.files : [];
 const url = getScriptUrl();
 let links = [...curLinks];
 let uploadWarnings = [];
 if(files.length > 0) {
 for(let i = 0; i < files.length; i++) {
 const f = files[i];
-btn.innerHTML = ⁠<i class="fa-solid fa-spinner fa-spin"></i> Uploading file ${i+1} of ${files.length}...⁠;
+if (btn) btn.innerHTML = ⁠<i class="fa-solid fa-spinner fa-spin"></i> Uploading file ${i+1} of ${files.length}...⁠;
 let dUrl = '';
 let b64 = '';
 let mime = '';
@@ -1421,7 +1392,8 @@ mime = compressed.mime;
 } catch(e) { console.error("Compression error", e); }
 if(url && b64) {
 const patTag = patId ? ⁠_${patId.replace(/[^a-zA-Z0-9]/g, '')}⁠ : '';
-const fName = ⁠Case_${document.getElementById('cDate').value || Date.now()}${patTag}_${f.name.replace(/\s+/g,'_')}⁠;
+const curD = document.getElementById('cDate')?.value || Date.now();
+const fName = ⁠Case_${curD}${patTag}_${f.name.replace(/\s+/g,'_')}⁠;
 const upRes = await uploadBase64ToDrive(b64, mime, fName, false);
 if (upRes.ok && upRes.url) {
 dUrl = upRes.url;
@@ -1448,25 +1420,25 @@ let o = document.getElementById('cPostOpPlanOther')?.value?.trim();
 return o ? ⁠${p} (${o})⁠ : p;
 };
 const isAir = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(tech.toUpperCase());
-const eid = document.getElementById('editId').value;
+const eid = document.getElementById('editId')?.value;
 const rec = {
 id: eid || ('C'+Date.now()),
-date: document.getElementById('cDate').value,
+date: document.getElementById('cDate')?.value || '',
 hosp: hosp || 'N/A',
 patId: patId || 'N/A',
-age: document.getElementById('cAge').value || 'N/A',
-sex: document.getElementById('cSex').value,
-prio: document.getElementById('cPrio').value,
-sup: document.getElementById('cSup').value,
+age: document.getElementById('cAge')?.value || 'N/A',
+sex: document.getElementById('cSex')?.value || 'Male',
+prio: document.getElementById('cPrio')?.value || 'Elective',
+sup: document.getElementById('cSup')?.value || 'No Supervision',
 spec,
 diag: diag || 'N/A',
 proc,
 comorbid: getChecked('comorbid','cComOther'),
 asa: document.querySelector('input[name="asa"]:checked')?.value || 'I',
 tech,
-airway: isAir ? ⁠MMS: ${document.getElementById('cMMS').value} | CL: ${document.getElementById('cCL').value}${document.getElementById('cAirNotes').value ? ' | ' + document.getElementById('cAirNotes').value.trim() : ''}⁠ : 'N/A',
+airway: isAir ? ⁠MMS: ${document.getElementById('cMMS')?.value} | CL: ${document.getElementById('cCL')?.value}${document.getElementById('cAirNotes')?.value ? ' | ' + document.getElementById('cAirNotes')?.value.trim() : ''}⁠ : 'N/A',
 analg: getChecked('analgesia','cAnalgOther'),
-diff: document.getElementById('cDiff').value.trim() || 'Nil',
+diff: document.getElementById('cDiff')?.value?.trim() || 'Nil',
 comp: getChecked('comp','cCompOther'),
 postOpPlan: getPostOpPlan(),
 painScore: document.querySelector('input[name="painScore"]:checked')?.value || 'Not Assessed',
@@ -1477,20 +1449,20 @@ if(eid) { const i = cases.findIndex(x=>x.id===eid); if(i>-1) cases[i]=rec; } els
 try {
 setLS('el_cases',cases);
 pushDatabaseToDrive(true);
-btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case';
+if (btn) { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case'; }
 resetForm(); showTab('tabLedger');
 } catch(e) {
 alert("Browser LocalStorage is full! Please export your CSV or backup to Drive.");
-btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case';
+if (btn) { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case'; }
 }
 }
 function resetForm() {
-document.getElementById('editId').value='';
+const eid = document.getElementById('editId'); if (eid) eid.value = '';
 const ft = document.getElementById('formTitle');
-ft.textContent=''; ft.style.display='none';
-document.getElementById('cancelBtn').style.display='none';
-document.getElementById('currFiles').innerHTML='';
-document.getElementById('fileStatus').textContent='';
+if (ft) { ft.textContent=''; ft.style.display='none'; }
+const cBtn = document.getElementById('cancelBtn'); if (cBtn) cBtn.style.display='none';
+const cFiles = document.getElementById('currFiles'); if (cFiles) cFiles.innerHTML='';
+const fStat = document.getElementById('fileStatus'); if (fStat) fStat.textContent='';
 curLinks=[];
 ['cHosp','cPatId','cAge','cSpec','cDiag','cProc','cComOther','cTech','cAirNotes','cAnalgOther','cDiff','cCompOther','cPostOpPlanOther','cFiles'].forEach(id=>{
 const el = document.getElementById(id); if (el) el.value = '';
@@ -1500,6 +1472,7 @@ init(); checkAirway();
 function renderLedger() {
 const allCases = getLS('el_cases');
 const box = document.getElementById('ledgerList');
+if (!box) return;
 const q = (document.getElementById('ledgerSearch')?.value || '').trim().toLowerCase();
 if(!allCases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
 window._cases = allCases;
@@ -1591,9 +1564,9 @@ leg.innerHTML = legendHtml;
 function renderSummary() {
 const cases = getLS('el_cases');
 const total = cases.length;
-document.getElementById('sumTotal').textContent = total;
-document.getElementById('donutUrgTotal').textContent = total;
-document.getElementById('donutSupTotal').textContent = total;
+const sTot = document.getElementById('sumTotal'); if (sTot) sTot.textContent = total;
+const dUtot = document.getElementById('donutUrgTotal'); if (dUtot) dUtot.textContent = total;
+const dStot = document.getElementById('donutSupTotal'); if (dStot) dStot.textContent = total;
 let elective = 0, emergency = 0, noSup = 0;
 const supCounts = {};
 const specCounts = {};
@@ -1615,9 +1588,9 @@ asaCounts[asa] = (asaCounts[asa] || 0) + 1;
 const hp = (c.hosp && c.hosp !== 'N/A') ? c.hosp : 'Unspecified';
 hospCounts[hp] = (hospCounts[hp] || 0) + 1;
 });
-document.getElementById('sumElective').textContent = elective;
-document.getElementById('sumEmergency').textContent = emergency;
-document.getElementById('sumNoSup').textContent = noSup;
+const sElec = document.getElementById('sumElective'); if (sElec) sElec.textContent = elective;
+const sEmerg = document.getElementById('sumEmergency'); if (sEmerg) sEmerg.textContent = emergency;
+const sNoSup = document.getElementById('sumNoSup'); if (sNoSup) sNoSup.textContent = noSup;
 renderSvgDonut('donutUrgency', 'legendUrgency', [
 { label: 'Elective', val: elective, color: '#0284c7' },
 { label: 'Emergency', val: emergency, color: '#ef4444' }
@@ -1629,6 +1602,7 @@ renderSvgDonut('donutSupervision', 'legendSupervision', [
 ]);
 const buildBars = (obj, containerId, color = 'var(--pri)') => {
 const el = document.getElementById(containerId);
+if (!el) return;
 const entries = Object.entries(obj).sort((a,b) => b[1] - a[1]);
 if (!entries.length) {
 el.innerHTML = '<div style="font-size:0.8rem;color:#64748b">No data logged yet.</div>';
@@ -1646,24 +1620,23 @@ buildBars(hospCounts, 'sumHospList', '#0f766e');
 }
 function editCase(id) {
 const c = getLS('el_cases').find(x=>x.id=id); if(!c) return;
-document.getElementById('editId').value = c.id;
+const eid = document.getElementById('editId'); if (eid) eid.value = c.id;
 const ft = document.getElementById('formTitle');
-ft.textContent = 'Edit Case / Add Files';
-ft.style.display = 'block';
-document.getElementById('cancelBtn').style.display = 'block';
-document.getElementById('cDate').value = c.date;
-document.getElementById('cHosp').value = (c.hosp && c.hosp ! 'N/A') ? c.hosp : '';
-document.getElementById('cPatId').value = (c.patId && c.patId !== 'N/A') ? c.patId : '';
-document.getElementById('cAge').value = c.age!'N/A'?c.age:'';
-document.getElementById('cSex').value = c.sex||'Male';
-document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
-document.getElementById('cSup').value = normalizeSupervision(c.sup||c.supervision);
-document.getElementById('cSpec').value = c.spec||c.specialty||'';
+if (ft) { ft.textContent = 'Edit Case / Add Files'; ft.style.display = 'block'; }
+const cBtn = document.getElementById('cancelBtn'); if (cBtn) cBtn.style.display = 'block';
+const cD = document.getElementById('cDate'); if (cD) cD.value = c.date;
+const cH = document.getElementById('cHosp'); if (cH) cH.value = (c.hosp && c.hosp ! 'N/A') ? c.hosp : '';
+const cP = document.getElementById('cPatId'); if (cP) cP.value = (c.patId && c.patId !== 'N/A') ? c.patId : '';
+const cA = document.getElementById('cAge'); if (cA) cA.value = c.age!'N/A'?c.age:'';
+const cS = document.getElementById('cSex'); if (cS) cS.value = c.sex||'Male';
+const cPr = document.getElementById('cPrio'); if (cPr) cPr.value = c.prio||c.priority||'Elective';
+const cSp = document.getElementById('cSup'); if (cSp) cSp.value = normalizeSupervision(c.sup||c.supervision);
+const cSpe = document.getElementById('cSpec'); if (cSpe) cSpe.value = c.spec||c.specialty||'';
 updateProcedureSuggestions();
-document.getElementById('cDiag').value = (c.diag && c.diag ! 'N/A') ? c.diag : '';
-document.getElementById('cProc').value = c.proc||c.procedure||'';
-document.getElementById('cTech').value = c.tech||c.technique||'';
-document.getElementById('cDiff').value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
+const cDia = document.getElementById('cDiag'); if (cDia) cDia.value = (c.diag && c.diag ! 'N/A') ? c.diag : '';
+const cPro = document.getElementById('cProc'); if (cPro) cPro.value = c.proc||c.procedure||'';
+const cTec = document.getElementById('cTech'); if (cTec) cTec.value = c.tech||c.technique||'';
+const cDif = document.getElementById('cDiff'); if (cDif) cDif.value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
 const restorePillsAndOther = (name, knownList, str, otherInputId) => {
 const arr = (str || '').split(', ').map(s => s.trim()).filter(Boolean);
 document.querySelectorAll(⁠input[name="${name}"]⁠).forEach(el => {
@@ -1685,7 +1658,8 @@ let match = document.querySelector(⁠input[name="postOpPlan"][value="${basePlan
 if (match) match.checked = true;
 if (c.postOpPlan.includes('(')) {
 let extra = c.postOpPlan.split('(')[1].replace(')','').trim();
-document.getElementById('cPostOpPlanOther').value = extra;
+const pOther = document.getElementById('cPostOpPlanOther');
+if (pOther) pOther.value = extra;
 }
 }
 if (c.painScore) {
@@ -1693,7 +1667,8 @@ let pMatch = document.querySelector(⁠input[name="painScore"][value="${c.painSc
 if (pMatch) pMatch.checked = true;
 }
 curLinks = c.links || (c.attachmentUrl ? [{url:c.attachmentUrl, thumb:''}] : []);
-document.getElementById('currFiles').innerHTML = curLinks.length ? ⁠<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>⁠ : '';
+const cFl = document.getElementById('currFiles');
+if (cFl) cFl.innerHTML = curLinks.length ? ⁠<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>⁠ : '';
 checkAirway(); showTab('tabLogger');
 }
 function delCase(id) {
@@ -1718,7 +1693,7 @@ a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
 a.download = ⁠Anaesthesiologist_Logbook_${new Date().toISOString().split('T')[0]}.csv⁠;
 a.click();
 }
-init();
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
