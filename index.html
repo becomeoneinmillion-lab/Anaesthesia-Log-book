@@ -1,1699 +1,1724 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#00897b">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Anaesthesiologist Logbook</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root{
---pri:#00897b;
---pri-dk:#00695c;
---pri-lt:#e0f2f1;
---bg:#f8fafc;
---txt:#0f172a;
---muted:#64748b;
---bdr:#cbd5e1;
---card-bg:#ffffff;
---blue:#0284c7;
---green:#059669;
---amber:#d97706;
---red:#ef4444;
---purple:#8b5cf6;
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--txt);padding-bottom:calc(84px + env(safe-area-inset-bottom, 0px));-webkit-font-smoothing:antialiased;}
-header{background:var(--pri);color:#fff;padding:11px 16px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,0.12);}
-header h1{font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.2;}
-.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
-.hdr-doc{font-size:0.75rem;font-weight:700;color:#ffffff;text-align:right;cursor:pointer;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.drv-pill{font-size:0.67rem;padding:3px 9px;border-radius:12px;background:rgba(255,255,255,0.2);color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.2s;}
-.drv-pill:hover{background:rgba(255,255,255,0.3);}
-.container{max-width:780px;margin:0 auto;padding:12px;}
-.card{background:var(--card-bg);border-radius:12px;padding:15px;margin-bottom:14px;border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,0.03);}
-.fg{margin-bottom:14px;}
-.lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:6px;flex-wrap:wrap;}
-label{
-display:inline-block;font-size:0.82rem;font-weight:800;color:#1e293b;
-margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;
-border-left:3.5px solid var(--pri);padding-left:7px;line-height:1.15;
-}
-input[type="text"],input[type="number"],input[type="date"],input[type="url"],input[type="search"],select{
-width:100%;padding:9px 11px;border:1px solid var(--bdr);border-radius:8px;font-size:0.92rem;background:#fff;color:var(--txt);transition:border-color 0.15s,box-shadow 0.15s;
-}
-input:focus,select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 2.5px rgba(0,137,123,0.16);}
-.row{display:flex;gap:8px;}.col{flex:1;min-width:0;}
-.pill-group{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
-.pill-lbl{display:inline-block;cursor:pointer;user-select:none;}.pill-lbl input{display:none;}
-.pill-sp{
-display:inline-flex;align-items:center;padding:3px 8px;border-radius:10px;
-font-size:0.68rem;font-weight:600;line-height:1.2;
-background:#f8fafc;color:#475569;border:1px solid #cbd5e1;transition:all 0.1s ease;
-}
-.pill-lbl input[type="radio"]:checked+.pill-sp{background:#00897b!important;color:#fff!important;border-color:#004d40!important;}
-.pill-lbl.comorbid input:checked+.pill-sp{background:#0284c7!important;color:#fff!important;border-color:#0369a1!important;}
-.pill-lbl.analgesia input:checked+.pill-sp{background:#059669!important;color:#fff!important;border-color:#047857!important;}
-.pill-lbl.comp input:checked+.pill-sp{background:#ef4444!important;color:#fff!important;border-color:#b91c1c!important;}
-.pill-lbl.pain input:checked+.pill-sp{background:#8b5cf6!important;color:#fff!important;border-color:#6d28d9!important;}
-.pill-lbl.postop input:checked+.pill-sp{background:#0d9488!important;color:#fff!important;border-color:#0f766e!important;}
-.pill-lbl.comp input[value="Nil"]:checked+.pill-sp,.pill-lbl.comorbid input[value="Nil"]:checked+.pill-sp{background:#10b981!important;color:#fff!important;border-color:#047857!important;}
-.cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:12px;margin-bottom:13px;display:none;}
-nav.b-nav{
-position:fixed;bottom:0;left:0;right:0;
-height:calc(62px + env(safe-area-inset-bottom, 0px));
-padding-bottom:env(safe-area-inset-bottom, 0px);
-background:#fff;border-top:1px solid var(--bdr);display:flex;z-index:999;
-box-shadow:0 -2px 10px rgba(0,0,0,0.06);
-}
-.nav-btn{background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;font-size:0.67rem;gap:4px;cursor:pointer;flex:1;justify-content:center;font-weight:600;}
-.nav-btn i{font-size:1.1rem;}
-.nav-btn.active{color:var(--pri)!important;font-weight:700;}
-.btn{width:100%;padding:11px;border-radius:8px;font-size:0.92rem;font-weight:700;border:none;cursor:pointer;background:var(--pri);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:background 0.15s, transform 0.05s;}
-.btn:active{transform:scale(0.99);background:var(--pri-dk);}
-.btn:disabled{opacity:0.6;cursor:not-allowed;}
-.btn-sec{background:#e2e8f0;color:var(--txt);}
-.btn-sec:hover{background:#cbd5e1;}
-.mini-btn{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:3px 8px;border-radius:6px;font-size:0.7rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
-.mini-btn:hover{background:#bae6fd;}
-.case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:13px;margin-bottom:10px;}
-.d-box{background:#f8fafc;border-radius:6px;padding:9px 11px;margin:8px 0;font-size:0.81rem;line-height:1.45;border-left:3.5px solid var(--pri);}
-.act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;padding:6px 10px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:5px 5px 0 0;}
-.thumb-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0;}
-.thumb-img{width:60px;height:60px;object-fit:cover;border-radius:6px;border:2px solid var(--pri);cursor:pointer;}
-.stat-grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
-@media(min-width:520px){.stat-grid-4{grid-template-columns:repeat(4,1fr);}}
-.stat-box{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:10px 8px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
-.stat-num{font-size:1.3rem;font-weight:800;color:var(--txt);}
-.stat-lbl{font-size:0.66rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:2px;}
-.chart-container{display:flex;align-items:center;justify-content:space-around;gap:14px;flex-wrap:wrap;padding:8px 0;}
-.donut-wrap{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center;}
-.donut-center{position:absolute;text-align:center;pointer-events:none;}
-.donut-center .dc-num{font-size:1.15rem;font-weight:800;color:var(--txt);line-height:1;}
-.donut-center .dc-lbl{font-size:0.62rem;color:var(--muted);font-weight:700;text-transform:uppercase;}
-.legend-box{display:flex;flex-direction:column;gap:5px;min-width:130px;}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:600;color:#334155;}
-.legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
-.bar-row{margin-bottom:8px;font-size:0.78rem;}
-.bar-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-weight:600;color:#334155;}
-.bar-track{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;}
-.bar-fill{height:100%;background:var(--pri);border-radius:4px;transition:width 0.3s ease;}
-.diag-box{padding:12px;border-radius:8px;font-size:0.83rem;line-height:1.45;background:#f8fafc;border:1px solid var(--bdr);margin-top:10px;display:none;}
-.badge-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:3px 8px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
-.badge-warn{background:#fef3c7;color:#b45309;border:1px solid #fde68a;padding:3px 8px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
-.step-card{border-left:4px solid var(--pri);background:#fff;border-radius:10px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);border-top:1px solid #f1f5f9;border-right:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;}
-.step-header{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
-.step-badge{background:var(--pri);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.78rem;flex-shrink:0;}
-.step-title{font-size:0.92rem;font-weight:700;color:#1e293b;}
-.step-body{font-size:0.83rem;color:#475569;line-height:1.5;padding-left:35px;}
-.code-preview-wrap{position:relative;margin:10px 0;background:#0f172a;border-radius:8px;overflow:hidden;}
-.code-bar{background:#1e293b;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;color:#94a3b8;font-size:0.73rem;font-family:monospace;}
-.code-box{max-height:180px;overflow-y:auto;padding:10px 12px;font-family:Consolas,monaco,monospace;font-size:0.74rem;color:#e2e8f0;white-space:pre;}
-.callout{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px;margin:8px 0;font-size:0.8rem;color:#1e40af;display:flex;gap:8px;align-items:flex-start;}
-#modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
-#modalOverlay img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#00897b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Anaesthesiologist Logbook</title>
+  <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+  <style>
+    :root{--pri:#00897b;--pri-dk:#00695c;--bg:#f8fafc;--txt:#0f172a;--muted:#64748b;--bdr:#cbd5e1;}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;}
+    body{background:var(--bg);color:var(--txt);padding-bottom:calc(82px + env(safe-area-inset-bottom, 0px));-webkit-font-smoothing:antialiased;}
+    
+    /* Header */
+    header{background:var(--pri);color:#fff;padding:10px 14px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 2px 6px rgba(0,0,0,0.12);}
+    header h1{font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:7px;line-height:1.2;}
+    .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+    .hdr-doc{font-size:0.75rem;font-weight:700;color:#ffffff;text-align:right;cursor:pointer;max-width:175px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .drv-pill{font-size:0.66rem;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.2);color:#fff;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+    .container{max-width:760px;margin:0 auto;padding:10px;}
+    .card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,0.03);}
+    .fg{margin-bottom:14px;}
+    .lbl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:6px;flex-wrap:wrap;}
+    
+    /* High-Prominence Section Headings */
+    label{
+      display:inline-block;font-size:0.82rem;font-weight:800;color:#1e293b;
+      margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;
+      border-left:3px solid var(--pri);padding-left:6px;line-height:1.15;
+    }
+    
+    input[type="text"],input[type="number"],input[type="date"],input[type="url"],input[type="search"],select{
+      width:100%;padding:9px 11px;border:1px solid var(--bdr);border-radius:8px;font-size:0.92rem;background:#fff;color:var(--txt);transition:border-color 0.15s,box-shadow 0.15s;
+    }
+    input:focus,select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 2.5px rgba(0,137,123,0.16);}
+    .row{display:flex;gap:8px;}.col{flex:1;min-width:0;}
+    
+    /* Ultra-Compact Micro Pills */
+    .pill-group{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
+    .pill-lbl{display:inline-block;cursor:pointer;user-select:none;}.pill-lbl input{display:none;}
+    .pill-sp{
+      display:inline-flex;align-items:center;padding:2.5px 7.5px;border-radius:10px;
+      font-size:0.65rem;font-weight:600;line-height:1.2;
+      background:#f8fafc;color:#475569;border:1px solid #cbd5e1;transition:all 0.1s ease;
+    }
+    .pill-lbl input[type="radio"]:checked+.pill-sp{background:#00897b!important;color:#fff!important;border-color:#004d40!important;}
+    .pill-lbl.comorbid input:checked+.pill-sp{background:#0284c7!important;color:#fff!important;border-color:#0369a1!important;}
+    .pill-lbl.analgesia input:checked+.pill-sp{background:#059669!important;color:#fff!important;border-color:#047857!important;}
+    .pill-lbl.comp input:checked+.pill-sp{background:#ef4444!important;color:#fff!important;border-color:#b91c1c!important;}
+    .pill-lbl.pain input:checked+.pill-sp{background:#8b5cf6!important;color:#fff!important;border-color:#6d28d9!important;}
+    .pill-lbl.postop input:checked+.pill-sp{background:#0d9488!important;color:#fff!important;border-color:#0f766e!important;}
+    .pill-lbl.comp input[value="Nil"]:checked+.pill-sp,.pill-lbl.comorbid input[value="Nil"]:checked+.pill-sp{background:#10b981!important;color:#fff!important;border-color:#047857!important;}
+    
+    .cond-box{background:#f0fdfa;border:1.5px solid #99f6e4;border-radius:10px;padding:11px;margin-bottom:13px;display:none;}
+    
+    /* Bottom Navigation (5 Tabs) */
+    nav.b-nav{
+      position:fixed;bottom:0;left:0;right:0;
+      height:calc(60px + env(safe-area-inset-bottom, 0px));
+      padding-bottom:env(safe-area-inset-bottom, 0px);
+      background:#fff;border-top:1px solid var(--bdr);display:flex;z-index:999;
+      box-shadow:0 -2px 8px rgba(0,0,0,0.05);
+    }
+    .nav-btn{background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;font-size:0.66rem;gap:3px;cursor:pointer;flex:1;justify-content:center;font-weight:600;}
+    .nav-btn i{font-size:1.02rem;}
+    .nav-btn.active{color:var(--pri)!important;font-weight:700;}
+    
+    .btn{width:100%;padding:11px;border-radius:8px;font-size:0.93rem;font-weight:700;border:none;cursor:pointer;background:var(--pri);color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:7px;}
+    .btn:active{transform:scale(0.99);background:var(--pri-dk);}
+    .btn:disabled{opacity:0.6;cursor:not-allowed;}
+    .btn-sec{background:#e2e8f0;color:var(--txt);}
+    .mini-btn{background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;padding:2px 7px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;}
+    
+    .case-item{background:#fff;border:1px solid var(--bdr);border-radius:10px;padding:12px;margin-bottom:10px;}
+    .d-box{background:#f8fafc;border-radius:6px;padding:8px 10px;margin:7px 0;font-size:0.81rem;line-height:1.45;border-left:3px solid var(--pri);}
+    .act-btn{display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;padding:6px 10px;border-radius:6px;text-decoration:none;font-weight:600;border:none;cursor:pointer;margin:5px 5px 0 0;}
+    .thumb-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0;}
+    .thumb-img{width:58px;height:58px;object-fit:cover;border-radius:6px;border:2px solid var(--pri);cursor:pointer;}
+    
+    /* Visual Analytics UI */
+    .stat-grid-4{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
+    @media(min-width:500px){.stat-grid-4{grid-template-columns:repeat(4,1fr);}}
+    .stat-box{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:10px 8px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,0.02);}
+    .stat-num{font-size:1.3rem;font-weight:800;color:var(--txt);}
+    .stat-lbl{font-size:0.66rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:2px;}
+    
+    .chart-container{display:flex;align-items:center;justify-content:space-around;gap:12px;flex-wrap:wrap;padding:8px 0;}
+    .donut-wrap{position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center;}
+    .donut-center{position:absolute;text-align:center;pointer-events:none;}
+    .donut-center .dc-num{font-size:1.15rem;font-weight:800;color:var(--txt);line-height:1;}
+    .donut-center .dc-lbl{font-size:0.62rem;color:var(--muted);font-weight:700;text-transform:uppercase;}
+    .legend-box{display:flex;flex-direction:column;gap:5px;min-width:130px;}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;font-weight:600;color:#334155;}
+    .legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+
+    .bar-row{margin-bottom:8px;font-size:0.78rem;}
+    .bar-lbl{display:flex;justify-content:space-between;margin-bottom:3px;font-weight:600;color:#334155;}
+    .bar-track{height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;}
+    .bar-fill{height:100%;background:var(--pri);border-radius:4px;transition:width 0.3s ease;}
+
+    .diag-box{padding:11px;border-radius:8px;font-size:0.82rem;line-height:1.45;background:#f8fafc;border:1px solid var(--bdr);margin-top:10px;display:none;}
+    .badge-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:2px 7px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+    .badge-warn{background:#fef3c7;color:#b45309;border:1px solid #fde68a;padding:2px 7px;border-radius:6px;font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
+    
+    /* Tutorial UI */
+    .step-card{background:#f8fafc;border:1px solid #cbd5e1;border-left:4px solid var(--pri);border-radius:8px;padding:12px;margin-bottom:12px;}
+    .step-title{font-size:0.88rem;font-weight:800;color:#0f172a;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+    .step-desc{font-size:0.81rem;color:#334155;line-height:1.5;}
+    .step-mock{background:#fff;border:1px dashed #94a3b8;border-radius:6px;padding:8px 10px;margin-top:8px;font-size:0.76rem;color:#1e293b;}
+
+    #modalOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:14px;}
+    #modalOverlay img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;}
+  </style>
 </head>
 <body>
-<header>
-<h1><i class="fa-solid fa-syringe"></i> Anaesthesiologist Logbook</h1>
-<div class="hdr-right">
-<div id="hdrDocName" class="hdr-doc" onclick="showTab('tabSettings')" style="display:none"></div>
-<div id="hdrDriveBadge" class="drv-pill" onclick="pullDatabaseFromDrive(false)">
-<i class="fa-solid fa-cloud"></i> <span>Sync Cloud</span>
-</div>
-</div>
-</header>
-<div id="modalOverlay" onclick="this.style.display='none'">
-<img id="modalImg" src="">
-<div style="margin-top:12px;display:flex;gap:10px">
-<a id="modalDriveBtn" href="#" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:8px 14px" onclick="event.stopPropagation()"><i class="fa-solid fa-up-right-from-square"></i> Open in Drive</a>
-<button type="button" class="act-btn" style="background:#ef4444;color:#fff;padding:8px 14px">Close Preview</button>
-</div>
-</div>
-<div class="container">
-<!-- TAB 1: LOGBOOK ENTRY -->
-<div id="tabLogger">
-<div class="card">
-<div id="formTitle" style="display:none;font-size:1rem;font-weight:700;color:var(--pri);margin-bottom:10px;"></div>
-<input type="hidden" id="editId" value="">
-<div class="fg">
-<label>Date</label>
-<input type="date" id="cDate">
-</div>
-<div class="fg">
-<div class="lbl-row">
-<label style="margin:0">Hospital Name</label>
-<button type="button" class="mini-btn" onclick="addCustom('hosp')">+ Add Custom</button>
-</div>
-<input type="text" id="cHosp" list="hospList" placeholder="Start typing or select hospital...">
-<datalist id="hospList"></datalist>
-</div>
-<div class="row">
-<div class="fg" style="flex:1.35"><label>Patient ID</label><input type="text" id="cPatId" placeholder="IP / UHID"></div>
-<div class="fg" style="flex:0.75"><label>Age</label><input type="number" id="cAge" inputmode="numeric" placeholder="Yrs"></div>
-<div class="fg" style="flex:1"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
-</div>
-<div class="row">
-<div class="fg col">
-<label>Elective / Emergency</label>
-<select id="cPrio" onchange="renderAsaPills()"><option>Elective</option><option>Emergency</option></select>
-</div>
-<div class="fg col">
-<label>Supervision</label>
-<select id="cSup">
-<option>No Supervision</option>
-<option>Direct Supervision</option>
-<option>Indirect Supervision</option>
-</select>
-</div>
-</div>
-<div class="fg">
-<div class="lbl-row">
-<label style="margin:0">Specialty</label>
-<button type="button" class="mini-btn" onclick="addCustom('spec')">+ Add Custom</button>
-</div>
-<input type="text" id="cSpec" list="specList" placeholder="Start typing specialty..." oninput="updateProcedureSuggestions()">
-<datalist id="specList"></datalist>
-</div>
-<div class="fg">
-<div class="lbl-row">
-<label style="margin:0">Diagnosis</label>
-<button type="button" class="mini-btn" onclick="addCustom('diag')">+ Add Custom</button>
-</div>
-<input type="text" id="cDiag" list="diagList" placeholder="Start typing or select diagnosis...">
-<datalist id="diagList"></datalist>
-</div>
-<div class="fg">
-<div class="lbl-row">
-<label style="margin:0">Surgical Procedure</label>
-<button type="button" class="mini-btn" onclick="addCustom('proc')">+ Add Custom</button>
-</div>
-<input type="text" id="cProc" list="procList" placeholder="Start typing or select procedure...">
-<datalist id="procList"></datalist>
-<div id="procSpecHint" style="font-size:0.72rem;color:var(--muted);margin-top:3px"></div>
-</div>
-<div class="fg">
-<label>Comorbidities</label>
-<div class="pill-group" id="comorbidPills"></div>
-<input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:6px">
-</div>
-<div class="fg">
-<label>ASA Physical Status</label>
-<div class="pill-group" id="asaPills"></div>
-</div>
-<div class="fg">
-<div class="lbl-row">
-<label style="margin:0">Anaesthesia Technique</label>
-<button type="button" class="mini-btn" onclick="addCustom('tech')">+ Add Custom</button>
-</div>
-<input type="text" id="cTech" list="techList" placeholder="Start typing technique..." oninput="checkAirway()">
-<datalist id="techList"></datalist>
-</div>
-<div id="airwayBox" class="cond-box">
-<label style="color:var(--pri)">Airway Management (GA / ETT / LMA)</label>
-<div class="row" style="margin-top:6px">
-<div class="fg col"><label>Pre-op MMS</label><select id="cMMS"><option>1</option><option>2</option><option>3</option><option>4</option><option>0</option><option>Not Assessed</option></select></div>
-<div class="fg col"><label>Cormack-Lehane</label><select id="cCL"><option>1</option><option>2</option><option>2a</option><option>2b</option><option>3a</option><option>3b</option><option>4</option></select></div>
-</div>
-<input type="text" id="cAirNotes" placeholder="Tube size, blade, intubation notes...">
-</div>
-<div class="fg">
-<label>Analgesia</label>
-<div class="pill-group" id="analgPills"></div>
-<input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:6px">
-</div>
-<div class="fg">
-<label>Difficult Airway / Special Notes</label>
-<input type="text" id="cDiff" placeholder="e.g. C-MAC, Bougie, Arterial line (or Nil)">
-</div>
-<div class="fg">
-<label>Complications</label>
-<div class="pill-group" id="compPills"></div>
-<input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:6px">
-</div>
-<div class="card" style="background:#f8fafc;border:1px solid #94a3b8;margin-bottom:14px">
-<div style="font-size:0.86rem;font-weight:800;color:var(--pri-dk);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.03em;">
-<i class="fa-solid fa-bed-pulse"></i> Post-op Details
-</div>
-<div class="fg" style="margin-bottom:10px">
-<label style="font-size:0.75rem">Post-op Plan</label>
-<div class="pill-group" id="postOpPlanPills"></div>
-<input type="text" id="cPostOpPlanOther" placeholder="Other post-op plan..." style="margin-top:6px">
-</div>
-<div class="fg" style="margin-bottom:4px">
-<label style="font-size:0.75rem">Immediate Post-op Pain Score (NRS 0–10)</label>
-<div class="pill-group" id="painScorePills"></div>
-</div>
-</div>
-<div class="fg" style="background:#f0fdfa;padding:11px;border-radius:8px;border:1px dashed var(--pri)">
-<label style="color:var(--pri)">Attach OT Record Sheet</label>
-<input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:4px 0;font-size:0.84rem" onchange="document.getElementById('fileStatus').textContent = this.files.length ? (this.files.length + ' file(s) selected ready to upload.') : ''">
-<div id="fileStatus" style="font-size:0.75rem;color:#059669;font-weight:700;margin-top:3px"></div>
-<div id="currFiles" style="margin-top:3px"></div>
-</div>
-<button type="button" class="btn" id="saveBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> Save Case</button>
-<button type="button" class="btn btn-sec" style="margin-top:8px;display:none" id="cancelBtn" onclick="resetForm();showTab('tabLedger')">Cancel Edit</button>
-</div>
-</div>
-<!-- TAB 2: LEDGER -->
-<div id="tabLedger" style="display:none">
-<div class="lbl-row" style="margin-bottom:8px">
-<h2 style="font-size:1.08rem">My Logbook Records</h2>
-<div style="display:flex;gap:5px;flex-wrap:wrap">
-<button type="button" class="mini-btn" style="background:#0284c7;color:#fff;border:none" onclick="pullDatabaseFromDrive(false)"><i class="fa-solid fa-rotate"></i> Sync Cloud</button>
-<button type="button" class="mini-btn" style="background:var(--pri);color:#fff;border:none" onclick="uploadCsvAndLedgerToDrive(true)"><i class="fa-solid fa-cloud-arrow-up"></i> Upload CSV</button>
-<button type="button" class="mini-btn" style="background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Download CSV</button>
-</div>
-</div>
-<div class="fg" style="margin-bottom:10px">
-<input type="search" id="ledgerSearch" placeholder="Search procedure, diagnosis, patient ID, specialty..." oninput="renderLedger()">
-</div>
-<div id="ledgerSyncNotice" class="diag-box" style="margin-bottom:10px"></div>
-<div id="ledgerList"></div>
-</div>
-<!-- TAB 3: SUMMARY -->
-<div id="tabSummary" style="display:none">
-<div class="lbl-row" style="margin-bottom:10px">
-<h2 style="font-size:1.08rem"><i class="fa-solid fa-chart-pie" style="color:var(--pri)"></i> Analytics & Summary</h2>
-<div style="display:flex;gap:6px">
-<button type="button" class="mini-btn" style="background:var(--pri);color:#fff;border:none" onclick="uploadCsvAndLedgerToDrive(true)"><i class="fa-solid fa-cloud"></i> Upload CSV</button>
-<button type="button" class="mini-btn" style="background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Download CSV</button>
-</div>
-</div>
-<div class="stat-grid-4">
-<div class="stat-box" style="border-top:3px solid var(--pri)">
-<div class="stat-num" id="sumTotal">0</div>
-<div class="stat-lbl">Total Cases</div>
-</div>
-<div class="stat-box" style="border-top:3px solid #0284c7">
-<div class="stat-num" id="sumElective">0</div>
-<div class="stat-lbl">Elective</div>
-</div>
-<div class="stat-box" style="border-top:3px solid #ef4444">
-<div class="stat-num" id="sumEmergency">0</div>
-<div class="stat-lbl">Emergency</div>
-</div>
-<div class="stat-box" style="border-top:3px solid #059669">
-<div class="stat-num" id="sumNoSup">0</div>
-<div class="stat-lbl">Independent / No Sup</div>
-</div>
-</div>
-<div class="card">
-<label style="margin-bottom:8px"><i class="fa-solid fa-chart-donut"></i> Case Distribution Charts</label>
-<div class="chart-container">
-<div style="text-align:center">
-<div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Case Priority</div>
-<div class="donut-wrap">
-<svg id="donutUrgency" width="130" height="130" viewBox="0 0 42 42"></svg>
-<div class="donut-center">
-<div class="dc-num" id="donutUrgTotal">0</div>
-<div class="dc-lbl">Cases</div>
-</div>
-</div>
-<div class="legend-box" id="legendUrgency" style="margin-top:6px"></div>
-</div>
-<div style="text-align:center">
-<div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Supervision Level</div>
-<div class="donut-wrap">
-<svg id="donutSupervision" width="130" height="130" viewBox="0 0 42 42"></svg>
-<div class="donut-center">
-<div class="dc-num" id="donutSupTotal">0</div>
-<div class="dc-lbl">Cases</div>
-</div>
-</div>
-<div class="legend-box" id="legendSupervision" style="margin-top:6px"></div>
-</div>
-</div>
-</div>
-<div class="card">
-<label style="margin-bottom:8px"><i class="fa-solid fa-stethoscope"></i> Specialty Distribution</label>
-<div id="sumSpecList"></div>
-</div>
-<div class="card">
-<label style="margin-bottom:8px"><i class="fa-solid fa-syringe"></i> Anaesthesia Techniques</label>
-<div id="sumTechList"></div>
-</div>
-<div class="card">
-<label style="margin-bottom:8px"><i class="fa-solid fa-heart-pulse"></i> ASA Physical Status</label>
-<div id="sumAsaList"></div>
-</div>
-<div class="card">
-<label style="margin-bottom:8px"><i class="fa-regular fa-hospital"></i> Hospital Distribution</label>
-<div id="sumHospList"></div>
-</div>
-</div>
-<!-- TAB 4: SETUP & TUTORIAL -->
-<div id="tabTutorial" style="display:none">
-<div class="card">
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-<i class="fa-solid fa-book-bookmark" style="font-size:1.3rem;color:var(--pri)"></i>
-<h2 style="font-size:1.15rem;font-weight:800;color:var(--txt)">Google Drive Cross-Device Sync Setup</h2>
-</div>
-<p style="font-size:0.83rem;color:var(--muted);line-height:1.45;margin-bottom:14px">
-Follow these 5 simple steps to connect your personal Google Drive. Once connected, your logbook will sync automatically across your phone, tablet, and computer using your single Web App URL.
-</p>
-<div class="step-card">
-<div class="step-header">
-<div class="step-badge">1</div>
-<div class="step-title">Open Google Apps Script</div>
-</div>
-<div class="step-body">
-<p>Visit Google Apps Script in your browser using the button below:</p>
-<div style="margin:8px 0">
-<a href="https://script.google.com/home/start" target="_blank" class="mini-btn" style="background:#0284c7;color:#fff;padding:6px 12px;font-size:0.8rem">
-<i class="fa-solid fa-arrow-up-right-from-square"></i> Open script.google.com
-</a>
-</div>
-<p>Click on <b>"+ New Project"</b> in the top-left corner. Name the project <code>Anaesthesiologist Logbook Sync</code>.</p>
-</div>
-</div>
-<div class="step-card">
-<div class="step-header">
-<div class="step-badge">2</div>
-<div class="step-title">Paste the Backend Code</div>
-</div>
-<div class="step-body">
-<p>Delete everything in the script editor (Code.gs), and paste the Apps Script code.</p>
-<div style="margin:10px 0">
-<button type="button" class="btn" style="background:#0f172a;font-size:0.83rem;padding:9px" onclick="copyBackendCodeDirect()">
-<i class="fa-regular fa-copy"></i> Click to Copy Full Script Code
-</button>
-</div>
-</div>
-</div>
-<div class="step-card">
-<div class="step-header">
-<div class="step-badge">3</div>
-<div class="step-title">Deploy as a Web App</div>
-</div>
-<div class="step-body">
-<p>1. In the Apps Script toolbar, click <b>Deploy → New deployment</b>.</p>
-<p style="margin-top:4px">2. Click the gear icon (<i class="fa-solid fa-gear"></i>) and choose <b>Web app</b>.</p>
-<p style="margin-top:4px">3. Set the deployment fields accurately:</p>
-<div class="callout">
-<i class="fa-solid fa-circle-exclamation" style="font-size:1.1rem;margin-top:1px"></i>
-<div>
-<b>Mandatory Settings:</b>
+  <header>
+    <h1><i class="fa-solid fa-syringe"></i> Anaesthesiologist Logbook</h1>
+    <div class="hdr-right">
+      <div id="hdrDocName" class="hdr-doc" onclick="showTab('tabSettings')" style="display:none"></div>
+      <div id="hdrDriveBadge" class="drv-pill" onclick="pullDatabaseFromDrive(false)" title="Tap to sync with Google Drive">
+        <i class="fa-solid fa-cloud"></i> <span>Drive Status</span>
+      </div>
+    </div>
+  </header>
+  
+  <div id="modalOverlay" onclick="this.style.display='none'">
+    <img id="modalImg" src="">
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <a id="modalDriveBtn" href="#" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:8px 14px" onclick="event.stopPropagation()"><i class="fa-solid fa-up-right-from-square"></i> Open in Drive</a>
+      <button type="button" class="act-btn" style="background:#ef4444;color:#fff;padding:8px 14px">Close Preview</button>
+    </div>
+  </div>
 
-• <b>Execute as:</b> <span style="text-decoration:underline">Me</span>
+  <div class="container">
+    <!-- TAB 1: LOGBOOK ENTRY -->
+    <div id="tabLogger">
+      <div class="card">
+        <div id="formTitle" style="display:none;font-size:1rem;font-weight:700;color:var(--pri);margin-bottom:10px;"></div>
+        <input type="hidden" id="editId" value="">
+        
+        <div class="fg">
+          <label>Date</label>
+          <input type="date" id="cDate">
+        </div>
 
-• <b>Who has access:</b> <span style="background:#fef08a;color:#854d0e;padding:1px 5px;border-radius:4px;font-weight:700">Anyone</span>
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Hospital Name</label>
+            <button type="button" class="mini-btn" onclick="addCustom('hosp')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cHosp" list="hospList" placeholder="Start typing or select hospital...">
+          <datalist id="hospList"></datalist>
+        </div>
 
-<i>(Selecting "Anyone" allows your phones and tablets to sync seamlessly).</i>
-</div>
-</div>
-<p>4. Click <b>Deploy</b>.</p>
-</div>
-</div>
-<div class="step-card">
-<div class="step-header">
-<div class="step-badge">4</div>
-<div class="step-title">Grant Google Permission</div>
-</div>
-<div class="step-body">
-<p>1. Click <b>Authorize access</b> and select your Google account.</p>
-<p style="margin-top:4px">2. If you see <i>"Google hasn't verified this app"</i>, click <b>Advanced</b> → <b>Go to Anaesthesiologist Logbook Sync (unsafe)</b>.</p>
-<p style="margin-top:4px">3. Click <b>Allow</b>.</p>
-</div>
-</div>
-<div class="step-card">
-<div class="step-header">
-<div class="step-badge">5</div>
-<div class="step-title">Paste Web App URL into Settings</div>
-</div>
-<div class="step-body">
-<p>Copy the <b>Web app URL</b> (ends in <code>/exec</code>) and paste it into the <b>Settings</b> tab.</p>
-<div style="margin:10px 0">
-<button type="button" class="btn" onclick="showTab('tabSettings')">
-<i class="fa-solid fa-gear"></i> Go to Settings Tab
-</button>
-</div>
-<p style="font-size:0.77rem;color:var(--muted)">On any other device, paste that same URL to load all your records instantly!</p>
-</div>
-</div>
-</div>
-</div>
-<!-- TAB 5: SETTINGS & DIAGNOSTICS -->
-<div id="tabSettings" style="display:none">
-<div class="card">
-<h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-user-doctor" style="color:var(--pri)"></i> 1. Doctor Profile & Details</h2>
-<div class="row">
-<div class="fg" style="flex:1.4">
-<label>Name of the Doctor</label>
-<input type="text" id="dName" placeholder="e.g. Dr. Naveenkumar S" oninput="saveDocProfile(false)">
-</div>
-<div class="fg" style="flex:1">
-<label>Date of Birth</label>
-<input type="date" id="dDob" oninput="saveDocProfile(false)">
-</div>
-</div>
-<div class="row">
-<div class="fg col">
-<label>Registration Number</label>
-<input type="text" id="dReg" placeholder="e.g. 123456" oninput="saveDocProfile(false)">
-</div>
-<div class="fg col">
-<label>Qualifications</label>
-<input type="text" id="dQual" placeholder="e.g. MBBS, MD (Anaes)" oninput="saveDocProfile(false)">
-</div>
-</div>
-<div class="row">
-<div class="fg col">
-<label>Designation</label>
-<input type="text" id="dDesig" placeholder="e.g. Assistant Professor" oninput="saveDocProfile(false)">
-</div>
-<div class="fg col">
-<label>Medical Council</label>
-<input type="text" id="dCouncil" placeholder="e.g. Tamil Nadu Medical Council" oninput="saveDocProfile(false)">
-</div>
-</div>
-<div class="row">
-<div class="fg" style="flex:1.5">
-<label>Address</label>
-<input type="text" id="dAddr" placeholder="Hospital / Residential Address..." oninput="saveDocProfile(false)">
-</div>
-<div class="fg" style="flex:1">
-<label>Country</label>
-<input type="text" id="dCountry" placeholder="e.g. India" oninput="saveDocProfile(false)">
-</div>
-</div>
-<button type="button" class="btn" onclick="saveDocProfile(true)"><i class="fa-solid fa-user-check"></i> Save Doctor Details</button>
-<div id="docSaveStatus" class="diag-box"></div>
-</div>
-<div class="card">
-<div class="lbl-row">
-<h2 style="font-size:1.05rem"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 2. Google Drive Access & URL</h2>
-<button type="button" class="mini-btn" onclick="showTab('tabTutorial')"><i class="fa-solid fa-circle-question"></i> Setup Tutorial</button>
-</div>
-<div class="fg">
-<label>Google Apps Script Web App URL</label>
-<input type="url" id="sUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="autoSaveUrl()">
-</div>
-<div class="row" style="margin-bottom:8px">
-<button type="button" class="btn" style="flex:1" onclick="saveSettings()"><i class="fa-solid fa-floppy-disk"></i> Save URL</button>
-<button type="button" class="btn" style="flex:1;background:#0284c7" id="btnTestDrive" onclick="testDriveAccess()"><i class="fa-solid fa-vial-circle-check"></i> Check Access</button>
-</div>
-<div class="row" style="margin-bottom:8px">
-<button type="button" class="btn" style="flex:1;background:#059669" onclick="pullDatabaseFromDrive(false)">
-<i class="fa-solid fa-cloud-arrow-down"></i> Pull Cloud Data
-</button>
-<button type="button" class="btn" style="flex:1;background:#0f172a" onclick="pushDatabaseToDrive(false)">
-<i class="fa-solid fa-cloud-arrow-up"></i> Push All Cases
-</button>
-</div>
-<button type="button" class="btn btn-sec" style="font-size:0.8rem;padding:9px" onclick="openUrlDirectly()">
-<i class="fa-solid fa-up-right-from-square"></i> Open Script URL in Browser Tab
-</button>
-<div id="testStatus" class="diag-box"></div>
-</div>
-<div class="card">
-<div class="lbl-row">
-<h2 style="font-size:1.05rem"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 3. Upload CSV & Ledger Data to Drive</h2>
-</div>
-<p style="font-size:0.79rem;color:var(--muted);margin-bottom:10px">
-Upload your formatted <b>CSV spreadsheet</b> or full <b>JSON ledger database</b> directly into your Google Drive folder.
-</p>
-<div class="row">
-<button type="button" class="btn" id="btnUploadCsv" style="background:#0284c7;font-size:0.83rem;padding:10px" onclick="uploadCsvAndLedgerToDrive(false)">
-<i class="fa-solid fa-file-csv"></i> Upload CSV to Drive
-</button>
-<button type="button" class="btn" id="btnUploadLedger" style="background:#0f172a;font-size:0.83rem;padding:10px" onclick="uploadLedgerJsonToDrive()">
-<i class="fa-solid fa-database"></i> Backup Ledger JSON
-</button>
-</div>
-<div id="cloudUploadStatus" class="diag-box"></div>
-</div>
-<div class="card">
-<div class="lbl-row">
-<h2 style="font-size:1.05rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 4. Attached Sheets Sync Status</h2>
-<button type="button" class="mini-btn" onclick="checkUploadStatus()"><i class="fa-solid fa-rotate"></i> Refresh Status</button>
-</div>
-<p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Verifies whether OT Record Sheets attached to your cases have been uploaded to Google Drive.</p>
-<div class="stat-grid-4" style="grid-template-columns:repeat(3,1fr);margin-top:8px">
-<div class="stat-box">
-<div class="stat-num" id="stTotalFiles">0</div>
-<div class="stat-lbl">Total Files</div>
-</div>
-<div class="stat-box" style="border-color:#86efac;background:#f0fdf4">
-<div class="stat-num" style="color:#15803d" id="stSyncedFiles">0</div>
-<div class="stat-lbl" style="color:#15803d">On Drive</div>
-</div>
-<div class="stat-box" style="border-color:#fde68a;background:#fffbeb">
-<div class="stat-num" style="color:#b45309" id="stLocalFiles">0</div>
-<div class="stat-lbl" style="color:#b45309">Local Only</div>
-</div>
-</div>
-<button type="button" class="btn" id="btnSyncAll" style="background:#059669;margin-top:8px" onclick="syncPendingUploads(false)">
-<i class="fa-solid fa-cloud-arrow-up"></i> Sync Local Attached Sheets to Drive Now
-</button>
-<div id="syncStatusBox" class="diag-box"></div>
-</div>
-</div>
-</div>
-<nav class="b-nav">
-<button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Logbook</span></button>
-<button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
-<button type="button" class="nav-btn" id="nav2" onclick="showTab('tabSummary')"><i class="fa-solid fa-chart-pie"></i><span>Summary</span></button>
-<button type="button" class="nav-btn" id="nav3" onclick="showTab('tabTutorial')"><i class="fa-solid fa-graduation-cap"></i><span>Tutorial</span></button>
-<button type="button" class="nav-btn" id="nav4" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
-</nav>
-<script>
-const getLS = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d} };
-const setLS = (k,v) => { try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.warn(e)} };
-let curLinks = [];
-const HOSPS = [
-"Government Medical College Hospital, Nilgiris",
-"Government Headquarters Hospital"
-];
-const SPECS = [
-"General Surgery",
-"Orthopaedics",
-"Obstetrics & Gynaec",
-"ENT",
-"Urology",
-"Paediatrics",
-"Neuro/Spine",
-"Plastic Surgery",
-"Ophthalmology",
-"Cardiothoracic",
-"Emergency/Trauma",
-"Oncology / Oncosurgery",
-"Vascular Surgery",
-"Maxillofacial / Dental"
-];
-const SPEC_PROC_MAP = {
-"General Surgery": ["Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy","Inguinal Hernia Repair","Incisional Hernia Repair","Total Thyroidectomy","Hemithyroidectomy","Modified Radical Mastectomy (MRM)","Excision of Fibroadenoma","Haemorrhoidectomy","Fistula in Ano Excision","Perianal Abscess Drainage","Perforation Closure","Splenectomy"],
-"Orthopaedics": ["Total Knee Arthroplasty (TKA)","Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm","ORIF Tibia / Fibula","Hemiarthroplasty Hip","Tension Band Wiring (TBW) Patella / Olecranon","Implant Removal","Carpal Tunnel Release","Arthroscopic ACL Reconstruction","External Fixator Application"],
-"Obstetrics & Gynaec": ["Elective LSCS","Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Vaginal Hysterectomy (VH / PFR)","Laparoscopic Ovarian Cystectomy","Salpingectomy for Ectopic","Dilatation & Curettage (D&C)","Suction Evacuation","Cervical Encirclage"],
-"ENT": ["Tonsillectomy","Adenoidectomy","Functional Endoscopic Sinus Surgery (FESS)","Tympanoplasty / Mastoidectomy","Septoplasty / SMR","Microlaryngeal Surgery (MLS)","Tracheostomy","Preauricular Sinus Excision"],
-"Urology": ["Transurethral Resection of Prostate (TURP)","Ureteroscopic Lithotripsy (URSL)","Percutaneous Nephrolithotomy (PCNL)","DJ Stenting / Stent Removal","Cystoscopy & Biopsy","Optical Internal Urethrotomy (OIU)","Radical / Simple Nephrectomy","Varicocelectomy","Hydrocele Surgery"],
-"Paediatrics": ["Herniotomy","Circumcision","Orchiopexy","Pyloromyotomy","Colostomy Closure","Intussusception Reduction","Foreign Body Bronchus Removal"],
-"Neuro/Spine": ["Craniotomy for EDH / SDH / Tumor","Burr Hole Evacuation","Lumbar Discectomy / Laminectomy","Anterior Cervical Discectomy & Fusion (ACDF)","Ventriculoperitoneal (VP) Shunt","Posterior Fossa Decompression"],
-"Plastic Surgery": ["Split Skin Grafting (SSG)","Full Thickness Skin Grafting (FTSG)","Microvascular Free Flap","Contracture Release","Cleft Lip / Palate Repair","Tendon Repair / Transfer"],
-"Ophthalmology": ["Phacoemulsification with IOL","Extracapsular Cataract Extraction (ECCE)","Trabeculectomy","Vitrectomy","Dacryocystorhinostomy (DCR)","Evisceration / Enucleation"],
-"Cardiothoracic": ["CABG On-Pump","CABG Off-Pump (OPCAB)","Valve Replacement (MVR / AVR)","Thoracotomy & Decortication","Lobectomy / Pneumonectomy","Thymectomy"],
-"Emergency/Trauma": ["Emergency Trauma Laparotomy","Emergency Craniotomy","Emergency LSCS","Emergency Wound Debridement & Washout","Emergency Amputation","Damage Control Laparotomy"],
-"Oncology / Oncosurgery": ["Modified Radical Mastectomy","Radical Neck Dissection","Commando Procedure","Whipple's Pancreaticoduodenectomy","Radical Gastrectomy","Anterior Resection / APR"],
-"Vascular Surgery": ["AV Fistula Creation","Femoro-Popliteal Bypass","Embolectomy","Varicose Vein Stripping / EVLT"],
-"Maxillofacial / Dental": ["ORIF Mandible Fracture","ORIF Maxilla / Zygoma","Orthognathic Le Fort Surgery","Excision of Ameloblastoma","Impaction Dental Extraction"]
-};
-const DEFAULT_PROCS = [
-"Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy",
-"Inguinal Hernia Repair","Total Thyroidectomy","Modified Radical Mastectomy (MRM)","Total Knee Arthroplasty (TKA)",
-"Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm / Tibia","Elective LSCS",
-"Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Tonsillectomy",
-"FESS","Tympanoplasty / Mastoidectomy","TURP","URSL / PCNL","Craniotomy","Lumbar Discectomy / Laminectomy","Split Skin Grafting (SSG)"
-];
-const DIAGS = [
-"Acute Appendicitis","Cholelithiasis / Calculus Cholecystitis","Hollow Viscus Perforation / Peritonitis",
-"Inguinal Hernia","Incisional / Paraumbilical Hernia","Multinodular Goitre (MNG)","Carcinoma Breast",
-"Osteoarthritis Knee","Osteoarthritis Hip / AVN Femur","Neck of Femur / Intertrochanteric Fracture",
-"Both Bones Forearm / Tibia Fracture","Term Gestation / Previous LSCS","Cephalopelvic Disproportion (CPD) / Fetal Distress",
-"Abnormal Uterine Bleeding (AUB) / Fibroid Uterus","Chronic Tonsillitis / Deviated Nasal Septum (DNS)",
-"Chronic Suppurative Otitis Media (CSOM)","Benign Prostatic Hyperplasia (BPH)","Renal / Ureteric Calculus",
-"Traumatic Brain Injury / EDH / SDH","Lumbar Canal Stenosis / IVDP","Diabetic Foot Ulcer / Raw Area"
-];
-const TECHS = [
-"General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT",
-"General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA",
-"Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)",
-"Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block",
-"USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block",
-"Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block",
-"USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block",
-"USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block",
-"USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block",
-"USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block",
-"USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)",
-"USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)",
-"USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation",
-"Local Infiltration / Field Block"
-];
-const COMORBIDS = ['Nil','T2DM','SHTN','Asthma','Anaemia','Seizure Disorder','Hypothyroidism','Hyperthyroidism','CKD','CAD','CLD','COPD','AKI','Obesity/OSA','GERD'];
-const ANALGS = ['Nil','IV Paracetamol','IV NSAID','IV Opioid','IV Multimodal','Regional Block','Local Infiltration','Epidural Infusion','IV PCA'];
-const COMPS = ['Nil','Hypotension','Bradycardia','Desaturation','Bronchospasm','Laryngospasm','Difficult Intubation','High Spinal','PDPH','PONV'];
-const POSTOP_PLANS = ['Routine Monitoring','Extubated on table & Routine Monitoring','Post op Elective Ventilation in PACU / ICU'];
-const PAIN_SCORES = ['0','1','2','3','4','5','6','7','8','9','10','Not Assessed'];
-function normalizeSupervision(val) {
-if (!val || val === 'Independent (Sole)') return 'No Supervision';
-return val;
-}
-function renderAsaPills(selectedVal) {
-const prioEl = document.getElementById('cPrio');
-const isEmerg = prioEl && prioEl.value === 'Emergency';
-const asaList = isEmerg ? ['I E','II E','III E','IV E','V E'] : ['I','II','III','IV','V'];
-let def = selectedVal;
-if (!def) {
-const cur = document.querySelector('input[name="asa"]:checked')?.value || 'I';
-if (isEmerg && !cur.endsWith('E')) def = cur + ' E';
-else if (!isEmerg && cur.endsWith('E')) def = cur.replace(' E','');
-else def = cur;
-}
-if (!asaList.includes(def)) def = asaList[0];
-makePills('asaPills','asa',asaList,'radio',def);
-}
-function updateProcedureSuggestions() {
-const specEl = document.getElementById('cSpec');
-const spec = specEl ? specEl.value.trim() : '';
-const hint = document.getElementById('procSpecHint');
-const customProcs = getLS('el_procs', []);
-let list = [];
-if (spec && SPEC_PROC_MAP[spec]) {
-list = [...SPEC_PROC_MAP[spec]];
-if (hint) hint.innerHTML = ⁠<i class="fa-solid fa-filter" style="color:var(--pri)"></i> Showing suggestions tailored for <b>${spec}</b>⁠;
-} else {
-list = [...DEFAULT_PROCS];
-if (hint) hint.textContent = spec ? ⁠Specialty custom list (${spec})⁠ : "Showing common surgical procedures";
-}
-const merged = [...new Set([...list, ...customProcs])];
-const esc = s => String(s).replace(/"/g, '"');
-const pList = document.getElementById('procList');
-if (pList) pList.innerHTML = merged.map(x=>⁠<option value="${esc(x)}">⁠).join('');
-}
-function loadDocProfile() {
-const p = getLS('el_doc_profile', {});
-const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v || ''; };
-setVal('dName', p.name);
-setVal('dDob', p.dob);
-setVal('dReg', p.reg);
-setVal('dQual', p.qual);
-setVal('dDesig', p.desig);
-setVal('dCouncil', p.council);
-setVal('dAddr', p.addr);
-setVal('dCountry', p.country);
-updateHeaderDocName();
-}
-function saveDocProfile(showMsg = false) {
-const getVal = id => (document.getElementById(id)?.value || '').trim();
-const p = {
-name: getVal('dName'),
-dob: getVal('dDob'),
-reg: getVal('dReg'),
-qual: getVal('dQual'),
-desig: getVal('dDesig'),
-council: getVal('dCouncil'),
-addr: getVal('dAddr'),
-country: getVal('dCountry')
-};
-setLS('el_doc_profile', p);
-updateHeaderDocName();
-pushDatabaseToDrive(true);
-if (showMsg) {
-const st = document.getElementById('docSaveStatus');
-if (st) {
-st.style.display = 'block';
-st.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-circle-check"></i> Doctor profile saved & synced!</span>';
-}
-}
-}
-function updateHeaderDocName() {
-const p = getLS('el_doc_profile', {});
-const el = document.getElementById('hdrDocName');
-if (!el) return;
-if (p && p.name) {
-el.textContent = p.name;
-el.style.display = 'block';
-} else {
-el.textContent = '';
-el.style.display = 'none';
-}
-}
-function getScriptUrl() {
-const inputVal = document.getElementById('sUrl')?.value?.trim();
-if (inputVal) return inputVal;
-return (localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '').trim();
-}
-function autoSaveUrl() {
-const url = document.getElementById('sUrl')?.value?.trim() || '';
-if (url) {
-localStorage.setItem('el_url', url);
-localStorage.setItem('etherlog_script_url', url);
-}
-updateHeaderBadge();
-}
-function openUrlDirectly() {
-const url = getScriptUrl();
-if (!url) return alert("Paste your Google Apps Script URL first.");
-window.open(url, '_blank');
-}
-function updateHeaderBadge() {
-const badge = document.getElementById('hdrDriveBadge');
-if (!badge) return;
-const url = getScriptUrl();
-const stats = getAttachmentStats();
-if (!url) {
-badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#fde047"></i> <span>No Drive URL</span>';
-} else if (stats.local > 0) {
-badge.innerHTML = ⁠<i class="fa-solid fa-cloud-arrow-up" style="color:#fde047"></i> <span>${stats.local} Unsynced</span>⁠;
-} else {
-badge.innerHTML = '<i class="fa-solid fa-cloud-check" style="color:#86efac"></i> <span>Drive Ready</span>';
-}
-updateHeaderDocName();
-}
-function extractDriveUrl(j, rawText) {
-if (typeof j === 'string' && j.trim().startsWith('http')) return j.trim();
-if (j && typeof j === 'object') {
-const direct = j.viewUrl || j.fileUrl || j.url || j.driveUrl || j.link || j.webViewLink || j.downloadUrl || j.alternateLink ||
-(j.data && (j.data.fileUrl || j.data.viewUrl || j.data.url || j.data.link));
-if (direct && typeof direct === 'string' && direct.startsWith('http')) return direct.trim();
-const fid = j.fileId || j.id || (j.data && (j.data.fileId || j.data.id));
-if (fid && typeof fid === 'string' && fid.length > 10 && !fid.includes(' ')) {
-return ⁠https://drive.google.com/file/d/${fid.trim()}/view⁠;
-}
-for (const val of Object.values(j)) {
-if (typeof val === 'string' && val.startsWith('https://drive.google.com')) return val.trim();
-}
-}
-if (typeof rawText === 'string' && rawText.trim().startsWith('https://drive.google.com')) {
-return rawText.trim();
-}
-return '';
-}
-function getItemDriveUrl(item) {
-if (!item) return '';
-if (typeof item === 'string') return item.startsWith('http') ? item : '';
-if (typeof item === 'object') {
-const u = item.url || item.fileUrl || item.viewUrl || item.driveUrl || item.link || '';
-return (typeof u === 'string' && u.startsWith('http')) ? u.trim() : '';
-}
-return '';
-}
-async function sendPostToScript(payload) {
-const url = getScriptUrl();
-if (!url) return { ok: false, error: 'Google Apps Script URL is empty. Please enter your script URL in Settings.' };
-try {
-const res = await fetch(url, {
-method: 'POST',
-mode: 'cors',
-credentials: 'omit',
-redirect: 'follow',
-headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-body: JSON.stringify(payload)
-});
-const rawText = await res.text();
-let j = null;
-try { j = JSON.parse(rawText); } catch (e) {}
-const driveUrl = extractDriveUrl(j, rawText);
-if (driveUrl) return { ok: true, url: driveUrl, raw: j || rawText };
-if (j && j.status === 'success') return { ok: true, url: j.fileUrl || j.viewUrl || j.url || 'https://drive.google.com', raw: j };
-if (rawText.includes('<!DOCTYPE html>') || rawText.includes('<html')) {
-return { ok: false, error: 'Google returned an HTML login page. Set "Who has access" to "Anyone" in Apps Script.', raw: 'HTML Page' };
-}
-return { ok: false, error: (j && (j.message || j.error)) ? (j.message || j.error) : 'Script responded without a Drive URL.', raw: j || rawText };
-} catch (err) {
-return { ok: false, error: 'Connection Error: Make sure script is deployed with access for "Anyone".' };
-}
-}
-async function uploadBase64ToDrive(b64DataUri, mimeType, fileName, isTest = false) {
-const cleanB64 = b64DataUri.includes(',') ? b64DataUri.split(',')[1] : b64DataUri;
-const safeName = fileName || ⁠Case_${Date.now()}.jpg⁠;
-return await sendPostToScript({
-action: isTest ? 'test' : 'uploadFile',
-testConnection: isTest,
-fileName: safeName,
-filename: safeName,
-mimeType: mimeType || 'image/jpeg',
-base64Data: cleanB64,
-base64: cleanB64,
-data: cleanB64
-});
-}
-async function pushDatabaseToDrive(silent = false) {
-const url = getScriptUrl();
-if (!url) return;
-const cases = getLS('el_cases', []);
-const docProfile = getLS('el_doc_profile', {});
-try {
-const res = await fetch(url, {
-method: 'POST',
-mode: 'cors',
-credentials: 'omit',
-headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-body: JSON.stringify({
-action: 'syncDatabase',
-allCases: cases,
-doctorProfile: docProfile
-})
-});
-const data = await res.json();
-if (!silent && data.status === 'success') {
-alert(⁠Cloud sync complete! ${data.totalCases} cases up to date on Google Drive.⁠);
-}
-} catch (e) {
-console.warn("Could not push database to Drive:", e);
-}
-}
-async function pullDatabaseFromDrive(silent = false) {
-const url = getScriptUrl();
-if (!url) {
-if (!silent) alert("Please enter and save your Google Apps Script URL in Settings first.");
-return;
-}
-const badge = document.getElementById('hdrDriveBadge');
-if (badge) badge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Syncing...</span>';
-try {
-const res = await fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' });
-const rawText = await res.text();
-let cloudData = null;
-try { cloudData = JSON.parse(rawText); } catch(pe) {}
-if (cloudData && Array.isArray(cloudData.cases)) {
-const localCases = getLS('el_cases', []);
-const map = new Map();
-cloudData.cases.forEach(c => map.set(c.id, c));
-localCases.forEach(c => {
-if (!map.has(c.id)) map.set(c.id, c);
-});
-const merged = Array.from(map.values()).sort((a, b) => (b.date > a.date ? 1 : -1));
-setLS('el_cases', merged);
-if (cloudData.doctorProfile && Object.keys(cloudData.doctorProfile).length) {
-setLS('el_doc_profile', cloudData.doctorProfile);
-loadDocProfile();
-}
-renderLedger();
-if (typeof renderSummary === 'function') renderSummary();
-updateHeaderBadge();
-if (merged.length > cloudData.cases.length) {
-pushDatabaseToDrive(true);
-}
-if (!silent) alert(⁠Synced! Logbook updated with ${merged.length} total cases.⁠);
-} else if (!silent) {
-alert("Connected to script, but no central cases found. Try 'Push All Cases' first.");
-}
-} catch (e) {
-console.warn("Pull from Drive failed:", e);
-if (!silent) alert("Could not fetch data from Google Drive. Check internet or Script URL.");
-} finally {
-updateHeaderBadge();
-}
-}
-function init() {
-try {
-const dateEl = document.getElementById('cDate');
-if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
-const sUrlEl = document.getElementById('sUrl');
-if (sUrlEl) sUrlEl.value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
-renderAsaPills('I');
-makePills('comorbidPills','comorbid',COMORBIDS,'checkbox','Nil');
-makePills('analgPills','analgesia',ANALGS,'checkbox','Nil');
-makePills('compPills','comp',COMPS,'checkbox','Nil');
-makePills('postOpPlanPills','postOpPlan',POSTOP_PLANS,'radio','Extubated on table & Routine Monitoring');
-makePills('painScorePills','painScore',PAIN_SCORES,'radio','0');
-renderLists();
-loadDocProfile();
-updateHeaderBadge();
-if (getScriptUrl()) {
-setTimeout(() => { pullDatabaseFromDrive(true); }, 200);
-}
-} catch (err) {
-console.error("Initialization error:", err);
-}
-}
-function renderLists() {
-const esc = s => String(s).replace(/"/g, '"');
-const hList = document.getElementById('hospList');
-if (hList) hList.innerHTML = [...new Set([...HOSPS,...getLS('el_hosps')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
-const sList = document.getElementById('specList');
-if (sList) sList.innerHTML = [...new Set([...SPECS,...getLS('el_specs')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
-const dList = document.getElementById('diagList');
-if (dList) dList.innerHTML = [...new Set([...DIAGS,...getLS('el_diags')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
-const tList = document.getElementById('techList');
-if (tList) tList.innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>⁠<option value="${esc(x)}">⁠).join('');
-updateProcedureSuggestions();
-}
-function makePills(id,name,arr,type,def) {
-const el = document.getElementById(id);
-if (!el) return;
-el.innerHTML = arr.map(v=>⁠<label class="pill-lbl ${name}"><input type="${type}" name="${name}" value="${v}" ${v===def?'checked':''} onchange="pillClick(this,'${name}')"><span class="pill-sp">${v}</span></label>⁠).join('');
-}
-function pillClick(el,name) {
-if(el.type==='radio') return;
-if(el.value==='Nil' && el.checked) document.querySelectorAll(⁠input[name="${name}"]⁠).forEach(c=>{if(c!el)c.checked=false});
-else if(el.value!'Nil' && el.checked) { const n=document.querySelector(⁠input[name="${name}"][value="Nil"]⁠); if(n) n.checked=false; }
-}
-function addCustom(type) {
-const cfg = {
-hosp: { prompt: "Enter new Hospital Name:", key: "el_hosps", input: "cHosp" },
-spec: { prompt: "Enter new Specialty:", key: "el_specs", input: "cSpec" },
-diag: { prompt: "Enter new Diagnosis:", key: "el_diags", input: "cDiag" },
-proc: { prompt: "Enter new Surgical Procedure:", key: "el_procs", input: "cProc" },
-tech: { prompt: "Enter new Anaesthesia Technique:", key: "el_techs", input: "cTech" }
-}[type];
-if (!cfg) return;
-const val = prompt(cfg.prompt);
-if (!val || !val.trim()) return;
-const cleanVal = val.trim();
-setLS(cfg.key, [...new Set([...getLS(cfg.key), cleanVal])]);
-renderLists();
-const inEl = document.getElementById(cfg.input);
-if (inEl) inEl.value = cleanVal;
-if (type === 'spec') updateProcedureSuggestions();
-if (type === 'tech') checkAirway();
-}
-function checkAirway() {
-const inEl = document.getElementById('cTech');
-const v = inEl ? inEl.value.toUpperCase() : '';
-const box = document.getElementById('airwayBox');
-if (box) box.style.display = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(v) ? 'block' : 'none';
-}
-function showTab(id) {
-const tabs = ['tabLogger','tabLedger','tabSummary','tabTutorial','tabSettings'];
-tabs.forEach((t,i) => {
-const el = document.getElementById(t);
-if (el) el.style.display = (t=id) ? 'block' : 'none';
-const nav = document.getElementById('nav'+i);
-if (nav) nav.classList.toggle('active', t=id);
-});
-if(id==='tabLedger') renderLedger();
-if(id==='tabSummary') renderSummary();
-if(id==='tabSettings') {
-loadDocProfile();
-checkUploadStatus();
-}
-updateHeaderBadge();
-window.scrollTo(0,0);
-}
-function compressFile(f) {
-if(f.type==='application/pdf') return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r({b64:rd.result,mime:f.type});rd.readAsDataURL(f)});
-return new Promise(r=>{
-const rd=new FileReader(); rd.onload=e=>{
-const img=new Image();
-img.onload=()=>{
-const cv=document.createElement('canvas'); let w=img.width, h=img.height;
-if(w>1100){h=Math.round(h*1100/w);w=1100;} cv.width=w; cv.height=h;
-cv.getContext('2d').drawImage(img,0,0,w,h); r({b64:cv.toDataURL('image/jpeg',0.65),mime:'image/jpeg'});
-};
-img.onerror = () => r({b64: e.target.result, mime: f.type});
-img.src=e.target.result;
-}; rd.readAsDataURL(f);
-});
-}
-function openPreview(src, driveUrl) {
-const mImg = document.getElementById('modalImg');
-if (mImg) mImg.src = src;
-const dBtn = document.getElementById('modalDriveBtn');
-if(dBtn) {
-if(driveUrl && driveUrl.startsWith('http')) { dBtn.href = driveUrl; dBtn.style.display = 'inline-flex'; }
-else dBtn.style.display = 'none';
-}
-const overlay = document.getElementById('modalOverlay');
-if (overlay) overlay.style.display = 'flex';
-}
-function handlePreviewClick(caseIdx, fileIdx) {
-const c = window._cases && window._cases[caseIdx];
-if (!c) return;
-const raw = c.links || (c.attachmentUrl ? [{ url: c.attachmentUrl, thumb: c.attachmentUrl }] : []);
-const item = raw[fileIdx];
-if (!item) return;
-const src = (typeof item === 'object') ? (item.thumb || item.url) : item;
-const dUrl = getItemDriveUrl(item);
-openPreview(src, dUrl);
-}
-function saveSettings() {
-const url = document.getElementById('sUrl')?.value?.trim() || '';
-localStorage.setItem('el_url', url);
-localStorage.setItem('etherlog_script_url', url);
-updateHeaderBadge();
-const stat = document.getElementById('testStatus');
-if (stat) {
-stat.style.display = 'block';
-stat.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-check-circle"></i> URL saved! Now click "Check Access" or "Pull Cloud Data".</span>';
-}
-}
-async function testDriveAccess() {
-const url = getScriptUrl();
-const stat = document.getElementById('testStatus');
-const btn = document.getElementById('btnTestDrive');
-if (!stat) return;
-stat.style.display = 'block';
-if (!url) {
-stat.innerHTML = '<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Error: Paste your Google Apps Script URL above first.</div>';
-return;
-}
-if (!url.includes('script.google.com') || !url.endsWith('/exec')) {
-stat.innerHTML = '<div style="color:#d97706;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> Warning: URL should end in <code>/exec</code> (not <code>/dev</code>). Testing...</div>';
-}
-saveSettings();
-if (btn) btn.disabled = true;
-stat.innerHTML = '<div style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Verifying Google Drive write access & folder creation...</div>';
-const samplePng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
-const res = await uploadBase64ToDrive(samplePng, "image/png", "Logbook_Access_Test.png", true);
-if (btn) btn.disabled = false;
-if (res.ok) {
-stat.innerHTML = ⁠ <div style="color:#15803d;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-check"></i> Success! Google Drive Access Verified</div> <div style="font-size:0.8rem;color:#334155"> <div>&#10004; <b>Connection:</b> Active</div> <div>&#10004; <b>Folder:</b> 'Anaesthesiologist Logbook' Accessible</div> <div>&#10004; <b>Cross-Device Sync:</b> Ready!</div> </div>⁠;
-} else {
-stat.innerHTML = ⁠ <div style="color:#dc2626;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-xmark"></i> Connection Blocked</div> <div style="font-size:0.8rem;color:#334155"> <div style="margin-bottom:6px">${res.error}</div> <div style="margin-top:8px"><b>Quick Tip:</b> Open the <b>Tutorial tab</b> to review the required "Execute as: Me" & "Who has access: Anyone" settings in Google Apps Script.</div> </div>⁠;
-}
-}
-function getAttachmentStats() {
-const cases = getLS('el_cases');
-let total = 0, synced = 0, local = 0;
-cases.forEach(c => {
-let raw = c.links || [];
-if (!raw.length && c.attachmentUrl) raw = [{ url: c.attachmentUrl }];
-raw.forEach(item => {
-total++;
-if (getItemDriveUrl(item)) synced++;
-else local++;
-});
-});
-return { total, synced, local };
-}
-function checkUploadStatus() {
-const s = getAttachmentStats();
-const elTot = document.getElementById('stTotalFiles');
-if (elTot) elTot.textContent = s.total;
-const elSyn = document.getElementById('stSyncedFiles');
-if (elSyn) elSyn.textContent = s.synced;
-const elLoc = document.getElementById('stLocalFiles');
-if (elLoc) elLoc.textContent = s.local;
-const box = document.getElementById('syncStatusBox');
-const btn = document.getElementById('btnSyncAll');
-if (!box) return;
-box.style.display = 'block';
-if (s.total === 0) {
-box.innerHTML = '<span style="color:#64748b"><i class="fa-solid fa-circle-info"></i> No OT Record Sheets attached in your logbook yet.</span>';
-if (btn) btn.disabled = true;
-} else if (s.local === 0) {
-box.innerHTML = ⁠<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> All ${s.synced} attached file(s) have valid Google Drive links!</span>⁠;
-if (btn) btn.disabled = true;
-} else {
-box.innerHTML = ⁠<span style="color:#b45309;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> ${s.local} file(s) are stored locally. Tap the green button above to sync them to your Google Drive.</span>⁠;
-if (btn) btn.disabled = false;
-}
-updateHeaderBadge();
-}
-async function syncPendingUploads(fromLedger = false) {
-const url = getScriptUrl();
-if (!url) {
-alert("Please enter your Google Apps Script URL in the Settings tab first.");
-showTab('tabSettings');
-return;
-}
-const stats = getAttachmentStats();
-if (stats.local === 0) {
-if (fromLedger) alert("All attached sheets are already synced to Google Drive!");
-else checkUploadStatus();
-return;
-}
-const btn = document.getElementById('btnSyncAll');
-const box = document.getElementById('syncStatusBox');
-if (btn) btn.disabled = true;
-if (box) {
-box.style.display = 'block';
-box.innerHTML = ⁠<span style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Uploading ${stats.local} pending file(s) to Google Drive...</span>⁠;
-}
-let cases = getLS('el_cases');
-let newlySynced = 0;
-let failedCount = 0;
-let lastError = '';
-for (let ci = 0; ci < cases.length; ci++) {
-let c = cases[ci];
-if (!Array.isArray(c.links)) {
-c.links = c.attachmentUrl ? [{ url: c.attachmentUrl.startsWith('http') ? c.attachmentUrl : '', thumb: c.attachmentUrl.startsWith('data:') ? c.attachmentUrl : '', name: 'OT_Record' }] : [];
-}
-for (let fi = 0; fi < c.links.length; fi++) {
-let item = c.links[fi];
-if (typeof item === 'string') {
-item = { url: item.startsWith('http') ? item : '', thumb: item.startsWith('data:') ? item : '', name: ⁠Case_${c.id}_${fi+1}⁠ };
-c.links[fi] = item;
-}
-const existingUrl = getItemDriveUrl(item);
-if (!existingUrl && item.thumb && item.thumb.startsWith('data:')) {
-const mimeMatch = item.thumb.match(/^data:([^;]+);/);
-const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-const ext = mime.includes('pdf') ? 'pdf' : 'jpg';
-const patTag = (c.patId && c.patId !== 'N/A') ? ⁠_${c.patId.replace(/[^a-zA-Z0-9]/g, '')}⁠ : '';
-const fName = ⁠Case_${c.date || c.id}${patTag}_${(c.proc || 'OT').replace(/[^a-zA-Z0-9]/g, '_')}_${fi + 1}.${ext}⁠;
-const res = await uploadBase64ToDrive(item.thumb, mime, fName, false);
-if (res.ok && res.url) {
-item.url = res.url;
-newlySynced++;
-} else {
-failedCount++;
-lastError = res.error;
-}
-}
-}
-}
-setLS('el_cases', cases);
-pushDatabaseToDrive(true);
-checkUploadStatus();
-renderLedger();
-if (fromLedger) {
-if (failedCount === 0) alert(⁠Success! Uploaded ${newlySynced} file(s) to Google Drive.⁠);
-else alert(⁠Uploaded ${newlySynced} file(s), ${failedCount} failed.\n\nReason: ${lastError}⁠);
-} else if (box) {
-if (failedCount === 0) {
-box.innerHTML = ⁠<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> Sync Complete! ${newlySynced} file(s) uploaded to Google Drive.</span>⁠;
-} else {
-box.innerHTML = ⁠<span style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Uploaded ${newlySynced} file(s), ${failedCount} failed: ${lastError}</span>⁠;
-}
-}
-}
-function generateCsvContent() {
-let cases = getLS('el_cases');
-if(!cases.length) return '';
-const q = v => ⁠"${(v || '').toString().replace(/"/g, '""')}"⁠;
-let csv = "\uFEFF";
-const p = getLS('el_doc_profile', {});
-const hasDocDetails = p && [p.name, p.dob, p.reg, p.qual, p.desig, p.council, p.addr, p.country].some(val => val && val.trim() !== '');
-if (hasDocDetails) {
-csv += ⁠${q("ANAESTHESIOLOGIST LOGBOOK - DOCTOR DETAILS")}\n⁠;
-if (p.name)    csv += ⁠${q("Name of the Doctor")},${q(p.name)}\n⁠;
-if (p.dob)     csv += ⁠${q("Date of Birth")},${q(p.dob)}\n⁠;
-if (p.reg)     csv += ⁠${q("Registration Number")},${q(p.reg)}\n⁠;
-if (p.qual)    csv += ⁠${q("Qualifications")},${q(p.qual)}\n⁠;
-if (p.desig)   csv += ⁠${q("Designation")},${q(p.desig)}\n⁠;
-if (p.council) csv += ⁠${q("Medical Council")},${q(p.council)}\n⁠;
-if (p.addr)    csv += ⁠${q("Address")},${q(p.addr)}\n⁠;
-if (p.country) csv += ⁠${q("Country")},${q(p.country)}\n⁠;
-csv += "\n";
-}
-csv += "Date,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Surgical_Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,PostOp_Plan,PostOp_Pain_Score,OT_Sheets_Drive_Links\n";
-cases.forEach(c => {
-let raw = c.links || [];
-if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl}];
-let stringLinks = raw.map(x => {
-const dUrl = getItemDriveUrl(x);
-if (dUrl) return dUrl;
-if (x && x.thumb) return 'Local File Only (Not Synced)';
-return '';
-}).filter(Boolean).join(' | ');
-if(!stringLinks) stringLinks = 'Nil';
-const row = [
-c.date,
-c.hosp||'',
-c.patId||'',
-c.age,
-c.sex,
-c.prio||c.priority||'',
-normalizeSupervision(c.sup||c.supervision||''),
-c.spec||c.specialty||'',
-c.diag||'',
-c.proc||c.procedure||'',
-c.comorbid||c.comorbidities||'',
-c.asa,
-c.tech||c.technique||'',
-c.airway||'',
-c.analg||c.analgesia||'',
-c.diff||c.difficultAirway||'',
-c.comp||c.complications||'',
-c.postOpPlan||'Routine Monitoring',
-c.painScore||'Not Assessed',
-stringLinks
-].map(q).join(',');
-csv += row + "\n";
-});
-return csv;
-}
-async function uploadCsvAndLedgerToDrive(fromButton = false) {
-const url = getScriptUrl();
-if (!url) {
-alert("Please set your Google Apps Script Web App URL in the Settings tab first.");
-showTab('tabSettings');
-return;
-}
-const cases = getLS('el_cases');
-if (!cases.length) {
-alert("Your logbook is currently empty. Log at least one case first.");
-return;
-}
-const statusBox = document.getElementById('cloudUploadStatus');
-const ledgerNotice = document.getElementById('ledgerSyncNotice');
-if (statusBox) {
-statusBox.style.display = 'block';
-statusBox.innerHTML = '<span style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Generating and uploading CSV to your Google Drive...</span>';
-}
-if (ledgerNotice && fromButton) {
-ledgerNotice.style.display = 'block';
-ledgerNotice.innerHTML = '<span style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Uploading CSV to Google Drive...</span>';
-}
-const csvContent = generateCsvContent();
-const dateStr = new Date().toISOString().split('T')[0];
-const fileName = ⁠Anaesthesiologist_Logbook_${dateStr}.csv⁠;
-const res = await sendPostToScript({
-action: 'saveCsv',
-fileName: fileName,
-csvContent: csvContent
-});
-if (res.ok && res.url) {
-const msg = ⁠ <div style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> Logbook CSV Uploaded to Google Drive!</div> <div style="margin-top:4px;font-size:0.8rem"> <b>Drive Link:</b> <a href="${res.url}" target="_blank" style="color:#0284c7;word-break:break-all">${res.url}</a> </div>⁠;
-if (statusBox) statusBox.innerHTML = msg;
-if (ledgerNotice) ledgerNotice.innerHTML = msg;
-if (fromButton) alert("CSV successfully uploaded to your Google Drive!");
-} else {
-const err = ⁠<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> CSV Upload Failed: ${res.error}</div>⁠;
-if (statusBox) statusBox.innerHTML = err;
-if (ledgerNotice) ledgerNotice.innerHTML = err;
-if (fromButton) alert("Upload failed: " + res.error);
-}
-}
-async function uploadLedgerJsonToDrive() {
-const url = getScriptUrl();
-if (!url) {
-alert("Please set your Google Apps Script URL in the Settings tab first.");
-showTab('tabSettings');
-return;
-}
-const cases = getLS('el_cases');
-if (!cases.length) {
-alert("Your logbook is currently empty.");
-return;
-}
-const statusBox = document.getElementById('cloudUploadStatus');
-if (statusBox) {
-statusBox.style.display = 'block';
-statusBox.innerHTML = '<span style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Uploading Ledger JSON backup to Google Drive...</span>';
-}
-const fullData = {
-exportedAt: new Date().toISOString(),
-doctorProfile: getLS('el_doc_profile', {}),
-cases: cases
-};
-const dateStr = new Date().toISOString().split('T')[0];
-const fileName = ⁠Ledger_Backup_${dateStr}.json⁠;
-const res = await sendPostToScript({
-action: 'saveLedger',
-fileName: fileName,
-ledgerJson: JSON.stringify(fullData, null, 2)
-});
-if (res.ok && res.url) {
-if (statusBox) {
-statusBox.innerHTML = ⁠ <div style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> Ledger JSON Backup Uploaded to Google Drive!</div> <div style="margin-top:4px;font-size:0.8rem"> <b>Backup Link:</b> <a href="${res.url}" target="_blank" style="color:#0284c7;word-break:break-all">${res.url}</a> </div>⁠;
-}
-alert("Complete ledger data backup successfully saved to Google Drive!");
-} else {
-if (statusBox) statusBox.innerHTML = ⁠<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Ledger Backup Failed: ${res.error}</div>⁠;
-alert("Backup failed: " + res.error);
-}
-}
-function copyBackendCodeDirect() {
-const scriptCode = `const FOLDER_NAME = "Anaesthesiologist Logbook";
-const DB_FILE_NAME = "logbook_database.json";
-function getOrCreateFolder() {
-const folders = DriveApp.getFoldersByName(FOLDER_NAME);
-if (folders.hasNext()) return folders.next();
-return DriveApp.createFolder(FOLDER_NAME);
-}
-function getDatabaseFile() {
-const folder = getOrCreateFolder();
-const files = folder.getFilesByName(DB_FILE_NAME);
-if (files.hasNext()) return files.next();
-return folder.createFile(DB_FILE_NAME, JSON.stringify({ cases: [], doctorProfile: {} }), "application/json");
-}
-function doGet(e) {
-try {
-const dbFile = getDatabaseFile();
-const content = dbFile.getBlob().getDataAsString();
-return ContentService.createTextOutput(content).setMimeType(ContentService.MimeType.JSON);
-} catch (err) {
-return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() })).setMimeType(ContentService.MimeType.JSON);
-}
-}
-function doPost(e) {
-try {
-if (!e || !e.postData || !e.postData.contents) return responseJson({ status: "error", message: "No data" });
-const payload = JSON.parse(e.postData.contents);
-const folder = getOrCreateFolder();
-if (payload.testConnection) {
-return responseJson({ status: "success", message: "Drive access confirmed", url: folder.getUrl() });
-}
-if (payload.action === "syncDatabase" || payload.allCases) {
-const dbFile = getDatabaseFile();
-const dbData = { updatedAt: new Date().toISOString(), doctorProfile: payload.doctorProfile || {}, cases: payload.allCases || payload.cases || [] };
-dbFile.setContent(JSON.stringify(dbData, null, 2));
-return responseJson({ status: "success", message: "Database updated on Google Drive", totalCases: dbData.cases.length });
-}
-if (payload.action === "saveCsv" || payload.csvContent) {
-const fName = payload.fileName || ("Anaesthesiologist_Logbook_" + new Date().toISOString().split("T")[0] + ".csv");
-const csvFile = folder.createFile(fName, payload.csvContent, "text/csv;charset=utf-8");
-csvFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-return responseJson({ status: "success", viewUrl: csvFile.getUrl(), fileName: fName });
-}
-const b64 = payload.base64Data || payload.base64 || payload.data;
-if (b64) {
-const fName = payload.fileName || ("File_" + Date.now() + ".jpg");
-const mime = payload.mimeType || "image/jpeg";
-const blob = Utilities.newBlob(Utilities.base64Decode(b64), mime, fName);
-const file = folder.createFile(blob);
-file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-return responseJson({ status: "success", viewUrl: file.getUrl(), fileId: file.getId() });
-}
-return responseJson({ status: "error", message: "Unknown action" });
-} catch (err) {
-return responseJson({ status: "error", error: err.toString() });
-}
-}
-function responseJson(obj) {
-return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
-}`;
-const ta = document.createElement('textarea');
-ta.value = scriptCode;
-document.body.appendChild(ta);
-ta.select();
-document.execCommand('copy');
-document.body.removeChild(ta);
-alert("Google Apps Script code copied to clipboard! Paste it into Code.gs at script.google.com");
-}
-async function saveCase() {
-const proc = document.getElementById('cProc')?.value?.trim();
-if(!proc) return alert("Enter Surgical Procedure");
-const hosp = document.getElementById('cHosp')?.value?.trim() || '';
-const patId = document.getElementById('cPatId')?.value?.trim() || '';
-const spec = document.getElementById('cSpec')?.value?.trim() || "General Surgery";
-const diag = document.getElementById('cDiag')?.value?.trim() || '';
-const tech = document.getElementById('cTech')?.value?.trim() || "General Anaesthesia (GA) - ETT";
-if (hosp) setLS('el_hosps', [...new Set([...getLS('el_hosps'), hosp])]);
-if (spec) setLS('el_specs', [...new Set([...getLS('el_specs'), spec])]);
-if (diag) setLS('el_diags', [...new Set([...getLS('el_diags'), diag])]);
-setLS('el_procs', [...new Set([...getLS('el_procs'), proc])]);
-setLS('el_techs', [...new Set([...getLS('el_techs'), tech])]);
-renderLists();
-const btn = document.getElementById('saveBtn');
-if (btn) btn.disabled = true;
-const fileIn = document.getElementById('cFiles');
-const files = fileIn ? fileIn.files : [];
-const url = getScriptUrl();
-let links = [...curLinks];
-let uploadWarnings = [];
-if(files.length > 0) {
-for(let i = 0; i < files.length; i++) {
-const f = files[i];
-if (btn) btn.innerHTML = ⁠<i class="fa-solid fa-spinner fa-spin"></i> Uploading file ${i+1} of ${files.length}...⁠;
-let dUrl = '';
-let b64 = '';
-let mime = '';
-try {
-const compressed = await compressFile(f);
-b64 = compressed.b64;
-mime = compressed.mime;
-} catch(e) { console.error("Compression error", e); }
-if(url && b64) {
-const patTag = patId ? ⁠_${patId.replace(/[^a-zA-Z0-9]/g, '')}⁠ : '';
-const curD = document.getElementById('cDate')?.value || Date.now();
-const fName = ⁠Case_${curD}${patTag}_${f.name.replace(/\s+/g,'_')}⁠;
-const upRes = await uploadBase64ToDrive(b64, mime, fName, false);
-if (upRes.ok && upRes.url) {
-dUrl = upRes.url;
-} else {
-uploadWarnings.push(⁠${f.name}: ${upRes.error}⁠);
-}
-} else if (!url) {
-uploadWarnings.push(⁠${f.name}: Saved locally (No Drive Script URL configured)⁠);
-}
-links.push({url: dUrl, thumb: b64, name: f.name});
-}
-}
-if (uploadWarnings.length > 0) {
-alert("Case saved locally, but attachment notice:\n\n" + uploadWarnings.join("\n\n"));
-}
-const getChecked = (n,oth) => {
-let a = Array.from(document.querySelectorAll(⁠input[name="${n}"]:checked⁠)).map(c=>c.value);
-let o = document.getElementById(oth)?.value?.trim(); if(o) a.push(o);
-return a.join(', ') || 'Nil';
-};
-const getPostOpPlan = () => {
-let p = document.querySelector('input[name="postOpPlan"]:checked')?.value || 'Routine Monitoring';
-let o = document.getElementById('cPostOpPlanOther')?.value?.trim();
-return o ? ⁠${p} (${o})⁠ : p;
-};
-const isAir = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(tech.toUpperCase());
-const eid = document.getElementById('editId')?.value;
-const rec = {
-id: eid || ('C'+Date.now()),
-date: document.getElementById('cDate')?.value || '',
-hosp: hosp || 'N/A',
-patId: patId || 'N/A',
-age: document.getElementById('cAge')?.value || 'N/A',
-sex: document.getElementById('cSex')?.value || 'Male',
-prio: document.getElementById('cPrio')?.value || 'Elective',
-sup: document.getElementById('cSup')?.value || 'No Supervision',
-spec,
-diag: diag || 'N/A',
-proc,
-comorbid: getChecked('comorbid','cComOther'),
-asa: document.querySelector('input[name="asa"]:checked')?.value || 'I',
-tech,
-airway: isAir ? ⁠MMS: ${document.getElementById('cMMS')?.value} | CL: ${document.getElementById('cCL')?.value}${document.getElementById('cAirNotes')?.value ? ' | ' + document.getElementById('cAirNotes')?.value.trim() : ''}⁠ : 'N/A',
-analg: getChecked('analgesia','cAnalgOther'),
-diff: document.getElementById('cDiff')?.value?.trim() || 'Nil',
-comp: getChecked('comp','cCompOther'),
-postOpPlan: getPostOpPlan(),
-painScore: document.querySelector('input[name="painScore"]:checked')?.value || 'Not Assessed',
-links
-};
-let cases = getLS('el_cases');
-if(eid) { const i = cases.findIndex(x=>x.id===eid); if(i>-1) cases[i]=rec; } else cases.unshift(rec);
-try {
-setLS('el_cases',cases);
-pushDatabaseToDrive(true);
-if (btn) { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case'; }
-resetForm(); showTab('tabLedger');
-} catch(e) {
-alert("Browser LocalStorage is full! Please export your CSV or backup to Drive.");
-if (btn) { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case'; }
-}
-}
-function resetForm() {
-const eid = document.getElementById('editId'); if (eid) eid.value = '';
-const ft = document.getElementById('formTitle');
-if (ft) { ft.textContent=''; ft.style.display='none'; }
-const cBtn = document.getElementById('cancelBtn'); if (cBtn) cBtn.style.display='none';
-const cFiles = document.getElementById('currFiles'); if (cFiles) cFiles.innerHTML='';
-const fStat = document.getElementById('fileStatus'); if (fStat) fStat.textContent='';
-curLinks=[];
-['cHosp','cPatId','cAge','cSpec','cDiag','cProc','cComOther','cTech','cAirNotes','cAnalgOther','cDiff','cCompOther','cPostOpPlanOther','cFiles'].forEach(id=>{
-const el = document.getElementById(id); if (el) el.value = '';
-});
-init(); checkAirway();
-}
-function renderLedger() {
-const allCases = getLS('el_cases');
-const box = document.getElementById('ledgerList');
-if (!box) return;
-const q = (document.getElementById('ledgerSearch')?.value || '').trim().toLowerCase();
-if(!allCases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet.</p>';
-window._cases = allCases;
-const filtered = allCases.map((c, idx) => ({ c, idx })).filter(({ c }) => {
-if (!q) return true;
-const hay = [
-c.date, c.hosp, c.patId, c.proc, c.procedure,
-c.diag, c.spec, c.specialty, c.tech, c.technique,
-c.comorbid, c.diff, c.comp, c.postOpPlan, c.painScore
-].join(' ').toLowerCase();
-return hay.includes(q);
-});
-if (!filtered.length) {
-return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:24px">No matching cases found.</p>';
-}
-box.innerHTML = filtered.map(({ c, idx: ci }) => {
-let raw = c.links || [];
-if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl, thumb: c.attachmentUrl.startsWith('http')?'':c.attachmentUrl, name:'OT_Record'}];
-let syncedCount = 0;
-const thumbs = raw.map((item,fi) => {
-const isObj = typeof item === 'object' && item !== null;
-const tSrc = isObj ? item.thumb : (typeof item === 'string' && !item.startsWith('http') ? item : '');
-const dUrl = getItemDriveUrl(item);
-if (dUrl) syncedCount++;
-if(tSrc && tSrc.startsWith('data:image')) {
-return ⁠<img src="${tSrc}" class="thumb-img" onclick="handlePreviewClick(${ci}, ${fi})" title="Tap to preview"> <button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="handlePreviewClick(${ci}, ${fi})"><i class="fa-solid fa-eye"></i> Sheet ${fi+1}</button> ${dUrl ? ⁠<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>⁠ : ''}⁠;
-} else if (tSrc && tSrc.startsWith('data:application/pdf')) {
-return ⁠<a href="${tSrc}" download="Case_PDF_${fi+1}.pdf" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-pdf"></i> PDF ${fi+1}</a> ${dUrl ? ⁠<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>⁠ : ''}⁠;
-} else if(dUrl) {
-return ⁠<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>⁠;
-}
-return '';
-}).join('');
-let syncBadge = '';
-if (raw.length > 0) {
-if (syncedCount === raw.length) {
-syncBadge = ⁠<span class="badge-ok"><i class="fa-solid fa-cloud-check"></i> Drive Synced (${syncedCount}/${raw.length})</span>⁠;
-} else {
-syncBadge = ⁠<span class="badge-warn" onclick="syncPendingUploads(true)" title="Tap to upload to Google Drive"><i class="fa-solid fa-triangle-exclamation"></i> Local Only (${syncedCount}/${raw.length} on Drive) - Tap to Sync</span>⁠;
-}
-}
-const procText = c.proc || c.procedure || 'N/A';
-const hospText = (c.hosp && c.hosp !== 'N/A') ? c.hosp : '';
-const patIdText = (c.patId && c.patId !== 'N/A') ? ⁠ | <strong>ID:</strong> ${c.patId}⁠ : '';
-const diagText = (c.diag && c.diag !== 'N/A') ? c.diag : 'N/A';
-const supText = normalizeSupervision(c.sup || c.supervision);
-return ⁠<div class="case-item"> <div class="lbl-row"> <span style="font-size:0.8rem;font-weight:700;color:#475569"><i class="fa-regular fa-calendar"></i> ${c.date}${patIdText} | ${c.age}Y / ${c.sex}</span> <span> <span class="mini-btn">${c.prio||c.priority||'Elective'}</span> <span class="mini-btn">ASA ${c.asa}</span> </span> </div> ${hospText ? ⁠<div style="font-size:0.8rem;color:#334155;margin-top:4px"><i class="fa-regular fa-hospital" style="color:var(--pri)"></i> <strong>Hospital:</strong> {hospText}</div>` : ''}
-<div style="font-size:0.8rem;color:#475569;margin-top:2px"><strong>Specialty:</strong> ${c.spec||c.specialty||'N/A'} | <strong>Supervision:</strong> ${supText}</div>
-<div style="font-size:0.84rem;margin-top:4px"><strong>Diagnosis:</strong> ${diagText}</div>
-<div style="font-size:0.88rem;margin-top:2px;color:#0f172a"><strong>Surgical Procedure:</strong> <span style="color:var(--pri-dk);font-weight:700">${procText}</span></div>
-<div style="font-size:0.84rem;margin-top:2px"><strong>Technique:</strong> ${c.tech||c.technique||'N/A'}</div>
-<div class="d-box">
-<div><strong>Comorbidities:</strong> ${c.comorbid||c.comorbidities||'Nil'}</div>
-${c.airway&&c.airway!=='N/A'?`<div><strong>Airway:</strong> ${c.airway}</div>`:''}
-<div><strong>Analgesia:</strong> ${c.analg||c.analgesia||'Nil'}</div>
-<div><strong>Difficult Airway/Notes:</strong> ${c.diff||c.difficultAirway||'Nil'}</div>
-<div><strong>Complications:</strong> ${c.comp||c.complications||'Nil'}</div>
-<div style="margin-top:4px;padding-top:4px;border-top:1px dashed #cbd5e1">
-<strong>Post-op Plan:</strong> ${c.postOpPlan||'Routine Monitoring'} | <strong>Pain Score (NRS):</strong> <span style="font-weight:700;color:#8b5cf6">${c.painScore||'Not Assessed'}</span>
-</div>
-</div>
-${syncBadge ? `<div style="margin:6px 0">${syncBadge}</div>` : ''}
-${thumbs ? `<div class="thumb-row">{thumbs}</div>⁠ : ''} <div> <button type="button" class="act-btn" style="background:#e2e8f0" onclick="editCase('${c.id}')"><i class="fa-solid fa-pen"></i> Edit / Add File</button> <button type="button" class="act-btn" style="background:#fee2e2;color:#dc2626" onclick="delCase('${c.id}')"><i class="fa-solid fa-trash"></i></button> </div> </div>⁠;
-}).join('');
-}
-function renderSvgDonut(svgId, legendId, data) {
-const svg = document.getElementById(svgId);
-const leg = document.getElementById(legendId);
-if (!svg || !leg) return;
-const total = data.reduce((acc, d) => acc + d.val, 0);
-if (total === 0) {
-svg.innerHTML = '<circle cx="21" cy="21" r="15.915" fill="none" stroke="#e2e8f0" stroke-width="4.5"/>';
-leg.innerHTML = '<span style="font-size:0.75rem;color:#64748b">No records</span>';
-return;
-}
-let offset = 25;
-let circles = '';
-let legendHtml = '';
-data.forEach(d => {
-if (d.val <= 0) return;
-const pct = (d.val / total) * 100;
-circles += ⁠<circle cx="21" cy="21" r="15.915" fill="none" stroke="${d.color}" stroke-width="4.5" stroke-dasharray="${pct.toFixed(2)} ${(100 - pct).toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}"></circle>⁠;
-offset -= pct;
-legendHtml += ⁠<div class="legend-item"> <span class="legend-dot" style="background:${d.color}"></span> <span>${d.label}: <b>${d.val}</b> (${Math.round(pct)}%)</span> </div>⁠;
-});
-svg.innerHTML = circles;
-leg.innerHTML = legendHtml;
-}
-function renderSummary() {
-const cases = getLS('el_cases');
-const total = cases.length;
-const sTot = document.getElementById('sumTotal'); if (sTot) sTot.textContent = total;
-const dUtot = document.getElementById('donutUrgTotal'); if (dUtot) dUtot.textContent = total;
-const dStot = document.getElementById('donutSupTotal'); if (dStot) dStot.textContent = total;
-let elective = 0, emergency = 0, noSup = 0;
-const supCounts = {};
-const specCounts = {};
-const techCounts = {};
-const asaCounts = {};
-const hospCounts = {};
-cases.forEach(c => {
-const pr = (c.prio || c.priority || 'Elective');
-if (pr === 'Emergency') emergency++; else elective++;
-const sup = normalizeSupervision(c.sup || c.supervision);
-if (sup === 'No Supervision') noSup++;
-supCounts[sup] = (supCounts[sup] || 0) + 1;
-const sp = c.spec || c.specialty || 'Unspecified';
-specCounts[sp] = (specCounts[sp] || 0) + 1;
-const tc = c.tech || c.technique || 'Unspecified';
-techCounts[tc] = (techCounts[tc] || 0) + 1;
-const asa = (c.asa || 'I');
-asaCounts[asa] = (asaCounts[asa] || 0) + 1;
-const hp = (c.hosp && c.hosp !== 'N/A') ? c.hosp : 'Unspecified';
-hospCounts[hp] = (hospCounts[hp] || 0) + 1;
-});
-const sElec = document.getElementById('sumElective'); if (sElec) sElec.textContent = elective;
-const sEmerg = document.getElementById('sumEmergency'); if (sEmerg) sEmerg.textContent = emergency;
-const sNoSup = document.getElementById('sumNoSup'); if (sNoSup) sNoSup.textContent = noSup;
-renderSvgDonut('donutUrgency', 'legendUrgency', [
-{ label: 'Elective', val: elective, color: '#0284c7' },
-{ label: 'Emergency', val: emergency, color: '#ef4444' }
-]);
-renderSvgDonut('donutSupervision', 'legendSupervision', [
-{ label: 'No Sup', val: supCounts['No Supervision'] || 0, color: '#059669' },
-{ label: 'Direct', val: supCounts['Direct Supervision'] || 0, color: '#0284c7' },
-{ label: 'Indirect', val: supCounts['Indirect Supervision'] || 0, color: '#eab308' }
-]);
-const buildBars = (obj, containerId, color = 'var(--pri)') => {
-const el = document.getElementById(containerId);
-if (!el) return;
-const entries = Object.entries(obj).sort((a,b) => b[1] - a[1]);
-if (!entries.length) {
-el.innerHTML = '<div style="font-size:0.8rem;color:#64748b">No data logged yet.</div>';
-return;
-}
-el.innerHTML = entries.map(([k, count]) => {
-const pct = total ? Math.round((count / total) * 100) : 0;
-return ⁠<div class="bar-row"> <div class="bar-lbl"><span>${k}</span><span>${count} (${pct}%)</span></div> <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div> </div>⁠;
-}).join('');
-};
-buildBars(specCounts, 'sumSpecList', '#00897b');
-buildBars(techCounts, 'sumTechList', '#0284c7');
-buildBars(asaCounts, 'sumAsaList', '#8b5cf6');
-buildBars(hospCounts, 'sumHospList', '#0f766e');
-}
-function editCase(id) {
-const c = getLS('el_cases').find(x=>x.id=id); if(!c) return;
-const eid = document.getElementById('editId'); if (eid) eid.value = c.id;
-const ft = document.getElementById('formTitle');
-if (ft) { ft.textContent = 'Edit Case / Add Files'; ft.style.display = 'block'; }
-const cBtn = document.getElementById('cancelBtn'); if (cBtn) cBtn.style.display = 'block';
-const cD = document.getElementById('cDate'); if (cD) cD.value = c.date;
-const cH = document.getElementById('cHosp'); if (cH) cH.value = (c.hosp && c.hosp ! 'N/A') ? c.hosp : '';
-const cP = document.getElementById('cPatId'); if (cP) cP.value = (c.patId && c.patId !== 'N/A') ? c.patId : '';
-const cA = document.getElementById('cAge'); if (cA) cA.value = c.age!'N/A'?c.age:'';
-const cS = document.getElementById('cSex'); if (cS) cS.value = c.sex||'Male';
-const cPr = document.getElementById('cPrio'); if (cPr) cPr.value = c.prio||c.priority||'Elective';
-const cSp = document.getElementById('cSup'); if (cSp) cSp.value = normalizeSupervision(c.sup||c.supervision);
-const cSpe = document.getElementById('cSpec'); if (cSpe) cSpe.value = c.spec||c.specialty||'';
-updateProcedureSuggestions();
-const cDia = document.getElementById('cDiag'); if (cDia) cDia.value = (c.diag && c.diag ! 'N/A') ? c.diag : '';
-const cPro = document.getElementById('cProc'); if (cPro) cPro.value = c.proc||c.procedure||'';
-const cTec = document.getElementById('cTech'); if (cTec) cTec.value = c.tech||c.technique||'';
-const cDif = document.getElementById('cDiff'); if (cDif) cDif.value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
-const restorePillsAndOther = (name, knownList, str, otherInputId) => {
-const arr = (str || '').split(', ').map(s => s.trim()).filter(Boolean);
-document.querySelectorAll(⁠input[name="${name}"]⁠).forEach(el => {
-el.checked = arr.includes(el.value);
-});
-if (otherInputId) {
-const customVals = arr.filter(v => !knownList.includes(v));
-const el = document.getElementById(otherInputId);
-if (el) el.value = customVals.join(', ');
-}
-};
-restorePillsAndOther('comorbid', COMORBIDS, c.comorbid||c.comorbidities, 'cComOther');
-renderAsaPills(c.asa || 'I');
-restorePillsAndOther('analgesia', ANALGS, c.analg||c.analgesia, 'cAnalgOther');
-restorePillsAndOther('comp', COMPS, c.comp||c.complications, 'cCompOther');
-if (c.postOpPlan) {
-let basePlan = POSTOP_PLANS.find(p => c.postOpPlan.startsWith(p)) || 'Routine Monitoring';
-let match = document.querySelector(⁠input[name="postOpPlan"][value="${basePlan}"]⁠);
-if (match) match.checked = true;
-if (c.postOpPlan.includes('(')) {
-let extra = c.postOpPlan.split('(')[1].replace(')','').trim();
-const pOther = document.getElementById('cPostOpPlanOther');
-if (pOther) pOther.value = extra;
-}
-}
-if (c.painScore) {
-let pMatch = document.querySelector(⁠input[name="painScore"][value="${c.painScore}"]⁠);
-if (pMatch) pMatch.checked = true;
-}
-curLinks = c.links || (c.attachmentUrl ? [{url:c.attachmentUrl, thumb:''}] : []);
-const cFl = document.getElementById('currFiles');
-if (cFl) cFl.innerHTML = curLinks.length ? ⁠<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>⁠ : '';
-checkAirway(); showTab('tabLogger');
-}
-function delCase(id) {
-if(confirm("Delete this case?")) {
-setLS('el_cases',getLS('el_cases').filter(x=>x.id!==id));
-pushDatabaseToDrive(true);
-renderLedger();
-updateHeaderBadge();
-}
-}
-async function exportCSV() {
-const csv = generateCsvContent();
-if(!csv) return alert("No cases to export!");
-const stats = getAttachmentStats();
-if (stats.local > 0 && getScriptUrl()) {
-if (confirm(⁠You have ${stats.local} attached OT sheet(s) stored locally.\n\nSync them to Google Drive now before exporting?⁠)) {
-await syncPendingUploads(false);
-}
-}
-const a = document.createElement('a');
-a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-a.download = ⁠Anaesthesiologist_Logbook_${new Date().toISOString().split('T')[0]}.csv⁠;
-a.click();
-}
-window.addEventListener('DOMContentLoaded', init);
-</script>
+        <div class="row">
+          <div class="fg" style="flex:1.35"><label>Patient ID</label><input type="text" id="cPatId" placeholder="IP / UHID"></div>
+          <div class="fg" style="flex:0.75"><label>Age</label><input type="number" id="cAge" inputmode="numeric" placeholder="Yrs"></div>
+          <div class="fg" style="flex:1"><label>Sex</label><select id="cSex"><option>Male</option><option>Female</option><option>Other</option></select></div>
+        </div>
+
+        <div class="row">
+          <div class="fg col">
+            <label>Elective / Emergency</label>
+            <select id="cPrio" onchange="renderAsaPills()"><option>Elective</option><option>Emergency</option></select>
+          </div>
+          <div class="fg col">
+            <label>Supervision</label>
+            <select id="cSup">
+              <option>No Supervision</option>
+              <option>Direct Supervision</option>
+              <option>Indirect Supervision</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Specialty</label>
+            <button type="button" class="mini-btn" onclick="addCustom('spec')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cSpec" list="specList" placeholder="Start typing specialty..." oninput="updateProcedureSuggestions()">
+          <datalist id="specList"></datalist>
+        </div>
+
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Diagnosis</label>
+            <button type="button" class="mini-btn" onclick="addCustom('diag')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cDiag" list="diagList" placeholder="Start typing or select diagnosis...">
+          <datalist id="diagList"></datalist>
+        </div>
+
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Surgical Procedure</label>
+            <button type="button" class="mini-btn" onclick="addCustom('proc')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cProc" list="procList" placeholder="Start typing or select procedure...">
+          <datalist id="procList"></datalist>
+          <div id="procSpecHint" style="font-size:0.7rem;color:var(--muted);margin-top:3px"></div>
+        </div>
+
+        <div class="fg">
+          <label>Comorbidities</label>
+          <div class="pill-group" id="comorbidPills"></div>
+          <input type="text" id="cComOther" placeholder="Other comorbidities..." style="margin-top:6px">
+        </div>
+
+        <div class="fg">
+          <label>ASA Physical Status</label>
+          <div class="pill-group" id="asaPills"></div>
+        </div>
+
+        <div class="fg">
+          <div class="lbl-row">
+            <label style="margin:0">Anaesthesia Technique</label>
+            <button type="button" class="mini-btn" onclick="addCustom('tech')">+ Add Custom</button>
+          </div>
+          <input type="text" id="cTech" list="techList" placeholder="Start typing technique..." oninput="checkAirway()">
+          <datalist id="techList"></datalist>
+        </div>
+
+        <div id="airwayBox" class="cond-box">
+          <label style="color:var(--pri)">Airway Management (GA / ETT / LMA)</label>
+          <div class="row" style="margin-top:6px">
+            <div class="fg col"><label>Pre-op MMS</label><select id="cMMS"><option>1</option><option>2</option><option>3</option><option>4</option><option>0</option><option>Not Assessed</option></select></div>
+            <div class="fg col"><label>Cormack-Lehane</label><select id="cCL"><option>1</option><option>2</option><option>2a</option><option>2b</option><option>3a</option><option>3b</option><option>4</option></select></div>
+          </div>
+          <input type="text" id="cAirNotes" placeholder="Tube size, blade, intubation notes...">
+        </div>
+
+        <div class="fg">
+          <label>Analgesia</label>
+          <div class="pill-group" id="analgPills"></div>
+          <input type="text" id="cAnalgOther" placeholder="Other analgesia / blocks / doses..." style="margin-top:6px">
+        </div>
+
+        <div class="fg">
+          <label>Difficult Airway / Special Notes</label>
+          <input type="text" id="cDiff" placeholder="e.g. C-MAC, Bougie, Arterial line (or Nil)">
+        </div>
+
+        <div class="fg">
+          <label>Complications</label>
+          <div class="pill-group" id="compPills"></div>
+          <input type="text" id="cCompOther" placeholder="Other complications / management..." style="margin-top:6px">
+        </div>
+
+        <div class="card" style="background:#f8fafc;border:1px solid #94a3b8;margin-bottom:14px">
+          <div style="font-size:0.86rem;font-weight:800;color:var(--pri-dk);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.03em;">
+            <i class="fa-solid fa-bed-pulse"></i> Post-op Details
+          </div>
+          <div class="fg" style="margin-bottom:10px">
+            <label style="font-size:0.75rem">Post-op Plan</label>
+            <div class="pill-group" id="postOpPlanPills"></div>
+            <input type="text" id="cPostOpPlanOther" placeholder="Other post-op plan..." style="margin-top:6px">
+          </div>
+          <div class="fg" style="margin-bottom:4px">
+            <label style="font-size:0.75rem">Immediate Post-op Pain Score (NRS 0–10)</label>
+            <div class="pill-group" id="painScorePills"></div>
+          </div>
+        </div>
+
+        <div class="fg" style="background:#f0fdfa;padding:11px;border-radius:8px;border:1px dashed var(--pri)">
+          <label style="color:var(--pri)">Attach OT Record Sheet</label>
+          <input type="file" id="cFiles" accept="image/*,application/pdf" multiple style="padding:4px 0;font-size:0.84rem" onchange="document.getElementById('fileStatus').textContent = this.files.length ? (this.files.length + ' file(s) selected ready to upload.') : ''">
+          <div id="fileStatus" style="font-size:0.75rem;color:#059669;font-weight:700;margin-top:3px"></div>
+          <div id="currFiles" style="margin-top:3px"></div>
+        </div>
+
+        <button type="button" class="btn" id="saveBtn" onclick="saveCase()"><i class="fa-solid fa-floppy-disk"></i> Save Case</button>
+        <button type="button" class="btn btn-sec" style="margin-top:8px;display:none" id="cancelBtn" onclick="resetForm();showTab('tabLedger')">Cancel Edit</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: LEDGER -->
+    <div id="tabLedger" style="display:none">
+      <div class="lbl-row" style="margin-bottom:8px">
+        <h2 style="font-size:1.08rem">My Logbook Records</h2>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button type="button" class="mini-btn" style="padding:6px 9px;font-size:0.72rem;background:#00897b;color:#fff;border:none" onclick="pullDatabaseFromDrive(false)"><i class="fa-solid fa-arrows-rotate"></i> Pull Cloud</button>
+          <button type="button" class="mini-btn" style="padding:6px 9px;font-size:0.72rem;background:#0284c7;color:#fff;border:none" onclick="syncAllToDrive()"><i class="fa-solid fa-cloud-arrow-up"></i> Upload CSV & Data</button>
+          <button type="button" class="mini-btn" style="padding:6px 9px;font-size:0.72rem;background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Download CSV</button>
+        </div>
+      </div>
+      <div class="fg" style="margin-bottom:10px">
+        <input type="search" id="ledgerSearch" placeholder="Search procedure, diagnosis, patient ID, specialty..." oninput="renderLedger()">
+      </div>
+      <div id="ledgerList"></div>
+    </div>
+
+    <!-- TAB 3: SUMMARY -->
+    <div id="tabSummary" style="display:none">
+      <div class="lbl-row" style="margin-bottom:10px">
+        <h2 style="font-size:1.08rem"><i class="fa-solid fa-chart-pie" style="color:var(--pri)"></i> Analytics & Summary</h2>
+        <button type="button" class="mini-btn" style="padding:6px 10px;font-size:0.74rem;background:#0f172a;color:#fff;border:none" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> Download CSV</button>
+      </div>
+
+      <div class="stat-grid-4">
+        <div class="stat-box" style="border-top:3px solid var(--pri)">
+          <div class="stat-num" id="sumTotal">0</div>
+          <div class="stat-lbl">Total Cases</div>
+        </div>
+        <div class="stat-box" style="border-top:3px solid #0284c7">
+          <div class="stat-num" id="sumElective">0</div>
+          <div class="stat-lbl">Elective</div>
+        </div>
+        <div class="stat-box" style="border-top:3px solid #ef4444">
+          <div class="stat-num" id="sumEmergency">0</div>
+          <div class="stat-lbl">Emergency</div>
+        </div>
+        <div class="stat-box" style="border-top:3px solid #059669">
+          <div class="stat-num" id="sumNoSup">0</div>
+          <div class="stat-lbl">Independent / No Sup</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px"><i class="fa-solid fa-chart-pie"></i> Case Distribution Charts</label>
+        <div class="chart-container">
+          <div style="text-align:center">
+            <div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Case Priority</div>
+            <div class="donut-wrap">
+              <svg id="donutUrgency" width="130" height="130" viewBox="0 0 42 42"></svg>
+              <div class="donut-center">
+                <div class="dc-num" id="donutUrgTotal">0</div>
+                <div class="dc-lbl">Cases</div>
+              </div>
+            </div>
+            <div class="legend-box" id="legendUrgency" style="margin-top:6px"></div>
+          </div>
+
+          <div style="text-align:center">
+            <div style="font-size:0.75rem;font-weight:700;color:#475569;margin-bottom:4px">Supervision Level</div>
+            <div class="donut-wrap">
+              <svg id="donutSupervision" width="130" height="130" viewBox="0 0 42 42"></svg>
+              <div class="donut-center">
+                <div class="dc-num" id="donutSupTotal">0</div>
+                <div class="dc-lbl">Cases</div>
+              </div>
+            </div>
+            <div class="legend-box" id="legendSupervision" style="margin-top:6px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px"><i class="fa-solid fa-stethoscope"></i> Specialty Distribution</label>
+        <div id="sumSpecList"></div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px"><i class="fa-solid fa-syringe"></i> Anaesthesia Techniques</label>
+        <div id="sumTechList"></div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px"><i class="fa-solid fa-heart-pulse"></i> ASA Physical Status</label>
+        <div id="sumAsaList"></div>
+      </div>
+
+      <div class="card">
+        <label style="margin-bottom:8px"><i class="fa-regular fa-hospital"></i> Hospital Distribution</label>
+        <div id="sumHospList"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: TUTORIAL -->
+    <div id="tabTutorial" style="display:none">
+      <div class="card">
+        <h2 style="font-size:1.08rem;margin-bottom:8px"><i class="fa-solid fa-graduation-cap" style="color:var(--pri)"></i> Google Drive Sync Setup Guide</h2>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;line-height:1.45">
+          Follow these 4 simple steps to connect your personal Google Drive so your <b>Case Ledger, CSV files, and OT Record Sheets</b> automatically sync across all your devices.
+        </p>
+
+        <div class="step-card">
+          <div class="step-title"><i class="fa-solid fa-1" style="background:var(--pri);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem"></i> Open Google Apps Script</div>
+          <div class="step-desc">
+            Tap the button below to open Google Apps Script and click <b>"New Project"</b> (top-left).
+            <div style="margin-top:8px">
+              <a href="[https://script.google.com/home/start](https://script.google.com/home/start)" target="_blank" class="act-btn" style="background:#0284c7;color:#fff;padding:7px 12px"><i class="fa-solid fa-up-right-from-square"></i> Open Google Apps Script</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title"><i class="fa-solid fa-2" style="background:var(--pri);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem"></i> Paste the Backend Script Code</div>
+          <div class="step-desc">
+            Delete any code inside <code>Code.gs</code>, paste the Google Apps Script code we provided earlier, and click the <b>Save icon</b> <i class="fa-solid fa-floppy-disk"></i>.
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title"><i class="fa-solid fa-3" style="background:var(--pri);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem"></i> Deploy & Grant Drive Permission</div>
+          <div class="step-desc">
+            1. Click the blue <b>Deploy</b> button (top-right) &rarr; <b>New deployment</b>.<br>
+            2. Click the gear icon next to "Select type" &rarr; choose <b>Web app</b>.<br>
+            3. Set the options exactly as shown below:
+            <div class="step-mock">
+              <div><b>Execute as:</b> Me (your email)</div>
+              <div style="margin-top:4px"><b>Who has access:</b> <span style="background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:4px;font-weight:700">Anyone</span></div>
+            </div>
+            4. Click <b>Deploy</b> &rarr; <b>Authorize access</b>.<br>
+            5. If Google shows <i>"Google hasn't verified this app"</i>, tap <b>Advanced</b> &rarr; <b>Go to Untitled project (unsafe)</b> &rarr; <b>Allow</b>.
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-title"><i class="fa-solid fa-4" style="background:var(--pri);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem"></i> Paste Web App URL in Settings</div>
+          <div class="step-desc">
+            Copy the generated <b>Web app URL</b> (ending in <code>/exec</code>), go to the <b>Settings</b> tab in this app, paste it into Section 2, and tap <b>Save URL</b>.
+            <div style="margin-top:8px">
+              <button type="button" class="act-btn" style="background:var(--pri);color:#fff;padding:7px 12px" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i> Go to Settings Tab</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: SETTINGS & DIAGNOSTICS -->
+    <div id="tabSettings" style="display:none">
+      <div class="card">
+        <h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-user-doctor" style="color:var(--pri)"></i> 1. Doctor Profile & Details</h2>
+        
+        <div class="row">
+          <div class="fg" style="flex:1.4">
+            <label>Name of the Doctor</label>
+            <input type="text" id="dName" placeholder="e.g. Dr. Naveenkumar S" oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg" style="flex:1">
+            <label>Date of Birth</label>
+            <input type="date" id="dDob" oninput="saveDocProfile(false)">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="fg col">
+            <label>Registration Number</label>
+            <input type="text" id="dReg" placeholder="e.g. 123456" oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg col">
+            <label>Qualifications</label>
+            <input type="text" id="dQual" placeholder="e.g. MBBS, MD (Anaes)" oninput="saveDocProfile(false)">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="fg col">
+            <label>Designation</label>
+            <input type="text" id="dDesig" placeholder="e.g. Assistant Professor" oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg col">
+            <label>Medical Council</label>
+            <input type="text" id="dCouncil" placeholder="e.g. Tamil Nadu Medical Council" oninput="saveDocProfile(false)">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="fg" style="flex:1.5">
+            <label>Address</label>
+            <input type="text" id="dAddr" placeholder="Hospital / Residential Address..." oninput="saveDocProfile(false)">
+          </div>
+          <div class="fg" style="flex:1">
+            <label>Country</label>
+            <input type="text" id="dCountry" placeholder="e.g. India" oninput="saveDocProfile(false)">
+          </div>
+        </div>
+
+        <button type="button" class="btn" onclick="saveDocProfile(true)"><i class="fa-solid fa-user-check"></i> Save Doctor Details</button>
+        <div id="docSaveStatus" class="diag-box"></div>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:1.05rem;margin-bottom:12px"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--pri)"></i> 2. Google Drive Access & Multi-Device Sync</h2>
+        <div class="fg">
+          <label>Google Apps Script Web App URL</label>
+          <input type="url" id="sUrl" placeholder="[https://script.google.com/macros/s/.../exec](https://script.google.com/macros/s/.../exec)" oninput="autoSaveUrl()">
+        </div>
+        <div class="row" style="margin-bottom:8px">
+          <button type="button" class="btn" style="flex:1" onclick="saveSettings()"><i class="fa-solid fa-floppy-disk"></i> Save URL</button>
+          <button type="button" class="btn" style="flex:1;background:#0284c7" id="btnTestDrive" onclick="testDriveAccess()"><i class="fa-solid fa-vial-circle-check"></i> Check Drive Access</button>
+        </div>
+        <div class="row" style="margin-bottom:8px">
+          <button type="button" class="btn" style="flex:1;background:#0d9488" onclick="pullDatabaseFromDrive(false)"><i class="fa-solid fa-cloud-arrow-down"></i> Pull Data from Drive</button>
+          <button type="button" class="btn" style="flex:1;background:#059669" onclick="syncAllToDrive()"><i class="fa-solid fa-cloud-arrow-up"></i> Push CSV & Ledger to Drive</button>
+        </div>
+        <button type="button" class="btn btn-sec" style="font-size:0.8rem;padding:9px" onclick="openUrlDirectly()">
+          <i class="fa-solid fa-up-right-from-square"></i> Open Script URL in Browser Tab
+        </button>
+        <div id="testStatus" class="diag-box"></div>
+      </div>
+
+      <div class="card">
+        <div class="lbl-row">
+          <h2 style="font-size:1.05rem"><i class="fa-solid fa-file-shield" style="color:var(--pri)"></i> 3. File Upload Status Check</h2>
+          <button type="button" class="mini-btn" onclick="checkUploadStatus()"><i class="fa-solid fa-rotate"></i> Refresh Status</button>
+        </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:8px">Verifies whether all attached OT Record Sheets across your logged cases have valid Google Drive links.</p>
+        
+        <div class="stat-grid-4" style="grid-template-columns:repeat(3,1fr);margin-top:8px">
+          <div class="stat-box">
+            <div class="stat-num" id="stTotalFiles">0</div>
+            <div class="stat-lbl">Total Files</div>
+          </div>
+          <div class="stat-box" style="border-color:#86efac;background:#f0fdf4">
+            <div class="stat-num" style="color:#15803d" id="stSyncedFiles">0</div>
+            <div class="stat-lbl" style="color:#15803d">On Drive</div>
+          </div>
+          <div class="stat-box" style="border-color:#fde68a;background:#fffbeb">
+            <div class="stat-num" style="color:#b45309" id="stLocalFiles">0</div>
+            <div class="stat-lbl" style="color:#b45309">Local Only</div>
+          </div>
+        </div>
+
+        <button type="button" class="btn" id="btnSyncAll" style="background:#059669;margin-top:6px" onclick="syncPendingUploads(false)">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Sync Local Files to Google Drive Now
+        </button>
+        <div id="syncStatusBox" class="diag-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="b-nav">
+    <button type="button" class="nav-btn active" id="nav0" onclick="showTab('tabLogger')"><i class="fa-solid fa-notes-medical"></i><span>Logbook</span></button>
+    <button type="button" class="nav-btn" id="nav1" onclick="showTab('tabLedger')"><i class="fa-solid fa-book-medical"></i><span>Ledger</span></button>
+    <button type="button" class="nav-btn" id="nav2" onclick="showTab('tabSummary')"><i class="fa-solid fa-chart-pie"></i><span>Summary</span></button>
+    <button type="button" class="nav-btn" id="nav3" onclick="showTab('tabTutorial')"><i class="fa-solid fa-circle-question"></i><span>Tutorial</span></button>
+    <button type="button" class="nav-btn" id="nav4" onclick="showTab('tabSettings')"><i class="fa-solid fa-gear"></i><span>Settings</span></button>
+  </nav>
+
+  <script>
+    const getLS = (k,d=[]) => { try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d} };
+    const setLS = (k,v) => localStorage.setItem(k,JSON.stringify(v));
+    let curLinks = [];
+
+    const HOSPS = [
+      "Government Medical College Hospital, Nilgiris",
+      "Government Headquarters Hospital"
+    ];
+
+    const SPECS = [
+      "General Surgery",
+      "Orthopaedics",
+      "Obstetrics & Gynaec",
+      "ENT",
+      "Urology",
+      "Paediatrics",
+      "Neuro/Spine",
+      "Plastic Surgery",
+      "Ophthalmology",
+      "Cardiothoracic",
+      "Emergency/Trauma",
+      "Oncology / Oncosurgery",
+      "Vascular Surgery",
+      "Maxillofacial / Dental"
+    ];
+
+    const SPEC_PROC_MAP = {
+      "General Surgery": ["Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy","Inguinal Hernia Repair","Incisional Hernia Repair","Total Thyroidectomy","Hemithyroidectomy","Modified Radical Mastectomy (MRM)","Excision of Fibroadenoma","Haemorrhoidectomy","Fistula in Ano Excision","Perianal Abscess Drainage","Perforation Closure","Splenectomy"],
+      "Orthopaedics": ["Total Knee Arthroplasty (TKA)","Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm","ORIF Tibia / Fibula","Hemiarthroplasty Hip","Tension Band Wiring (TBW) Patella / Olecranon","Implant Removal","Carpal Tunnel Release","Arthroscopic ACL Reconstruction","External Fixator Application"],
+      "Obstetrics & Gynaec": ["Elective LSCS","Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Vaginal Hysterectomy (VH / PFR)","Laparoscopic Ovarian Cystectomy","Salpingectomy for Ectopic","Dilatation & Curettage (D&C)","Suction Evacuation","Cervical Encirclage"],
+      "ENT": ["Tonsillectomy","Adenoidectomy","Functional Endoscopic Sinus Surgery (FESS)","Tympanoplasty / Mastoidectomy","Septoplasty / SMR","Microlaryngeal Surgery (MLS)","Tracheostomy","Preauricular Sinus Excision"],
+      "Urology": ["Transurethral Resection of Prostate (TURP)","Ureteroscopic Lithotripsy (URSL)","Percutaneous Nephrolithotomy (PCNL)","DJ Stenting / Stent Removal","Cystoscopy & Biopsy","Optical Internal Urethrotomy (OIU)","Radical / Simple Nephrectomy","Varicocelectomy","Hydrocele Surgery"],
+      "Paediatrics": ["Herniotomy","Circumcision","Orchiopexy","Pyloromyotomy","Colostomy Closure","Intussusception Reduction","Foreign Body Bronchus Removal"],
+      "Neuro/Spine": ["Craniotomy for EDH / SDH / Tumor","Burr Hole Evacuation","Lumbar Discectomy / Laminectomy","Anterior Cervical Discectomy & Fusion (ACDF)","Ventriculoperitoneal (VP) Shunt","Posterior Fossa Decompression"],
+      "Plastic Surgery": ["Split Skin Grafting (SSG)","Full Thickness Skin Grafting (FTSG)","Microvascular Free Flap","Contracture Release","Cleft Lip / Palate Repair","Tendon Repair / Transfer"],
+      "Ophthalmology": ["Phacoemulsification with IOL","Extracapsular Cataract Extraction (ECCE)","Trabeculectomy","Vitrectomy","Dacryocystorhinostomy (DCR)","Evisceration / Enucleation"],
+      "Cardiothoracic": ["CABG On-Pump","CABG Off-Pump (OPCAB)","Valve Replacement (MVR / AVR)","Thoracotomy & Decortication","Lobectomy / Pneumonectomy","Thymectomy"],
+      "Emergency/Trauma": ["Emergency Trauma Laparotomy","Emergency Craniotomy","Emergency LSCS","Emergency Wound Debridement & Washout","Emergency Amputation","Damage Control Laparotomy"],
+      "Oncology / Oncosurgery": ["Modified Radical Mastectomy","Radical Neck Dissection","Commando Procedure","Whipple's Pancreaticoduodenectomy","Radical Gastrectomy","Anterior Resection / APR"],
+      "Vascular Surgery": ["AV Fistula Creation","Femoro-Popliteal Bypass","Embolectomy","Varicose Vein Stripping / EVLT"],
+      "Maxillofacial / Dental": ["ORIF Mandible Fracture","ORIF Maxilla / Zygoma","Orthognathic Le Fort Surgery","Excision of Ameloblastoma","Impaction Dental Extraction"]
+    };
+
+    const DEFAULT_PROCS = [
+      "Laparoscopic Appendicectomy","Open Appendicectomy","Laparoscopic Cholecystectomy","Exploratory Laparotomy",
+      "Inguinal Hernia Repair","Total Thyroidectomy","Modified Radical Mastectomy (MRM)","Total Knee Arthroplasty (TKA)",
+      "Total Hip Arthroplasty (THA)","DHS / PFN Femur Fixation","ORIF Both Bones Forearm / Tibia","Elective LSCS",
+      "Emergency LSCS","Total Abdominal Hysterectomy (TAH)","Total Laparoscopic Hysterectomy (TLH)","Tonsillectomy",
+      "FESS","Tympanoplasty / Mastoidectomy","TURP","URSL / PCNL","Craniotomy","Lumbar Discectomy / Laminectomy","Split Skin Grafting (SSG)"
+    ];
+
+    const DIAGS = [
+      "Acute Appendicitis","Cholelithiasis / Calculus Cholecystitis","Hollow Viscus Perforation / Peritonitis",
+      "Inguinal Hernia","Incisional / Paraumbilical Hernia","Multinodular Goitre (MNG)","Carcinoma Breast",
+      "Osteoarthritis Knee","Osteoarthritis Hip / AVN Femur","Neck of Femur / Intertrochanteric Fracture",
+      "Both Bones Forearm / Tibia Fracture","Term Gestation / Previous LSCS","Cephalopelvic Disproportion (CPD) / Fetal Distress",
+      "Abnormal Uterine Bleeding (AUB) / Fibroid Uterus","Chronic Tonsillitis / Deviated Nasal Septum (DNS)",
+      "Chronic Suppurative Otitis Media (CSOM)","Benign Prostatic Hyperplasia (BPH)","Renal / Ureteric Calculus",
+      "Traumatic Brain Injury / EDH / SDH","Lumbar Canal Stenosis / IVDP","Diabetic Foot Ulcer / Raw Area"
+    ];
+
+    const TECHS = [
+      "General Anaesthesia (GA) - ETT","General Anaesthesia (GA) - RSI ETT","General Anaesthesia (GA) - Nasotracheal ETT",
+      "General Anaesthesia (GA) - DLT","General Anaesthesia (GA) - LMA / SGA","General Anaesthesia (GA) - TIVA",
+      "Subarachnoid Block (Spinal)","Epidural Anaesthesia (Lumbar)","Epidural Anaesthesia (Thoracic)",
+      "Combined Spinal-Epidural (CSE)","Caudal Epidural","USG guided Right Supraclavicular Brachial Plexus Block",
+      "USG guided Left Supraclavicular Brachial Plexus Block","Landmark guided Right Supraclavicular Brachial Plexus Block",
+      "Landmark guided Left Supraclavicular Brachial Plexus Block","USG guided Right Interscalene Block",
+      "USG guided Left Interscalene Block","USG guided Right Infraclavicular Block","USG guided Left Infraclavicular Block",
+      "USG guided Right Axillary Block","USG guided Left Axillary Block","USG guided Bilateral TAP Block",
+      "USG guided Right TAP Block","USG guided Left TAP Block","USG guided Bilateral Rectus Sheath Block",
+      "USG guided Bilateral ESP Block","USG guided Right Femoral Nerve Block","USG guided Left Femoral Nerve Block",
+      "USG guided Right Adductor Canal Block (ACB)","USG guided Left Adductor Canal Block (ACB)",
+      "USG guided Right Sciatic Block (Popliteal)","USG guided Left Sciatic Block (Popliteal)",
+      "USG guided Right PENG / FICB Block","USG guided Left PENG / FICB Block","Monitored Anesthesia Care (MAC) / Sedation",
+      "Local Infiltration / Field Block"
+    ];
+
+    const COMORBIDS = ['Nil','T2DM','SHTN','Asthma','Anaemia','Seizure Disorder','Hypothyroidism','Hyperthyroidism','CKD','CAD','CLD','COPD','AKI','Obesity/OSA','GERD'];
+    const ANALGS = ['Nil','IV Paracetamol','IV NSAID','IV Opioid','IV Multimodal','Regional Block','Local Infiltration','Epidural Infusion','IV PCA'];
+    const COMPS = ['Nil','Hypotension','Bradycardia','Desaturation','Bronchospasm','Laryngospasm','Difficult Intubation','High Spinal','PDPH','PONV'];
+    const POSTOP_PLANS = ['Routine Monitoring','Extubated on table & Routine Monitoring','Post op Elective Ventilation in PACU / ICU'];
+    const PAIN_SCORES = ['0','1','2','3','4','5','6','7','8','9','10','Not Assessed'];
+
+    function normalizeSupervision(val) {
+      if (!val || val === 'Independent (Sole)') return 'No Supervision';
+      return val;
+    }
+
+    function renderAsaPills(selectedVal) {
+      const isEmerg = document.getElementById('cPrio').value === 'Emergency';
+      const asaList = isEmerg ? ['I E','II E','III E','IV E','V E'] : ['I','II','III','IV','V'];
+      
+      let def = selectedVal;
+      if (!def) {
+        const curEl = document.querySelector('input[name="asa"]:checked');
+        const cur = curEl ? curEl.value : 'I';
+        if (isEmerg && !cur.endsWith('E')) def = cur + ' E';
+        else if (!isEmerg && cur.endsWith('E')) def = cur.replace(' E','');
+        else def = cur;
+      }
+      if (!asaList.includes(def)) def = asaList[0];
+      makePills('asaPills','asa',asaList,'radio',def);
+    }
+
+    function updateProcedureSuggestions() {
+      const spec = document.getElementById('cSpec').value.trim();
+      const hint = document.getElementById('procSpecHint');
+      const customProcs = getLS('el_procs', []);
+      let list = [];
+
+      if (spec && SPEC_PROC_MAP[spec]) {
+        list = [...SPEC_PROC_MAP[spec]];
+        hint.innerHTML = `<i class="fa-solid fa-filter" style="color:var(--pri)"></i> Showing suggestions tailored for <b>${spec}</b>`;
+      } else {
+        list = [...DEFAULT_PROCS];
+        hint.textContent = spec ? `Specialty custom list (${spec})` : "Showing common surgical procedures";
+      }
+
+      const merged = [...new Set([...list, ...customProcs])];
+      const esc = s => String(s).replace(/"/g, '&quot;');
+      document.getElementById('procList').innerHTML = merged.map(x=>`<option value="${esc(x)}">`).join('');
+    }
+
+    function loadDocProfile() {
+      const p = getLS('el_doc_profile', {});
+      document.getElementById('dName').value = p.name || '';
+      document.getElementById('dDob').value = p.dob || '';
+      document.getElementById('dReg').value = p.reg || '';
+      document.getElementById('dQual').value = p.qual || '';
+      document.getElementById('dDesig').value = p.desig || '';
+      document.getElementById('dCouncil').value = p.council || '';
+      document.getElementById('dAddr').value = p.addr || '';
+      document.getElementById('dCountry').value = p.country || '';
+      updateHeaderDocName();
+    }
+
+    function saveDocProfile(showMsg = false) {
+      const p = {
+        name: document.getElementById('dName').value.trim(),
+        dob: document.getElementById('dDob').value.trim(),
+        reg: document.getElementById('dReg').value.trim(),
+        qual: document.getElementById('dQual').value.trim(),
+        desig: document.getElementById('dDesig').value.trim(),
+        council: document.getElementById('dCouncil').value.trim(),
+        addr: document.getElementById('dAddr').value.trim(),
+        country: document.getElementById('dCountry').value.trim()
+      };
+      setLS('el_doc_profile', p);
+      updateHeaderDocName();
+      if (showMsg) {
+        pushDatabaseToDrive(true);
+        const st = document.getElementById('docSaveStatus');
+        st.style.display = 'block';
+        st.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-circle-check"></i> Doctor profile saved and synced!</span>';
+      }
+    }
+
+    function updateHeaderDocName() {
+      const p = getLS('el_doc_profile', {});
+      const el = document.getElementById('hdrDocName');
+      if (p && p.name) {
+        el.textContent = p.name;
+        el.style.display = 'block';
+      } else {
+        el.textContent = '';
+        el.style.display = 'none';
+      }
+    }
+
+    function getScriptUrl() {
+      const sEl = document.getElementById('sUrl');
+      const inputVal = (sEl && sEl.value) ? sEl.value.trim() : '';
+      if (inputVal) return inputVal;
+      return (localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '').trim();
+    }
+
+    function autoSaveUrl() {
+      const url = document.getElementById('sUrl').value.trim();
+      if (url) {
+        localStorage.setItem('el_url', url);
+        localStorage.setItem('etherlog_script_url', url);
+      }
+      updateHeaderBadge();
+    }
+
+    function openUrlDirectly() {
+      const url = getScriptUrl();
+      if (!url) return alert("Paste your Google Apps Script URL first.");
+      window.open(url, '_blank');
+    }
+
+    function updateHeaderBadge() {
+      const badge = document.getElementById('hdrDriveBadge');
+      if (!badge) return;
+      const url = getScriptUrl();
+      const stats = getAttachmentStats();
+      if (!url) {
+        badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#fde047"></i> <span>No Drive URL</span>';
+      } else if (stats.local > 0) {
+        badge.innerHTML = `<i class="fa-solid fa-cloud-arrow-up" style="color:#fde047"></i> <span>${stats.local} Unsynced</span>`;
+      } else {
+        badge.innerHTML = '<i class="fa-solid fa-cloud-check" style="color:#86efac"></i> <span>Sync Ready</span>';
+      }
+      updateHeaderDocName();
+    }
+
+    function extractDriveUrl(j, rawText) {
+      if (typeof j === 'string' && j.trim().startsWith('http')) return j.trim();
+      if (j && typeof j === 'object') {
+        const direct = j.viewUrl || j.url || j.fileUrl || j.driveUrl || j.link || j.webViewLink || j.downloadUrl || j.alternateLink ||
+                       (j.data && (j.data.viewUrl || j.data.url || j.data.fileUrl || j.data.link));
+        if (direct && typeof direct === 'string' && direct.startsWith('http')) return direct.trim();
+
+        const fid = j.fileId || j.id || (j.data && (j.data.fileId || j.data.id));
+        if (fid && typeof fid === 'string' && fid.length > 10 && !fid.includes(' ')) {
+          return `[https://drive.google.com/file/d/$](https://drive.google.com/file/d/$){fid.trim()}/view`;
+        }
+
+        for (const val of Object.values(j)) {
+          if (typeof val === 'string' && val.startsWith('[https://drive.google.com](https://drive.google.com)')) return val.trim();
+        }
+      }
+      if (typeof rawText === 'string' && rawText.trim().startsWith('[https://drive.google.com](https://drive.google.com)')) {
+        return rawText.trim();
+      }
+      return '';
+    }
+
+    function getItemDriveUrl(item) {
+      if (!item) return '';
+      if (typeof item === 'string') return item.startsWith('http') ? item : '';
+      if (typeof item === 'object') {
+        const u = item.url || item.viewUrl || item.fileUrl || item.driveUrl || item.link || '';
+        return (typeof u === 'string' && u.startsWith('http')) ? u.trim() : '';
+      }
+      return '';
+    }
+
+    async function uploadBase64ToDrive(b64DataUri, mimeType, fileName, isTest = false) {
+      const url = getScriptUrl();
+      if (!url) return { ok: false, error: 'Google Apps Script URL is empty.' };
+
+      const cleanB64 = b64DataUri.includes(',') ? b64DataUri.split(',')[1] : b64DataUri;
+      const safeName = fileName || `Case_${Date.now()}.jpg`;
+
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          mode: 'cors',
+          credentials: 'omit',
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            testConnection: isTest,
+            fileName: safeName,
+            filename: safeName,
+            name: safeName,
+            mimeType: mimeType || 'image/jpeg',
+            type: mimeType || 'image/jpeg',
+            base64Data: cleanB64,
+            base64: cleanB64,
+            data: cleanB64
+          })
+        });
+
+        const rawText = await res.text();
+        let j = null;
+        try { j = JSON.parse(rawText); } catch (e) {}
+
+        const driveUrl = extractDriveUrl(j, rawText);
+        if (driveUrl) {
+          return { ok: true, url: driveUrl, raw: j || rawText };
+        }
+
+        if (j && j.status === 'success') {
+          return { ok: true, url: j.viewUrl || j.url || '[https://drive.google.com](https://drive.google.com)', raw: j };
+        }
+
+        if (rawText.includes('<!DOCTYPE html>') || rawText.includes('<html')) {
+          return {
+            ok: false,
+            error: 'Google returned an HTML login/error page. Ensure "Who has access" is set to "Anyone" in Apps Script.',
+            raw: 'HTML Page Returned'
+          };
+        }
+
+        return {
+          ok: false,
+          error: (j && (j.message || j.error)) ? (j.message || j.error) : 'Script responded without a Drive URL.',
+          raw: j || rawText
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          error: 'CORS / Network Block: Check permissions & deploy a New version in Google Apps Script.'
+        };
+      }
+    }
+
+    // --- CLOUD DATABASE SYNC FUNCTIONS ---
+    async function pushDatabaseToDrive(silent = false) {
+      const url = getScriptUrl();
+      if (!url) return false;
+      const cases = getLS('el_cases', []);
+      const docProfile = getLS('el_doc_profile', {});
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          mode: 'cors',
+          credentials: 'omit',
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'syncDatabase',
+            allCases: cases,
+            doctorProfile: docProfile
+          })
+        });
+        const data = await res.json();
+        if (!silent && data && data.status === 'success') {
+          alert(`Cloud sync complete! ${data.totalCases} cases saved to Google Drive.`);
+        }
+        return true;
+      } catch (e) {
+        console.warn("Could not push database to Drive (saved locally):", e);
+        return false;
+      }
+    }
+
+    async function pullDatabaseFromDrive(silent = false) {
+      const url = getScriptUrl();
+      if (!url) {
+        if (!silent) {
+          alert("Please enter and save your Google Apps Script URL in Settings first.");
+          showTab('tabSettings');
+        }
+        return;
+      }
+      const badge = document.getElementById('hdrDriveBadge');
+      if (badge) badge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Syncing...</span>';
+
+      try {
+        const res = await fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' });
+        const cloudData = await res.json();
+
+        if (cloudData && Array.isArray(cloudData.cases)) {
+          const localCases = getLS('el_cases', []);
+          const map = new Map();
+          cloudData.cases.forEach(c => { if(c && c.id) map.set(c.id, c); });
+          localCases.forEach(c => {
+            if (c && c.id && !map.has(c.id)) map.set(c.id, c);
+          });
+
+          const merged = Array.from(map.values()).sort((a, b) => (b.date > a.date ? 1 : -1));
+          setLS('el_cases', merged);
+
+          if (cloudData.doctorProfile && Object.keys(cloudData.doctorProfile).length) {
+            const locDoc = getLS('el_doc_profile', {});
+            if (!locDoc.name) {
+              setLS('el_doc_profile', cloudData.doctorProfile);
+              loadDocProfile();
+            }
+          }
+
+          renderLedger();
+          renderSummary();
+          updateHeaderBadge();
+
+          if (merged.length > cloudData.cases.length) {
+            pushDatabaseToDrive(true);
+          }
+
+          if (!silent) alert(`Cloud Sync Complete! Logbook updated (${merged.length} total cases).`);
+        } else if (!silent) {
+          alert("Connected to Script, but no cloud database found yet. Pushing your local cases now...");
+          await pushDatabaseToDrive(false);
+        }
+      } catch (e) {
+        console.warn("Pull from Drive failed:", e);
+        if (!silent) alert("Could not fetch data from Google Drive. Make sure you deployed the updated Code.gs with doGet(e) as a New Version.");
+      } finally {
+        updateHeaderBadge();
+      }
+    }
+
+    function buildCSVString() {
+      const cases = getLS('el_cases', []);
+      const q = v => `"${(v || '').toString().replace(/"/g, '""')}"`;
+      let csv = "\uFEFF";
+
+      const p = getLS('el_doc_profile', {});
+      const hasDocDetails = p && [p.name, p.dob, p.reg, p.qual, p.desig, p.council, p.addr, p.country].some(val => val && val.trim() !== '');
+      if (hasDocDetails) {
+        csv += `${q("ANAESTHESIOLOGIST LOGBOOK - DOCTOR DETAILS")}\n`;
+        if (p.name)    csv += `${q("Name of the Doctor")},${q(p.name)}\n`;
+        if (p.dob)     csv += `${q("Date of Birth")},${q(p.dob)}\n`;
+        if (p.reg)     csv += `${q("Registration Number")},${q(p.reg)}\n`;
+        if (p.qual)    csv += `${q("Qualifications")},${q(p.qual)}\n`;
+        if (p.desig)   csv += `${q("Designation")},${q(p.desig)}\n`;
+        if (p.council) csv += `${q("Medical Council")},${q(p.council)}\n`;
+        if (p.addr)    csv += `${q("Address")},${q(p.addr)}\n`;
+        if (p.country) csv += `${q("Country")},${q(p.country)}\n`;
+        csv += "\n";
+      }
+
+      csv += "Date,Hospital,Patient_ID,Age,Sex,Priority,Supervision,Specialty,Diagnosis,Surgical_Procedure,Comorbidities,ASA,Technique,Airway,Analgesia,DifficultAirway,Complications,PostOp_Plan,PostOp_Pain_Score,OT_Sheets_Drive_Links\n";
+      
+      cases.forEach(c => {
+        let raw = c.links || [];
+        if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl}];
+        
+        let stringLinks = raw.map(x => {
+          const dUrl = getItemDriveUrl(x);
+          if (dUrl) return dUrl;
+          if (x && x.thumb) return 'Local File Only (Not Synced to Drive)';
+          return '';
+        }).filter(Boolean).join(' | ');
+        
+        if(!stringLinks) stringLinks = 'Nil';
+        
+        const row = [
+            c.date,
+            c.hosp||'',
+            c.patId||'',
+            c.age,
+            c.sex,
+            c.prio||c.priority||'',
+            normalizeSupervision(c.sup||c.supervision||''),
+            c.spec||c.specialty||'',
+            c.diag||'',
+            c.proc||c.procedure||'',
+            c.comorbid||c.comorbidities||'',
+            c.asa,
+            c.tech||c.technique||'',
+            c.airway||'',
+            c.analg||c.analgesia||'',
+            c.diff||c.difficultAirway||'',
+            c.comp||c.complications||'',
+            c.postOpPlan||'Routine Monitoring',
+            c.painScore||'Not Assessed',
+            stringLinks
+        ].map(q).join(',');
+
+        csv += row + "\n";
+      });
+      return csv;
+    }
+
+    async function syncAllToDrive() {
+      const url = getScriptUrl();
+      if (!url) {
+        alert("Please paste your Google Apps Script URL in Settings first.");
+        showTab('tabSettings');
+        return;
+      }
+
+      const stats = getAttachmentStats();
+      if (stats.local > 0) {
+        await syncPendingUploads(true);
+      }
+
+      await pushDatabaseToDrive(true);
+
+      const csvContent = buildCSVString();
+      const fileName = `Anaesthesiologist_Logbook_${new Date().toISOString().split('T')[0]}.csv`;
+
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          mode: 'cors',
+          credentials: 'omit',
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'saveCsv',
+            fileName: fileName,
+            csvContent: csvContent
+          })
+        });
+        const j = await res.json();
+        if (j && (j.viewUrl || j.status === 'success')) {
+          alert(`Success! Both your Ledger Database and CSV file (${fileName}) have been uploaded to your Google Drive folder.`);
+        } else {
+          alert("Ledger synced! Note: To also save a separate .csv file on Drive, ensure your Code.gs has the updated script.");
+        }
+      } catch (e) {
+        alert("Upload encountered a network error. Please verify your Script URL in Settings.");
+      }
+    }
+
+    function init() {
+      try {
+        document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('sUrl').value = localStorage.getItem('el_url') || localStorage.getItem('etherlog_script_url') || '';
+        renderAsaPills('I');
+        makePills('comorbidPills','comorbid',COMORBIDS,'checkbox','Nil');
+        makePills('analgPills','analgesia',ANALGS,'checkbox','Nil');
+        makePills('compPills','comp',COMPS,'checkbox','Nil');
+        makePills('postOpPlanPills','postOpPlan',POSTOP_PLANS,'radio','Extubated on table & Routine Monitoring');
+        makePills('painScorePills','painScore',PAIN_SCORES,'radio','0');
+        renderLists();
+        loadDocProfile();
+        updateHeaderBadge();
+
+        if (getScriptUrl()) {
+          setTimeout(() => { pullDatabaseFromDrive(true); }, 300);
+        }
+      } catch (err) {
+        console.error("Init error:", err);
+      }
+    }
+
+    function renderLists() {
+      const esc = s => String(s).replace(/"/g, '&quot;');
+      document.getElementById('hospList').innerHTML = [...new Set([...HOSPS,...getLS('el_hosps')])].map(x=>`<option value="${esc(x)}">`).join('');
+      document.getElementById('specList').innerHTML = [...new Set([...SPECS,...getLS('el_specs')])].map(x=>`<option value="${esc(x)}">`).join('');
+      document.getElementById('diagList').innerHTML = [...new Set([...DIAGS,...getLS('el_diags')])].map(x=>`<option value="${esc(x)}">`).join('');
+      document.getElementById('techList').innerHTML = [...new Set([...TECHS,...getLS('el_techs')])].map(x=>`<option value="${esc(x)}">`).join('');
+      updateProcedureSuggestions();
+    }
+
+    function makePills(id,name,arr,type,def) {
+      document.getElementById(id).innerHTML = arr.map(v=>`<label class="pill-lbl ${name}"><input type="${type}" name="${name}" value="${v}" ${v===def?'checked':''} onchange="pillClick(this,'${name}')"><span class="pill-sp">${v}</span></label>`).join('');
+    }
+
+    function pillClick(el,name) {
+      if(el.type==='radio') return;
+      if(el.value==='Nil' && el.checked) document.querySelectorAll(`input[name="${name}"]`).forEach(c=>{if(c!==el)c.checked=false});
+      else if(el.value!=='Nil' && el.checked) { const n=document.querySelector(`input[name="${name}"][value="Nil"]`); if(n) n.checked=false; }
+    }
+
+    function addCustom(type) {
+      const cfg = {
+        hosp: { prompt: "Enter new Hospital Name:", key: "el_hosps", input: "cHosp" },
+        spec: { prompt: "Enter new Specialty:", key: "el_specs", input: "cSpec" },
+        diag: { prompt: "Enter new Diagnosis:", key: "el_diags", input: "cDiag" },
+        proc: { prompt: "Enter new Surgical Procedure:", key: "el_procs", input: "cProc" },
+        tech: { prompt: "Enter new Anaesthesia Technique:", key: "el_techs", input: "cTech" }
+      }[type];
+      if (!cfg) return;
+
+      const val = prompt(cfg.prompt);
+      if (!val || !val.trim()) return;
+      const cleanVal = val.trim();
+      setLS(cfg.key, [...new Set([...getLS(cfg.key), cleanVal])]);
+      renderLists();
+      document.getElementById(cfg.input).value = cleanVal;
+      if (type === 'spec') updateProcedureSuggestions();
+      if (type === 'tech') checkAirway();
+    }
+
+    function checkAirway() {
+      const v = document.getElementById('cTech').value.toUpperCase();
+      document.getElementById('airwayBox').style.display = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(v) ? 'block' : 'none';
+    }
+
+    function showTab(id) {
+      ['tabLogger','tabLedger','tabSummary','tabTutorial','tabSettings'].forEach((t,i) => {
+        const el = document.getElementById(t);
+        if (el) el.style.display = (t===id) ? 'block' : 'none';
+        const navEl = document.getElementById('nav'+i);
+        if (navEl) navEl.classList.toggle('active', t===id);
+      });
+      if(id==='tabLedger') renderLedger();
+      if(id==='tabSummary') renderSummary();
+      if(id==='tabSettings') {
+        loadDocProfile();
+        checkUploadStatus();
+      }
+      updateHeaderBadge();
+      window.scrollTo(0,0);
+    }
+
+    function compressFile(f) {
+      if(f.type==='application/pdf') return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r({b64:rd.result,mime:f.type});rd.readAsDataURL(f)});
+      return new Promise(r=>{
+        const rd=new FileReader(); rd.onload=e=>{
+          const img=new Image(); 
+          img.onload=()=>{
+            const cv=document.createElement('canvas'); let w=img.width, h=img.height;
+            if(w>1100){h=Math.round(h*1100/w);w=1100;} cv.width=w; cv.height=h;
+            cv.getContext('2d').drawImage(img,0,0,w,h); r({b64:cv.toDataURL('image/jpeg',0.65),mime:'image/jpeg'});
+          }; 
+          img.onerror = () => r({b64: e.target.result, mime: f.type});
+          img.src=e.target.result;
+        }; rd.readAsDataURL(f);
+      });
+    }
+
+    function openPreview(src, driveUrl) {
+      document.getElementById('modalImg').src = src;
+      const dBtn = document.getElementById('modalDriveBtn');
+      if(driveUrl && driveUrl.startsWith('http')) { dBtn.href = driveUrl; dBtn.style.display = 'inline-flex'; } else dBtn.style.display = 'none';
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    function saveSettings() {
+      const url = document.getElementById('sUrl').value.trim();
+      localStorage.setItem('el_url', url);
+      localStorage.setItem('etherlog_script_url', url);
+      updateHeaderBadge();
+      const stat = document.getElementById('testStatus');
+      stat.style.display = 'block';
+      stat.innerHTML = '<span style="color:#059669;font-weight:700"><i class="fa-solid fa-check-circle"></i> URL saved! Pulling existing records from Google Drive...</span>';
+      if (url) pullDatabaseFromDrive(true);
+    }
+
+    async function testDriveAccess() {
+      const url = getScriptUrl();
+      const stat = document.getElementById('testStatus');
+      const btn = document.getElementById('btnTestDrive');
+      stat.style.display = 'block';
+
+      if (!url) {
+        stat.innerHTML = '<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Error: Paste your Google Apps Script URL above first.</div>';
+        return;
+      }
+
+      saveSettings();
+      btn.disabled = true;
+      stat.innerHTML = '<div style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Verifying Google Drive write access & link response...</div>';
+
+      const samplePng = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
+      const res = await uploadBase64ToDrive(samplePng, "image/png", "Logbook_Access_Test.png", true);
+      btn.disabled = false;
+
+      if (res.ok && res.url) {
+        stat.innerHTML = `
+          <div style="color:#15803d;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-check"></i> Success! Google Drive Access & Upload Verified</div>
+          <div style="font-size:0.8rem;color:#334155">
+            <div>&#10004; <b>CORS & Connection:</b> Passed</div>
+            <div>&#10004; <b>Drive Folder/File Write:</b> Authorized</div>
+            <div>&#10004; <b>Drive Link Returned:</b> <a href="${res.url}" target="_blank" style="color:#0284c7;word-break:break-all">${res.url}</a></div>
+          </div>`;
+      } else {
+        stat.innerHTML = `
+          <div style="color:#dc2626;font-weight:700;margin-bottom:6px"><i class="fa-solid fa-circle-xmark"></i> Connection / Drive Authorization Blocked</div>
+          <div style="font-size:0.8rem;color:#334155">
+            <div style="margin-bottom:6px">${res.error}</div>
+            <div style="margin-top:8px"><b>Need help?</b> Check the <b>Tutorial</b> tab for step-by-step instructions.</div>
+          </div>`;
+      }
+    }
+
+    function getAttachmentStats() {
+      const cases = getLS('el_cases');
+      let total = 0, synced = 0, local = 0;
+      cases.forEach(c => {
+        let raw = c.links || [];
+        if (!raw.length && c.attachmentUrl) raw = [{ url: c.attachmentUrl }];
+        raw.forEach(item => {
+          total++;
+          if (getItemDriveUrl(item)) synced++;
+          else local++;
+        });
+      });
+      return { total, synced, local };
+    }
+
+    function checkUploadStatus() {
+      const s = getAttachmentStats();
+      document.getElementById('stTotalFiles').textContent = s.total;
+      document.getElementById('stSyncedFiles').textContent = s.synced;
+      document.getElementById('stLocalFiles').textContent = s.local;
+
+      const box = document.getElementById('syncStatusBox');
+      const btn = document.getElementById('btnSyncAll');
+      box.style.display = 'block';
+
+      if (s.total === 0) {
+        box.innerHTML = '<span style="color:#64748b"><i class="fa-solid fa-circle-info"></i> No OT Record Sheets attached in your logbook yet.</span>';
+        btn.disabled = true;
+      } else if (s.local === 0) {
+        box.innerHTML = `<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> All ${s.synced} attached file(s) have valid Google Drive links!</span>`;
+        btn.disabled = true;
+      } else {
+        box.innerHTML = `<span style="color:#b45309;font-weight:700"><i class="fa-solid fa-triangle-exclamation"></i> ${s.local} file(s) are saved locally without a Drive link. Tap the green button above to upload them now.</span>`;
+        btn.disabled = false;
+      }
+      updateHeaderBadge();
+    }
+
+    async function syncPendingUploads(fromLedger = false) {
+      const url = getScriptUrl();
+      if (!url) {
+        alert("Please enter your Google Apps Script URL in the Settings tab first.");
+        showTab('tabSettings');
+        return;
+      }
+
+      const stats = getAttachmentStats();
+      if (stats.local === 0) {
+        if (fromLedger) alert("All attached files are already synced to Google Drive!");
+        else checkUploadStatus();
+        return;
+      }
+
+      const btn = document.getElementById('btnSyncAll');
+      const box = document.getElementById('syncStatusBox');
+      if (btn) btn.disabled = true;
+      if (box) {
+        box.style.display = 'block';
+        box.innerHTML = `<span style="color:#0284c7;font-weight:700"><i class="fa-solid fa-spinner fa-spin"></i> Uploading ${stats.local} pending file(s) to Google Drive...</span>`;
+      }
+
+      let cases = getLS('el_cases');
+      let newlySynced = 0;
+      let failedCount = 0;
+      let lastError = '';
+
+      for (let ci = 0; ci < cases.length; ci++) {
+        let c = cases[ci];
+        if (!Array.isArray(c.links)) {
+          c.links = c.attachmentUrl ? [{ url: c.attachmentUrl.startsWith('http') ? c.attachmentUrl : '', thumb: c.attachmentUrl.startsWith('data:') ? c.attachmentUrl : '', name: 'OT_Record' }] : [];
+        }
+
+        for (let fi = 0; fi < c.links.length; fi++) {
+          let item = c.links[fi];
+          if (typeof item === 'string') {
+            item = { url: item.startsWith('http') ? item : '', thumb: item.startsWith('data:') ? item : '', name: `Case_${c.id}_${fi+1}` };
+            c.links[fi] = item;
+          }
+
+          const existingUrl = getItemDriveUrl(item);
+          if (!existingUrl && item.thumb && item.thumb.startsWith('data:')) {
+            const mimeMatch = item.thumb.match(/^data:([^;]+);/);
+            const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+            const ext = mime.includes('pdf') ? 'pdf' : 'jpg';
+            const patTag = (c.patId && c.patId !== 'N/A') ? `_${c.patId.replace(/[^a-zA-Z0-9]/g, '')}` : '';
+            const fName = `Case_${c.date || c.id}${patTag}_${(c.proc || 'OT').replace(/[^a-zA-Z0-9]/g, '_')}_${fi + 1}.${ext}`;
+
+            const res = await uploadBase64ToDrive(item.thumb, mime, fName, false);
+            if (res.ok && res.url) {
+              item.url = res.url;
+              newlySynced++;
+            } else {
+              failedCount++;
+              lastError = res.error;
+            }
+          }
+        }
+      }
+
+      setLS('el_cases', cases);
+      pushDatabaseToDrive(true);
+      checkUploadStatus();
+      renderLedger();
+
+      if (fromLedger) {
+        if (failedCount === 0) alert(`Success! Uploaded ${newlySynced} file(s) to Google Drive.`);
+        else alert(`Uploaded ${newlySynced} file(s), ${failedCount} failed.\n\nReason: ${lastError}`);
+      } else if (box) {
+        if (failedCount === 0) {
+          box.innerHTML = `<span style="color:#15803d;font-weight:700"><i class="fa-solid fa-circle-check"></i> Sync Complete! ${newlySynced} file(s) uploaded to Google Drive.</span>`;
+        } else {
+          box.innerHTML = `<span style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-xmark"></i> Uploaded ${newlySynced} file(s), ${failedCount} failed: ${lastError}</span>`;
+        }
+      }
+    }
+
+    async function saveCase() {
+      const proc = document.getElementById('cProc').value.trim();
+      if(!proc) return alert("Enter Surgical Procedure");
+
+      const hosp = document.getElementById('cHosp').value.trim();
+      const patId = document.getElementById('cPatId').value.trim();
+      const spec = document.getElementById('cSpec').value.trim() || "General Surgery";
+      const diag = document.getElementById('cDiag').value.trim();
+      const tech = document.getElementById('cTech').value.trim() || "General Anaesthesia (GA) - ETT";
+
+      if (hosp) setLS('el_hosps', [...new Set([...getLS('el_hosps'), hosp])]);
+      if (spec) setLS('el_specs', [...new Set([...getLS('el_specs'), spec])]);
+      if (diag) setLS('el_diags', [...new Set([...getLS('el_diags'), diag])]);
+      setLS('el_procs', [...new Set([...getLS('el_procs'), proc])]);
+      setLS('el_techs', [...new Set([...getLS('el_techs'), tech])]);
+      renderLists();
+      
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = true;
+      const files = document.getElementById('cFiles').files;
+      const url = getScriptUrl();
+      let links = [...curLinks];
+      let uploadWarnings = [];
+      
+      if(files.length > 0) {
+        for(let i = 0; i < files.length; i++) {
+          const f = files[i];
+          btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading file ${i+1} of ${files.length}...`;
+          let dUrl = '';
+          let b64 = '';
+          let mime = '';
+          try {
+            const compressed = await compressFile(f);
+            b64 = compressed.b64;
+            mime = compressed.mime;
+          } catch(e) { console.error("Compression error", e); }
+          
+          if(url && b64) {
+            const patTag = patId ? `_${patId.replace(/[^a-zA-Z0-9]/g, '')}` : '';
+            const fName = `Case_${document.getElementById('cDate').value || Date.now()}${patTag}_${f.name.replace(/\s+/g,'_')}`;
+            const upRes = await uploadBase64ToDrive(b64, mime, fName, false);
+            if (upRes.ok && upRes.url) {
+              dUrl = upRes.url;
+            } else {
+              uploadWarnings.push(`${f.name}: ${upRes.error}`);
+            }
+          } else if (!url) {
+            uploadWarnings.push(`${f.name}: Saved locally (No Drive Script URL set)`);
+          }
+          links.push({url: dUrl, thumb: b64, name: f.name});
+        }
+      }
+
+      if (uploadWarnings.length > 0) {
+        alert("Case saved locally, but Google Drive file upload reported:\n\n" + uploadWarnings.join("\n\n"));
+      }
+
+      const getChecked = (n,oth) => {
+        let a = Array.from(document.querySelectorAll(`input[name="${n}"]:checked`)).map(c=>c.value);
+        let oEl = document.getElementById(oth);
+        let o = oEl ? oEl.value.trim() : '';
+        if(o) a.push(o);
+        return a.join(', ') || 'Nil';
+      };
+
+      const getPostOpPlan = () => {
+        let pEl = document.querySelector('input[name="postOpPlan"]:checked');
+        let p = pEl ? pEl.value : 'Routine Monitoring';
+        let oEl = document.getElementById('cPostOpPlanOther');
+        let o = oEl ? oEl.value.trim() : '';
+        return o ? `${p} (${o})` : p;
+      };
+      
+      const isAir = /GA|GENERAL|ETT|LMA|SGA|TIVA|DLT/.test(tech.toUpperCase());
+      const eid = document.getElementById('editId').value;
+      const asaEl = document.querySelector('input[name="asa"]:checked');
+      const painEl = document.querySelector('input[name="painScore"]:checked');
+
+      const rec = {
+        id: eid || ('C'+Date.now()),
+        date: document.getElementById('cDate').value,
+        hosp: hosp || 'N/A',
+        patId: patId || 'N/A',
+        age: document.getElementById('cAge').value || 'N/A',
+        sex: document.getElementById('cSex').value,
+        prio: document.getElementById('cPrio').value,
+        sup: document.getElementById('cSup').value,
+        spec,
+        diag: diag || 'N/A',
+        proc,
+        comorbid: getChecked('comorbid','cComOther'),
+        asa: asaEl ? asaEl.value : 'I',
+        tech,
+        airway: isAir ? `MMS: ${document.getElementById('cMMS').value} | CL: ${document.getElementById('cCL').value}${document.getElementById('cAirNotes').value ? ' | ' + document.getElementById('cAirNotes').value.trim() : ''}` : 'N/A',
+        analg: getChecked('analgesia','cAnalgOther'),
+        diff: document.getElementById('cDiff').value.trim() || 'Nil',
+        comp: getChecked('comp','cCompOther'),
+        postOpPlan: getPostOpPlan(),
+        painScore: painEl ? painEl.value : 'Not Assessed',
+        links
+      };
+      
+      let cases = getLS('el_cases');
+      if(eid) { const i = cases.findIndex(x=>x.id===eid); if(i>-1) cases[i]=rec; } else cases.unshift(rec);
+      
+      try {
+        setLS('el_cases',cases);
+        pushDatabaseToDrive(true);
+        btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case';
+        resetForm(); showTab('tabLedger');
+      } catch(e) {
+        alert("Browser LocalStorage is full! Export your CSV to back up your cases.");
+        btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Save Case';
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('editId').value='';
+      const ft = document.getElementById('formTitle');
+      ft.textContent=''; ft.style.display='none';
+      document.getElementById('cancelBtn').style.display='none';
+      document.getElementById('currFiles').innerHTML='';
+      document.getElementById('fileStatus').textContent='';
+      curLinks=[];
+      ['cHosp','cPatId','cAge','cSpec','cDiag','cProc','cComOther','cTech','cAirNotes','cAnalgOther','cDiff','cCompOther','cPostOpPlanOther','cFiles'].forEach(id=>{
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
+      document.getElementById('cDate').value = new Date().toISOString().split('T')[0];
+      renderAsaPills('I');
+      makePills('comorbidPills','comorbid',COMORBIDS,'checkbox','Nil');
+      makePills('analgPills','analgesia',ANALGS,'checkbox','Nil');
+      makePills('compPills','comp',COMPS,'checkbox','Nil');
+      makePills('postOpPlanPills','postOpPlan',POSTOP_PLANS,'radio','Extubated on table & Routine Monitoring');
+      makePills('painScorePills','painScore',PAIN_SCORES,'radio','0');
+      checkAirway();
+    }
+
+    function renderLedger() {
+      const allCases = getLS('el_cases');
+      const box = document.getElementById('ledgerList');
+      const searchEl = document.getElementById('ledgerSearch');
+      const q = (searchEl && searchEl.value ? searchEl.value : '').trim().toLowerCase();
+
+      if(!allCases.length) return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:30px">No cases logged yet. If you have cases on another device, go to Settings, paste your Script URL, and tap Pull Data.</p>';
+      window._cases = allCases;
+
+      const filtered = allCases.map((c, idx) => ({ c, idx })).filter(({ c }) => {
+        if (!q) return true;
+        const hay = [
+          c.date, c.hosp, c.patId, c.proc, c.procedure,
+          c.diag, c.spec, c.specialty, c.tech, c.technique,
+          c.comorbid, c.diff, c.comp, c.postOpPlan, c.painScore
+        ].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+
+      if (!filtered.length) {
+        return box.innerHTML = '<p style="text-align:center;color:#64748b;padding:24px">No matching cases found.</p>';
+      }
+      
+      box.innerHTML = filtered.map(({ c, idx: ci }) => {
+        let raw = c.links || [];
+        if(!raw.length && c.attachmentUrl) raw = [{url: c.attachmentUrl, thumb: c.attachmentUrl.startsWith('http')?'':c.attachmentUrl, name:'OT_Record'}];
+        
+        let syncedCount = 0;
+        const thumbs = raw.map((item,fi) => {
+          const isObj = typeof item === 'object' && item !== null;
+          const tSrc = isObj ? item.thumb : (typeof item === 'string' && !item.startsWith('http') ? item : '');
+          const dUrl = getItemDriveUrl(item);
+          if (dUrl) syncedCount++;
+          
+          const safeThumbExpr = `window._cases[${ci}].links && window._cases[${ci}].links[${fi}] ? (window._cases[${ci}].links[${fi}].thumb || '') : ''`;
+          const safeUrlExpr = `'${dUrl.replace(/'/g, "\\'")}'`;
+
+          if(tSrc && tSrc.startsWith('data:image')) {
+            return `<img src="${tSrc}" class="thumb-img" onclick="openPreview(${safeThumbExpr}, ${safeUrlExpr})" title="Tap to preview">
+                    <button type="button" class="act-btn" style="background:#0284c7;color:#fff" onclick="openPreview(${safeThumbExpr}, ${safeUrlExpr})"><i class="fa-solid fa-eye"></i> Sheet ${fi+1}</button>
+                    ${dUrl ? `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>` : ''}`;
+          } else if (tSrc && tSrc.startsWith('data:application/pdf')) {
+            return `<a href="${tSrc}" download="Case_PDF_${fi+1}.pdf" class="act-btn" style="background:#0284c7;color:#fff"><i class="fa-solid fa-file-pdf"></i> PDF ${fi+1}</a>
+                    ${dUrl ? `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>` : ''}`;
+          } else if(dUrl) {
+            return `<a href="${dUrl}" target="_blank" class="act-btn" style="background:#0d9488;color:#fff"><i class="fa-solid fa-cloud"></i> Drive Link ${fi+1}</a>`;
+          }
+          return '';
+        }).join('');
+
+        let syncBadge = '';
+        if (raw.length > 0) {
+          if (syncedCount === raw.length) {
+            syncBadge = `<span class="badge-ok"><i class="fa-solid fa-cloud-check"></i> Drive Synced (${syncedCount}/${raw.length})</span>`;
+          } else {
+            syncBadge = `<span class="badge-warn" onclick="syncPendingUploads(true)" title="Tap to upload to Google Drive"><i class="fa-solid fa-triangle-exclamation"></i> Local Only (${syncedCount}/${raw.length} on Drive) - Tap to Sync</span>`;
+          }
+        }
+
+        const procText = c.proc || c.procedure || 'N/A';
+        const hospText = (c.hosp && c.hosp !== 'N/A') ? c.hosp : '';
+        const patIdText = (c.patId && c.patId !== 'N/A') ? ` | <strong>ID:</strong> ${c.patId}` : '';
+        const diagText = (c.diag && c.diag !== 'N/A') ? c.diag : 'N/A';
+        const supText = normalizeSupervision(c.sup || c.supervision);
+
+        return `<div class="case-item">
+          <div class="lbl-row">
+            <span style="font-size:0.8rem;font-weight:700;color:#475569"><i class="fa-regular fa-calendar"></i> ${c.date}${patIdText} | ${c.age}Y / ${c.sex}</span>
+            <span>
+              <span class="mini-btn">${c.prio||c.priority||'Elective'}</span>
+              <span class="mini-btn">ASA ${c.asa}</span>
+            </span>
+          </div>
+          ${hospText ? `<div style="font-size:0.8rem;color:#334155;margin-top:4px"><i class="fa-regular fa-hospital" style="color:var(--pri)"></i> <strong>Hospital:</strong> ${hospText}</div>` : ''}
+          <div style="font-size:0.8rem;color:#475569;margin-top:2px"><strong>Specialty:</strong> ${c.spec||c.specialty||'N/A'} | <strong>Supervision:</strong> ${supText}</div>
+          <div style="font-size:0.84rem;margin-top:4px"><strong>Diagnosis:</strong> ${diagText}</div>
+          <div style="font-size:0.88rem;margin-top:2px;color:#0f172a"><strong>Surgical Procedure:</strong> <span style="color:var(--pri-dk);font-weight:700">${procText}</span></div>
+          <div style="font-size:0.84rem;margin-top:2px"><strong>Technique:</strong> ${c.tech||c.technique||'N/A'}</div>
+          <div class="d-box">
+            <div><strong>Comorbidities:</strong> ${c.comorbid||c.comorbidities||'Nil'}</div>
+            ${c.airway&&c.airway!=='N/A'?`<div><strong>Airway:</strong> ${c.airway}</div>`:''}
+            <div><strong>Analgesia:</strong> ${c.analg||c.analgesia||'Nil'}</div>
+            <div><strong>Difficult Airway/Notes:</strong> ${c.diff||c.difficultAirway||'Nil'}</div>
+            <div><strong>Complications:</strong> ${c.comp||c.complications||'Nil'}</div>
+            <div style="margin-top:4px;padding-top:4px;border-top:1px dashed #cbd5e1">
+              <strong>Post-op Plan:</strong> ${c.postOpPlan||'Routine Monitoring'} | <strong>Pain Score (NRS):</strong> <span style="font-weight:700;color:#8b5cf6">${c.painScore||'Not Assessed'}</span>
+            </div>
+          </div>
+          ${syncBadge ? `<div style="margin:6px 0">${syncBadge}</div>` : ''}
+          ${thumbs ? `<div class="thumb-row">${thumbs}</div>` : ''}
+          <div>
+            <button type="button" class="act-btn" style="background:#e2e8f0" onclick="editCase('${c.id}')"><i class="fa-solid fa-pen"></i> Edit / Add File</button>
+            <button type="button" class="act-btn" style="background:#fee2e2;color:#dc2626" onclick="delCase('${c.id}')"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderSvgDonut(svgId, legendId, data) {
+      const svg = document.getElementById(svgId);
+      const leg = document.getElementById(legendId);
+      if (!svg || !leg) return;
+
+      const total = data.reduce((acc, d) => acc + d.val, 0);
+      if (total === 0) {
+        svg.innerHTML = '<circle cx="21" cy="21" r="15.915" fill="none" stroke="#e2e8f0" stroke-width="4.5"/>';
+        leg.innerHTML = '<span style="font-size:0.75rem;color:#64748b">No records</span>';
+        return;
+      }
+
+      let offset = 25;
+      let circles = '';
+      let legendHtml = '';
+
+      data.forEach(d => {
+        if (d.val <= 0) return;
+        const pct = (d.val / total) * 100;
+        circles += `<circle cx="21" cy="21" r="15.915" fill="none" stroke="${d.color}" stroke-width="4.5"
+                     stroke-dasharray="${pct.toFixed(2)} ${(100 - pct).toFixed(2)}"
+                     stroke-dashoffset="${offset.toFixed(2)}"></circle>`;
+        offset -= pct;
+
+        legendHtml += `<div class="legend-item">
+          <span class="legend-dot" style="background:${d.color}"></span>
+          <span>${d.label}: <b>${d.val}</b> (${Math.round(pct)}%)</span>
+        </div>`;
+      });
+
+      svg.innerHTML = circles;
+      leg.innerHTML = legendHtml;
+    }
+
+    function renderSummary() {
+      const cases = getLS('el_cases');
+      const total = cases.length;
+      document.getElementById('sumTotal').textContent = total;
+      document.getElementById('donutUrgTotal').textContent = total;
+      document.getElementById('donutSupTotal').textContent = total;
+
+      let elective = 0, emergency = 0, noSup = 0;
+      const supCounts = {};
+      const specCounts = {};
+      const techCounts = {};
+      const asaCounts = {};
+      const hospCounts = {};
+
+      cases.forEach(c => {
+        const pr = (c.prio || c.priority || 'Elective');
+        if (pr === 'Emergency') emergency++; else elective++;
+
+        const sup = normalizeSupervision(c.sup || c.supervision);
+        if (sup === 'No Supervision') noSup++;
+        supCounts[sup] = (supCounts[sup] || 0) + 1;
+
+        const sp = c.spec || c.specialty || 'Unspecified';
+        specCounts[sp] = (specCounts[sp] || 0) + 1;
+
+        const tc = c.tech || c.technique || 'Unspecified';
+        techCounts[tc] = (techCounts[tc] || 0) + 1;
+
+        const asa = (c.asa || 'I');
+        asaCounts[asa] = (asaCounts[asa] || 0) + 1;
+
+        const hp = (c.hosp && c.hosp !== 'N/A') ? c.hosp : 'Unspecified';
+        hospCounts[hp] = (hospCounts[hp] || 0) + 1;
+      });
+
+      document.getElementById('sumElective').textContent = elective;
+      document.getElementById('sumEmergency').textContent = emergency;
+      document.getElementById('sumNoSup').textContent = noSup;
+
+      renderSvgDonut('donutUrgency', 'legendUrgency', [
+        { label: 'Elective', val: elective, color: '#0284c7' },
+        { label: 'Emergency', val: emergency, color: '#ef4444' }
+      ]);
+
+      renderSvgDonut('donutSupervision', 'legendSupervision', [
+        { label: 'No Sup', val: supCounts['No Supervision'] || 0, color: '#059669' },
+        { label: 'Direct', val: supCounts['Direct Supervision'] || 0, color: '#0284c7' },
+        { label: 'Indirect', val: supCounts['Indirect Supervision'] || 0, color: '#eab308' }
+      ]);
+
+      const buildBars = (obj, containerId, color = 'var(--pri)') => {
+        const el = document.getElementById(containerId);
+        const entries = Object.entries(obj).sort((a,b) => b[1] - a[1]);
+        if (!entries.length) {
+          el.innerHTML = '<div style="font-size:0.8rem;color:#64748b">No data logged yet.</div>';
+          return;
+        }
+        el.innerHTML = entries.map(([k, count]) => {
+          const pct = total ? Math.round((count / total) * 100) : 0;
+          return `<div class="bar-row">
+            <div class="bar-lbl"><span>${k}</span><span>${count} (${pct}%)</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+          </div>`;
+        }).join('');
+      };
+
+      buildBars(specCounts, 'sumSpecList', '#00897b');
+      buildBars(techCounts, 'sumTechList', '#0284c7');
+      buildBars(asaCounts, 'sumAsaList', '#8b5cf6');
+      buildBars(hospCounts, 'sumHospList', '#0f766e');
+    }
+
+    function editCase(id) {
+      const c = getLS('el_cases').find(x=>x.id===id); if(!c) return;
+      document.getElementById('editId').value = c.id;
+      const ft = document.getElementById('formTitle');
+      ft.textContent = 'Edit Case / Add Files';
+      ft.style.display = 'block';
+      document.getElementById('cancelBtn').style.display = 'block';
+      document.getElementById('cDate').value = c.date;
+      document.getElementById('cHosp').value = (c.hosp && c.hosp !== 'N/A') ? c.hosp : '';
+      document.getElementById('cPatId').value = (c.patId && c.patId !== 'N/A') ? c.patId : '';
+      document.getElementById('cAge').value = c.age!=='N/A'?c.age:'';
+      document.getElementById('cSex').value = c.sex||'Male';
+      document.getElementById('cPrio').value = c.prio||c.priority||'Elective';
+      document.getElementById('cSup').value = normalizeSupervision(c.sup||c.supervision);
+      document.getElementById('cSpec').value = c.spec||c.specialty||'';
+      updateProcedureSuggestions();
+      document.getElementById('cDiag').value = (c.diag && c.diag !== 'N/A') ? c.diag : '';
+      document.getElementById('cProc').value = c.proc||c.procedure||'';
+      document.getElementById('cTech').value = c.tech||c.technique||'';
+      document.getElementById('cDiff').value = (c.diff||c.difficultAirway)==='Nil'?'':(c.diff||c.difficultAirway||'');
+
+      const restorePillsAndOther = (name, knownList, str, otherInputId) => {
+        const arr = (str || '').split(', ').map(s => s.trim()).filter(Boolean);
+        document.querySelectorAll(`input[name="${name}"]`).forEach(el => {
+          el.checked = arr.includes(el.value);
+        });
+        if (otherInputId) {
+          const customVals = arr.filter(v => !knownList.includes(v));
+          const el = document.getElementById(otherInputId);
+          if (el) el.value = customVals.join(', ');
+        }
+      };
+
+      restorePillsAndOther('comorbid', COMORBIDS, c.comorbid||c.comorbidities, 'cComOther');
+      renderAsaPills(c.asa || 'I');
+      restorePillsAndOther('analgesia', ANALGS, c.analg||c.analgesia, 'cAnalgOther');
+      restorePillsAndOther('comp', COMPS, c.comp||c.complications, 'cCompOther');
+
+      if (c.postOpPlan) {
+        let basePlan = POSTOP_PLANS.find(p => c.postOpPlan.startsWith(p)) || 'Routine Monitoring';
+        let match = document.querySelector(`input[name="postOpPlan"][value="${basePlan}"]`);
+        if (match) match.checked = true;
+        if (c.postOpPlan.includes('(')) {
+          let extra = c.postOpPlan.split('(')[1].replace(')','').trim();
+          document.getElementById('cPostOpPlanOther').value = extra;
+        }
+      }
+      if (c.painScore) {
+        let pMatch = document.querySelector(`input[name="painScore"][value="${c.painScore}"]`);
+        if (pMatch) pMatch.checked = true;
+      }
+
+      curLinks = c.links || (c.attachmentUrl ? [{url:c.attachmentUrl, thumb:''}] : []);
+      document.getElementById('currFiles').innerHTML = curLinks.length ? `<span style="font-size:0.78rem;color:#059669">${curLinks.length} file(s) attached. <u onclick="curLinks=[];document.getElementById('currFiles').innerHTML='Cleared.'" style="cursor:pointer;color:#dc2626">Clear all</u></span>` : '';
+      checkAirway(); showTab('tabLogger');
+    }
+
+    function delCase(id) {
+      if(confirm("Delete case?")) {
+        setLS('el_cases',getLS('el_cases').filter(x=>x.id!==id));
+        pushDatabaseToDrive(true);
+        renderLedger();
+        updateHeaderBadge();
+      }
+    }
+    
+    async function exportCSV() {
+      let cases = getLS('el_cases'); 
+      if(!cases.length) return alert("No cases to export!");
+
+      const stats = getAttachmentStats();
+      if (stats.local > 0 && getScriptUrl()) {
+        if (confirm(`You have ${stats.local} attached OT sheet(s) without a Google Drive link.\n\nSync them to Google Drive now before exporting CSV?`)) {
+          await syncPendingUploads(false);
+        }
+      }
+      
+      const csv = buildCSVString();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+      a.download = `Anaesthesiologist_Logbook_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    }
+    
+    init();
+  </script>
 </body>
 </html>
