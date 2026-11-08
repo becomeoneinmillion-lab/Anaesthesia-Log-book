@@ -1,0 +1,6 @@
+{
+  "appId": "com.nklogbook.app",
+  "appName": "Your App Name",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
