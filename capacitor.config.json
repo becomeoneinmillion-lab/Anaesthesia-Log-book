@@ -1,6 +1,6 @@
 {
   "appId": "com.nklogbook.app",
-  "appName": "Your App Name",
+  "appName": "Anaesthesiologist's logbook",
   "webDir": "www",
   "bundledWebRuntime": false
 }
